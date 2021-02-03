@@ -11,9 +11,10 @@
 #include <nusys.h>
 #include "graphic.h"
 
-Gfx          gfx_glist[GFX_GLIST_LEN];
-Dynamic      gfx_dynamic;
-Gfx*         glistp;
+Gfx       gfx_glist[GFX_GLIST_LEN];
+Dynamic   gfx_dynamic;
+Matrices  gfx_matrices[MATRICES_MAX_LEN];
+Gfx*      glistp;
 
 /*----------------------------------------------------------------------------
   gfxRCPIinit
@@ -35,9 +36,9 @@ void gfxRCPInit(void)
 /*----------------------------------------------------------------------------
   gfxClearCfb
 
-  Setting addresses of the frame buffer/Z-buffer and clear them 
+  Setting addresses of the frame buffer/Z-buffer and clear them
 
-  Using nuGfxZBuffer (the address of the Z-buffer) and nuGfxCfb_ptr (the  
+  Using nuGfxZBuffer (the address of the Z-buffer) and nuGfxCfb_ptr (the
   address of the frame buffer) which are global variables of NuSYSTEM.
 ----------------------------------------------------------------------------*/
 void gfxClearCfb(void)
@@ -51,11 +52,11 @@ void gfxClearCfb(void)
 			       GPACK_ZDZ(G_MAXFBZ,0)));
   gDPFillRectangle(glistp++, 0, 0, SCREEN_WD-1, SCREEN_HT-1);
   gDPPipeSync(glistp++);
-  
+
     /* Clear the frame buffer  */
   gDPSetColorImage(glistp++, G_IM_FMT_RGBA, G_IM_SIZ_16b, SCREEN_WD,
 		   osVirtualToPhysical(nuGfxCfb_ptr));
-  gDPSetFillColor(glistp++, (GPACK_RGBA5551(0, 0, 0, 1) << 16 | 
+  gDPSetFillColor(glistp++, (GPACK_RGBA5551(0, 0, 0, 1) << 16 |
 				GPACK_RGBA5551(0, 0, 0, 1)));
   gDPFillRectangle(glistp++, 0, 0, SCREEN_WD-1, SCREEN_HT-1);
   gDPPipeSync(glistp++);

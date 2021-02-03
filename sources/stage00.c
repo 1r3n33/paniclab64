@@ -1,5 +1,5 @@
 /*
-   stage00.c 
+   stage00.c
 
    Copyright (C) 1997-1999, NINTENDO Co,Ltd.
 */
@@ -8,7 +8,9 @@
 #include <nusys.h>
 #include "graphic.h"
 
-void shadetri(Dynamic* dynamicp);
+void applyMatrices(Matrices* matrices);
+
+void shadetri(Matrices* matrices);
 
 /* Make the display list and activate the task. */
 
@@ -23,15 +25,27 @@ void makeDL00(void)
   /* Clear the frame buffer and the Z-buffer  */
   gfxClearCfb();
 
-  /* The set of projection modeling matrices  */
+  // Compute projection matrix
   guOrtho(&gfx_dynamic.projection,
 	  -(float)SCREEN_WD/2.0F, (float)SCREEN_WD/2.0F,
 	  -(float)SCREEN_HT/2.0F, (float)SCREEN_HT/2.0F,
 	  1.0F, 10.0F, 1.0F);
-  guRotate(&gfx_dynamic.modeling, 0.0F, 0.0F, 0.0F, 1.0F);
 
-  /* Draw a square  */
-  shadetri(&gfx_dynamic);
+  // Set projection matrix
+  gSPMatrix(
+    glistp++,
+    OS_K0_TO_PHYSICAL(&gfx_dynamic.projection),
+		G_MTX_PROJECTION|G_MTX_LOAD|G_MTX_NOPUSH);
+
+  for (int i = 0; i<MATRICES_MAX_LEN; i++)
+  {
+    guTranslate(&gfx_matrices[i].translation, 100.0F, 0.0F, 0.0F);
+    guRotate(&gfx_matrices[i].rotation, (360.0F/(float)MATRICES_MAX_LEN)*(float)i, 0.0F, 0.0F, 1.0F);
+    guScale(&gfx_matrices[i].scale, 0.0F, 1.0F, 1.0F);
+
+    /* Draw a square  */
+    shadetri(&gfx_matrices[i]);
+  }
 
   /* End the construction of the display list  */
   gDPFullSync(glistp++);
@@ -48,19 +62,31 @@ void makeDL00(void)
 
 /* The vertex coordinate  */
 static Vtx shade_vtx[] =  {
-        {        -64,  64, -5, 0, 0, 0, 0, 0xff, 0, 0xff	},
-        {         64,  64, -5, 0, 0, 0, 0, 0, 0, 0xff	},
-        {         64, -64, -5, 0, 0, 0, 0, 0, 0xff, 0xff	},
-        {        -64, -64, -5, 0, 0, 0, 0xff, 0, 0, 0xff	},
+        {        -16,  16, -5, 0, 0, 0, 0, 0xff, 0, 0xff	},
+        {         16,  16, -5, 0, 0, 0, 0, 0, 0, 0xff	},
+        {         16, -16, -5, 0, 0, 0, 0, 0, 0xff, 0xff	},
+        {        -16, -16, -5, 0, 0, 0, 0xff, 0, 0, 0xff	},
 };
 
-/* Draw a square  */
-void shadetri(Dynamic* dynamicp)
+void applyMatrices(Matrices* matrices)
 {
-  gSPMatrix(glistp++,OS_K0_TO_PHYSICAL(&(dynamicp->projection)),
-		G_MTX_PROJECTION|G_MTX_LOAD|G_MTX_NOPUSH);
-  gSPMatrix(glistp++,OS_K0_TO_PHYSICAL(&(dynamicp->modeling)),
+  gSPMatrix(
+    glistp++,
+    OS_K0_TO_PHYSICAL(&(matrices->rotation)),
 		G_MTX_MODELVIEW|G_MTX_LOAD|G_MTX_NOPUSH);
+
+#if 1
+  gSPMatrix(
+    glistp++,
+    OS_K0_TO_PHYSICAL(&(matrices->translation)),
+		G_MTX_MODELVIEW|G_MTX_MUL|G_MTX_NOPUSH);
+#endif
+}
+
+/* Draw a square  */
+void shadetri(Matrices* matrices)
+{
+  applyMatrices(matrices);
 
   gSPVertex(glistp++,&(shade_vtx[0]),4, 0);
 
