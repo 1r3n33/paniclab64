@@ -17,9 +17,9 @@ LDFLAGS = $(MKDEPOPT) -L$(LIB) -L$(NUSYSLIBDIR) -lnusys_d -lgultra_d -L$(GCCDIR)
 
 OPTIMIZER =	-g
 
-APP = nu0.out
+APP = paniclab.out
 
-TARGETS = nu0.n64
+TARGETS = paniclab.n64
 
 HFILES = graphic.h
 

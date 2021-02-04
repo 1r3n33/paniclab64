@@ -32,6 +32,6 @@ beginseg
 endseg
 
 beginwave
-	name	"nu0"
+	name	"paniclab"
 	include	"code"
 endwave
