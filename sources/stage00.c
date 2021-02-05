@@ -8,7 +8,7 @@
 #include <nusys.h>
 #include "graphic.h"
 
-#include "rgba16sign1.h"
+#include "squiddy.h"
 
 void applyMatrices(Matrices* matrices);
 
@@ -41,7 +41,7 @@ void makeDL00(void)
 
   for (int i = 0; i<MATRICES_MAX_LEN; i++)
   {
-    guTranslate(&gfx_matrices[i].translation, 100.0F, 0.0F, 0.0F);
+    guTranslate(&gfx_matrices[i].translation, 0.0F, 100.0F, 0.0F);
     guRotate(&gfx_matrices[i].rotation, (360.0F/(float)MATRICES_MAX_LEN)*(float)i, 0.0F, 0.0F, 1.0F);
     guScale(&gfx_matrices[i].scale, 0.0F, 1.0F, 1.0F);
 
@@ -105,7 +105,7 @@ void shadetri(Matrices* matrices)
 
   /* Load texture (image rgba16sign1) */
   gDPLoadTextureBlock(glistp++,
-                      rgba16sign1,              /* Pointer to texture image */
+                      squiddy_pixel,            /* Pointer to texture image */
                       G_IM_FMT_RGBA,            /* Texel format */
                       G_IM_SIZ_16b,             /* Texel size */
                       32, 32,                   /* Image width and height */
