@@ -8,11 +8,12 @@
 #include <nusys.h>
 #include "graphic.h"
 
-#include "squiddy.h"
+#include "../assets/graphics/sluggy_blue_32x32_RGBA_16b.h"
+#include "../assets/graphics/sluggy_orange_32x32_RGBA_16b.h"
 
 void applyMatrices(Matrices* matrices);
 
-void shadetri(Matrices* matrices);
+void shadetri(Matrices* matrices, int blue);
 
 /* Make the display list and activate the task. */
 
@@ -46,7 +47,7 @@ void makeDL00(void)
     guScale(&gfx_matrices[i].scale, 0.0F, 1.0F, 1.0F);
 
     /* Draw a square  */
-    shadetri(&gfx_matrices[i]);
+    shadetri(&gfx_matrices[i], i&1);
   }
 
   /* End the construction of the display list  */
@@ -84,7 +85,7 @@ void applyMatrices(Matrices* matrices)
 }
 
 /* Draw a square  */
-void shadetri(Matrices* matrices)
+void shadetri(Matrices* matrices, int blue)
 {
   applyMatrices(matrices);
 
@@ -103,9 +104,19 @@ void shadetri(Matrices* matrices)
   /* Switch to combine mode using texture color */
   gDPSetCombineMode(glistp++, G_CC_DECALRGBA, G_CC_DECALRGBA);
 
-  /* Load texture (image rgba16sign1) */
+  /* Load texture */
+  PalPixel * pp = 0;
+  if (blue)
+  {
+    pp = _pp_table_sluggy_blue_32x32_RGBA_16b;
+  }
+  else
+  {
+    pp = _pp_table_sluggy_orange_32x32_RGBA_16b;
+  }
+
   gDPLoadTextureBlock(glistp++,
-                      squiddy_pixel,            /* Pointer to texture image */
+                      pp->pixel.p16,            /* Pointer to texture image */
                       G_IM_FMT_RGBA,            /* Texel format */
                       G_IM_SIZ_16b,             /* Texel size */
                       32, 32,                   /* Image width and height */
