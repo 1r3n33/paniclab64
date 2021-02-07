@@ -8,10 +8,10 @@
 #include <nusys.h>
 #include "graphic.h"
 
-#include "../assets/graphics/slug_blue_32x32_RGBA_16b.h"
-#include "../assets/graphics/slug_orange_32x32_RGBA_16b.h"
-#include "../assets/graphics/squid_purple_32x32_RGBA_16b.h"
-#include "../assets/graphics/squid_red_32x32_RGBA_16b.h"
+#include "../assets/graphics/sq_bl_st_32x32_CI_4b.h"
+#include "../assets/graphics/sq_or_st_32x32_CI_4b.h"
+#include "../assets/graphics/sq_bl_dt_32x32_CI_4b.h"
+#include "../assets/graphics/sq_or_dt_32x32_CI_4b.h"
 
 void applyMatrices(Matrices* matrices);
 
@@ -107,35 +107,34 @@ void shadetri(Matrices* matrices, int type)
   gDPSetCombineMode(glistp++, G_CC_DECALRGBA, G_CC_DECALRGBA);
 
   /* Load texture */
-  PalPixel * pp = 0;
+  PalPixel * img = 0;
   switch (type)
   {
   case 0:
-    pp = _pp_table_slug_blue_32x32_RGBA_16b;
+    img = &_pp_table_sq_bl_st_32x32_CI_4b[0];
     break;
 
   case 1:
-    pp = _pp_table_slug_orange_32x32_RGBA_16b;
+    img = &_pp_table_sq_or_st_32x32_CI_4b[0];
     break;
 
   case 2:
-    pp = _pp_table_squid_purple_32x32_RGBA_16b;
+    img = &_pp_table_sq_bl_dt_32x32_CI_4b[0];
     break;
 
   case 3:
-    pp = _pp_table_squid_red_32x32_RGBA_16b;
+    img = &_pp_table_sq_or_dt_32x32_CI_4b[0];
     break;
   }
 
-  gDPLoadTextureBlock(glistp++,
-                      pp->pixel.p16,            /* Pointer to texture image */
-                      G_IM_FMT_RGBA,            /* Texel format */
-                      G_IM_SIZ_16b,             /* Texel size */
-                      32, 32,                   /* Image width and height */
-                      0,                        /* LUT (palette) index (not used here) */
-                      G_TX_WRAP, G_TX_WRAP,     /* Clamp, wrap, mirror frag in s direction */
-                      5, 5,                     /* s, t masks */
-                      G_TX_NOLOD, G_TX_NOLOD);  /* Shift (not shifted here) */
+  gDPLoadTextureBlock_4b(glistp++,
+                         img->pixel.p4,            /* Pointer to texture image */
+                         G_IM_FMT_CI,              /* Texel format */
+                         32, 32,                   /* Image width and height */
+                         0,                        /* LUT (palette) index */
+                         G_TX_WRAP, G_TX_WRAP,     /* Clamp, wrap, mirror frag in s direction */
+                         5, 5,                     /* s, t masks */
+                         G_TX_NOLOD, G_TX_NOLOD);  /* Shift (not shifted here) */
 
   /* Texture perspective correction is turned on during mapping */
   gDPSetTexturePersp(glistp++, G_TP_PERSP);
@@ -145,8 +144,10 @@ void shadetri(Matrices* matrices, int type)
   /* This can be ignored until LOD or detail texture is explained */
   gDPSetTextureLOD(glistp++, G_TL_TILE);
   gDPSetTextureDetail(glistp++, G_TD_CLAMP);
-  /* Texture palette (not used) */
-  gDPSetTextureLUT(glistp++, G_TT_NONE);
+
+  /* Texture palette */
+  gDPSetTextureLUT(glistp++, G_TT_RGBA16);
+  gDPLoadTLUT_pal16(glistp++, 0, img->ppal);
 
   gDPSetRenderMode(glistp++,G_RM_AA_OPA_SURF, G_RM_AA_OPA_SURF2);
 
