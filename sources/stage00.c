@@ -8,12 +8,14 @@
 #include <nusys.h>
 #include "graphic.h"
 
-#include "../assets/graphics/sluggy_blue_32x32_RGBA_16b.h"
-#include "../assets/graphics/sluggy_orange_32x32_RGBA_16b.h"
+#include "../assets/graphics/slug_blue_32x32_RGBA_16b.h"
+#include "../assets/graphics/slug_orange_32x32_RGBA_16b.h"
+#include "../assets/graphics/squid_purple_32x32_RGBA_16b.h"
+#include "../assets/graphics/squid_red_32x32_RGBA_16b.h"
 
 void applyMatrices(Matrices* matrices);
 
-void shadetri(Matrices* matrices, int blue);
+void shadetri(Matrices* matrices, int type);
 
 /* Make the display list and activate the task. */
 
@@ -47,7 +49,7 @@ void makeDL00(void)
     guScale(&gfx_matrices[i].scale, 0.0F, 1.0F, 1.0F);
 
     /* Draw a square  */
-    shadetri(&gfx_matrices[i], i&1);
+    shadetri(&gfx_matrices[i], i&3);
   }
 
   /* End the construction of the display list  */
@@ -85,7 +87,7 @@ void applyMatrices(Matrices* matrices)
 }
 
 /* Draw a square  */
-void shadetri(Matrices* matrices, int blue)
+void shadetri(Matrices* matrices, int type)
 {
   applyMatrices(matrices);
 
@@ -106,13 +108,23 @@ void shadetri(Matrices* matrices, int blue)
 
   /* Load texture */
   PalPixel * pp = 0;
-  if (blue)
+  switch (type)
   {
-    pp = _pp_table_sluggy_blue_32x32_RGBA_16b;
-  }
-  else
-  {
-    pp = _pp_table_sluggy_orange_32x32_RGBA_16b;
+  case 0:
+    pp = _pp_table_slug_blue_32x32_RGBA_16b;
+    break;
+
+  case 1:
+    pp = _pp_table_slug_orange_32x32_RGBA_16b;
+    break;
+
+  case 2:
+    pp = _pp_table_squid_purple_32x32_RGBA_16b;
+    break;
+
+  case 3:
+    pp = _pp_table_squid_red_32x32_RGBA_16b;
+    break;
   }
 
   gDPLoadTextureBlock(glistp++,
