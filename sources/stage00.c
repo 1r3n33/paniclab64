@@ -1,11 +1,6 @@
-/*
-   stage00.c
-
-   Copyright (C) 1997-1999, NINTENDO Co,Ltd.
-*/
-
 #include <assert.h>
 #include <nusys.h>
+#include "game.h"
 #include "graphic.h"
 
 #include "../assets/graphics/sq_bl_st_32x32_CI_4b.h"
@@ -19,7 +14,7 @@ void shadetri(Matrices* matrices, int type);
 
 /* Make the display list and activate the task. */
 
-void makeDL00(void)
+void makeDL00(Game* game)
 {
   /* Specify the display list buffer  */
   glistp = gfx_glist;
@@ -42,14 +37,14 @@ void makeDL00(void)
     OS_K0_TO_PHYSICAL(&gfx_dynamic.projection),
 		G_MTX_PROJECTION|G_MTX_LOAD|G_MTX_NOPUSH);
 
-  for (int i = 0; i<MATRICES_MAX_LEN; i++)
+  for (int i = 0; i<game->cards.count; i++)
   {
     guTranslate(&gfx_matrices[i].translation, 0.0F, 100.0F, 0.0F);
-    guRotate(&gfx_matrices[i].rotation, (360.0F/(float)MATRICES_MAX_LEN)*(float)i, 0.0F, 0.0F, 1.0F);
+    guRotate(&gfx_matrices[i].rotation, (360.0F/(float)game->cards.count)*(float)i, 0.0F, 0.0F, 1.0F);
     guScale(&gfx_matrices[i].scale, 0.0F, 1.0F, 1.0F);
 
     /* Draw a square  */
-    shadetri(&gfx_matrices[i], i&3);
+    shadetri(&gfx_matrices[i], game->cards.gfx_ids[i]&3);
   }
 
   /* End the construction of the display list  */

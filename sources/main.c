@@ -1,14 +1,17 @@
 #include <nusys.h>
+#include "game.h"
 
 /* Declaration of the prototype */
 void stage00(int);
-void makeDL00(void);
+void makeDL00(Game* game);
 
 /*------------------------
 	Main
 --------------------------*/
 void mainproc(void)
 {
+  init(&game);
+
   /* The initialization of graphic  */
   nuGfxInit();
 
@@ -22,16 +25,15 @@ void mainproc(void)
 }
 
 /*-----------------------------------------------------------------------------
-  The call-back function 
+  The call-back function
 
-  pendingGfx which is passed from Nusystem as the argument of the call-back 
-  function is the total number of RCP tasks that are currently processing 
-  and waiting for the process. 
+  pendingGfx which is passed from Nusystem as the argument of the call-back
+  function is the total number of RCP tasks that are currently processing
+  and waiting for the process.
 -----------------------------------------------------------------------------*/
 void stage00(int pendingGfx)
 {
   /* It provides the display process if there is no RCP task that is processing. */
   if(pendingGfx < 1)
-    makeDL00();		
+    makeDL00(&game);
 }
-
