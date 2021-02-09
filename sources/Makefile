@@ -6,14 +6,17 @@ MAKEMASK = makemask
 NUSYSINCDIR = $(N64KITDIR)/nusys/include
 NUSYSLIBDIR = $(N64KITDIR)/nusys/lib
 
+NUSTDINCDIR = $(N64KITDIR)/nustd/include
+NUSTDLIBDIR = $(N64KITDIR)/nustd/lib
+
 LIB = $(ROOT)/usr/lib
 LPR = $(LIB)/PR
 INC = $(ROOT)/usr/include
 
 LCDEFS = -DNU_DEBUG -DF3DEX_GBI_2
-LCINCS = -I. -I$(NUSYSINCDIR) -I$(ROOT)/usr/include/PR
+LCINCS = -I. -I$(NUSYSINCDIR) -I$(NUSTDINCDIR) -I$(ROOT)/usr/include/PR
 LCOPTS = -G 0
-LDFLAGS = $(MKDEPOPT) -L$(LIB) -L$(NUSYSLIBDIR) -lnusys_d -lgultra_d -L$(GCCDIR)/MIPSE/LIB -lkmc
+LDFLAGS = $(MKDEPOPT) -L$(LIB) -L$(NUSYSLIBDIR) -L$(NUSTDLIBDIR) -lnusys_d -lgultra_d -L$(GCCDIR)/MIPSE/LIB -lkmc
 
 OPTIMIZER =	-g
 
@@ -21,9 +24,7 @@ APP = paniclab.out
 
 TARGETS = paniclab.n64
 
-HFILES = graphic.h
-
-CODEFILES = main.c stage00.c graphic.c gfxinit.c
+CODEFILES = $(wildcard *.c)
 
 CODEOBJECTS = $(CODEFILES:.c=.o)
 
