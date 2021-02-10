@@ -7,6 +7,10 @@
 #include "../assets/graphics/sq_or_st_32x32_CI_4b.h"
 #include "../assets/graphics/sq_bl_dt_32x32_CI_4b.h"
 #include "../assets/graphics/sq_or_dt_32x32_CI_4b.h"
+#include "../assets/graphics/sl_bl_st_32x32_CI_4b.h"
+#include "../assets/graphics/sl_or_st_32x32_CI_4b.h"
+#include "../assets/graphics/sl_bl_dt_32x32_CI_4b.h"
+#include "../assets/graphics/sl_or_dt_32x32_CI_4b.h"
 
 void applyMatrices(Matrices* matrices);
 
@@ -44,7 +48,7 @@ void makeDL00(Game* game)
     guScale(&gfx_matrices[i].scale, 0.0F, 1.0F, 1.0F);
 
     /* Draw a square  */
-    shadetri(&gfx_matrices[i], game->cards.gfx_ids[i]&3);
+    shadetri(&gfx_matrices[i], game->cards.gfx_ids[i]&7);
   }
 
   /* End the construction of the display list  */
@@ -119,6 +123,22 @@ void shadetri(Matrices* matrices, int type)
 
   case 3:
     img = &_pp_table_sq_or_dt_32x32_CI_4b[0];
+    break;
+
+  case 4:
+    img = &_pp_table_sl_bl_st_32x32_CI_4b[0];
+    break;
+
+  case 5:
+    img = &_pp_table_sl_or_st_32x32_CI_4b[0];
+    break;
+
+  case 6:
+    img = &_pp_table_sl_bl_dt_32x32_CI_4b[0];
+    break;
+
+  case 7:
+    img = &_pp_table_sl_or_dt_32x32_CI_4b[0];
     break;
   }
 
