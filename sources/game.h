@@ -16,8 +16,11 @@ typedef struct
 }  Game;
 
 
-// Fill and shuffle cards
+// Fill cards
 void fill(Cards * cards);
+
+// Shuffle cards
+void shuffle(Cards * cards);
 
 // Init the game
 void init(Game *game);

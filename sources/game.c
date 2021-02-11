@@ -13,9 +13,11 @@ void fill(Cards *cards)
     {
         cards->gfx_ids[i] = i;
     }
+}
 
-    // shuffle
-    for (u32 i=count-1; i>0; i--)
+void shuffle(Cards *cards)
+{
+    for (u32 i=cards->count-1; i>0; i--)
     {
         u32 rnd = rand()%(i+1);
         u32 id = cards->gfx_ids[rnd];
@@ -28,5 +30,7 @@ void init(Game * game)
 {
     u64 time = osGetTime();
     srand((unsigned)time);
+
     fill(&game->cards);
+    shuffle(&game->cards);
 }

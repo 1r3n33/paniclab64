@@ -5,6 +5,9 @@
 void stage00(int);
 void makeDL00(Game* game);
 
+// Controller data
+NUContData contdata[1];
+
 /*------------------------
 	Main
 --------------------------*/
@@ -12,16 +15,21 @@ void mainproc(void)
 {
   init(&game);
 
-  /* The initialization of graphic  */
+  // Initialization of graphics
   nuGfxInit();
 
-  /* Register call-back  */
+  // Initialization of controllers
+  nuContInit();
+
+  // Register call-back
   nuGfxFuncSet((NUGfxFunc)stage00);
-  /* The screen display ON */
+
+  // The screen display ON
   nuGfxDisplayOn();
 
   while(1)
-    ;
+  {
+  }
 }
 
 /*-----------------------------------------------------------------------------
@@ -33,7 +41,18 @@ void mainproc(void)
 -----------------------------------------------------------------------------*/
 void stage00(int pendingGfx)
 {
-  /* It provides the display process if there is no RCP task that is processing. */
+  // Read data of controller 1
+  nuContDataGetEx(contdata, 0);
+
+  // Shuffle cards
+  if(contdata[0].trigger & START_BUTTON)
+  {
+    shuffle(&game.cards);
+  }
+
+  // It provides the display process if there is no RCP task that is processing.
   if(pendingGfx < 1)
+  {
     makeDL00(&game);
+  }
 }
