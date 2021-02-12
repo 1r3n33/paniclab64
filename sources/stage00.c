@@ -11,6 +11,7 @@
 #include "../assets/graphics/sl_or_st_32x32_CI_4b.h"
 #include "../assets/graphics/sl_bl_dt_32x32_CI_4b.h"
 #include "../assets/graphics/sl_or_dt_32x32_CI_4b.h"
+#include "../assets/graphics/dice_sq_32x32_CI_4b.h"
 
 void applyMatrices(Matrices* matrices);
 
@@ -41,14 +42,25 @@ void makeDL00(Game* game)
     OS_K0_TO_PHYSICAL(&gfx_dynamic.projection),
 		G_MTX_PROJECTION|G_MTX_LOAD|G_MTX_NOPUSH);
 
-  for (int i = 0; i<game->cards.count; i++)
+  // Draw cards circle
+  for (u32 i = 0; i<game->cards.count; i++)
   {
     guTranslate(&gfx_matrices[i].translation, 0.0F, 100.0F, 0.0F);
     guRotate(&gfx_matrices[i].rotation, (360.0F/(float)game->cards.count)*(float)i, 0.0F, 0.0F, 1.0F);
-    guScale(&gfx_matrices[i].scale, 0.0F, 1.0F, 1.0F);
+    guScale(&gfx_matrices[i].scale, 1.0F, 1.0F, 1.0F);
 
-    /* Draw a square  */
     shadetri(&gfx_matrices[i], game->cards.gfx_ids[i]&7);
+  }
+
+  // Draw dice
+  for (u32 j=0; j<3; j++)
+  {
+    u32 k = game->cards.count+j;
+    guTranslate(&gfx_matrices[k].translation, -40.0F+((float)j*40.0F), 0.0F, 0.0F);
+    guRotate(&gfx_matrices[k].rotation, 0.0F, 0.0F, 0.0F, 1.0F);
+    guScale(&gfx_matrices[k].scale, 1.0F, 1.0F, 1.0F);
+
+    shadetri(&gfx_matrices[k], 8);
   }
 
   /* End the construction of the display list  */
@@ -58,18 +70,18 @@ void makeDL00(Game* game)
   /* Check if all are put in the array  */
   assert(glistp - gfx_glist < GFX_GLIST_LEN);
 
-  /* Activate the RSP task.  Switch display buffers at the end of the task. */
+  /* Activate the RSP task. Switch display buffers at the end of the task. */
   nuGfxTaskStart(gfx_glist,
 		 (s32)(glistp - gfx_glist) * sizeof (Gfx),
 		 NU_GFX_UCODE_F3DEX , NU_SC_SWAPBUFFER);
 }
 
-/* The vertex coordinate  */
+// Vertex: xyz, uv, rgba
 static Vtx shade_vtx[] =  {
-        {        -16,  16, -5, 0, 31<<6,  0<<6, 0x00, 0xff, 0x00, 0xff	},
-        {         16,  16, -5, 0,  0<<0,  0<<6, 0x00, 0x00, 0x00, 0xff	},
-        {         16, -16, -5, 0,  0<<6, 31<<6, 0x00, 0x00, 0xff, 0xff	},
-        {        -16, -16, -5, 0, 31<<6, 31<<6, 0xff, 0x00, 0x00, 0xff	},
+  { -16,  16, -5, 0,  0<<6,  0<<6, 0x00, 0xff, 0x00, 0xff },
+  {  16,  16, -5, 0, 31<<6,  0<<6, 0x00, 0x00, 0x00, 0xff },
+  {  16, -16, -5, 0, 31<<6, 31<<6, 0x00, 0x00, 0xff, 0xff },
+  { -16, -16, -5, 0,  0<<6, 31<<6, 0xff, 0x00, 0x00, 0xff },
 };
 
 void applyMatrices(Matrices* matrices)
@@ -139,6 +151,10 @@ void shadetri(Matrices* matrices, int type)
 
   case 7:
     img = &_pp_table_sl_or_dt_32x32_CI_4b[0];
+    break;
+
+  case 8:
+    img = &_pp_table_dice_sq_32x32_CI_4b[0];
     break;
   }
 

@@ -9,7 +9,7 @@
 #define GFX_GLIST_LEN 2048
 
 // Matrices max length
-#define MATRICES_MAX_LEN 16
+#define MATRICES_MAX_LEN 32
 
 /*-------------------------- define structure ------------------------------ */
 /* The projection-matrix structure  */
