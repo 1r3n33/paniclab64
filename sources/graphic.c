@@ -1,13 +1,3 @@
-/*
-   graphic.c
-
-   The general graphic routine (the initialization and frame buffer clear)
-   and the definition of the external variable
-
-   Copyright (C) 1997-1999, NINTENDO Co,Ltd.
-
-*/
-
 #include <nusys.h>
 #include "graphic.h"
 
@@ -43,21 +33,54 @@ void gfxRCPInit(void)
 ----------------------------------------------------------------------------*/
 void gfxClearCfb(void)
 {
-  /* Clear the Z-buffer  */
-  gDPSetDepthImage(glistp++, OS_K0_TO_PHYSICAL(nuGfxZBuffer));
-  gDPSetCycleType(glistp++, G_CYC_FILL);
-  gDPSetColorImage(glistp++, G_IM_FMT_RGBA, G_IM_SIZ_16b,SCREEN_WD,
-		   OS_K0_TO_PHYSICAL(nuGfxZBuffer));
-  gDPSetFillColor(glistp++,(GPACK_ZDZ(G_MAXFBZ,0) << 16 |
-			       GPACK_ZDZ(G_MAXFBZ,0)));
-  gDPFillRectangle(glistp++, 0, 0, SCREEN_WD-1, SCREEN_HT-1);
+  gDPSetCycleType(
+    glistp++,
+    G_CYC_FILL);
+
+  // Clear the Z-buffer
+  gDPSetDepthImage(
+    glistp++,
+    OS_K0_TO_PHYSICAL(nuGfxZBuffer));
+
+  gDPSetColorImage(
+    glistp++,
+    G_IM_FMT_RGBA,
+    G_IM_SIZ_16b,
+    SCREEN_WD,
+		OS_K0_TO_PHYSICAL(nuGfxZBuffer));
+
+  gDPSetFillColor(
+    glistp++,
+    (GPACK_ZDZ(G_MAXFBZ, 0) << 16 | GPACK_ZDZ(G_MAXFBZ, 0)));
+
+  gDPFillRectangle(
+    glistp++,
+    0,
+    0,
+    SCREEN_WD-1,
+    SCREEN_HT-1);
+
   gDPPipeSync(glistp++);
 
-    /* Clear the frame buffer  */
-  gDPSetColorImage(glistp++, G_IM_FMT_RGBA, G_IM_SIZ_16b, SCREEN_WD,
-		   osVirtualToPhysical(nuGfxCfb_ptr));
-  gDPSetFillColor(glistp++, (GPACK_RGBA5551(0, 0, 0, 1) << 16 |
-				GPACK_RGBA5551(0, 0, 0, 1)));
-  gDPFillRectangle(glistp++, 0, 0, SCREEN_WD-1, SCREEN_HT-1);
+  // Clear the frame buffer
+  gDPSetColorImage(
+    glistp++,
+    G_IM_FMT_RGBA,
+    G_IM_SIZ_16b,
+    SCREEN_WD,
+		osVirtualToPhysical(nuGfxCfb_ptr));
+
+  u16 bkgColor = GPACK_RGBA5551(0xCA, 0xCE, 0x20, 1);
+  gDPSetFillColor(
+    glistp++,
+    (bkgColor << 16 | bkgColor));
+
+  gDPFillRectangle(
+    glistp++,
+    0,
+    0,
+    SCREEN_WD-1,
+    SCREEN_HT-1);
+
   gDPPipeSync(glistp++);
 }
