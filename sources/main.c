@@ -9,11 +9,12 @@ void makeDL00(Game* game);
 NUContData contdata[1];
 
 /*------------------------
-	Main
+  Main
 --------------------------*/
 void mainproc(void)
 {
-  init(&game);
+  init_game(&game);
+  shuffle_game(&game);
 
   // Initialization of graphics
   nuGfxInit();
@@ -47,7 +48,7 @@ void stage00(int pendingGfx)
   // Shuffle cards
   if(contdata[0].trigger & START_BUTTON)
   {
-    shuffle(&game.cards);
+    shuffle_game(&game);
   }
 
   // It provides the display process if there is no RCP task that is processing.

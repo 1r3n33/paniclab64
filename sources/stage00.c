@@ -12,8 +12,11 @@
 #include "../assets/graphics/sl_bl_dt_32x32_CI_4b.h"
 #include "../assets/graphics/sl_or_dt_32x32_CI_4b.h"
 #include "../assets/graphics/dice_sq_32x32_CI_4b.h"
+#include "../assets/graphics/dice_sl_32x32_CI_4b.h"
 #include "../assets/graphics/dice_st_32x32_CI_4b.h"
+#include "../assets/graphics/dice_dt_32x32_CI_4b.h"
 #include "../assets/graphics/dice_bl_32x32_CI_4b.h"
+#include "../assets/graphics/dice_or_32x32_CI_4b.h"
 
 void applyMatrices(Matrices* matrices);
 
@@ -55,14 +58,14 @@ void makeDL00(Game* game)
   }
 
   // Draw dice
-  for (u32 j=0; j<3; j++)
+  for (u32 j=0; j<game->dice.count; j++)
   {
     u32 k = game->cards.count+j;
     guTranslate(&gfx_matrices[k].translation, -40.0F+((float)j*40.0F), 0.0F, 0.0F);
     guRotate(&gfx_matrices[k].rotation, 0.0F, 0.0F, 0.0F, 1.0F);
     guScale(&gfx_matrices[k].scale, 0.8F, 0.8F, 0.8F);
 
-    shadetri(&gfx_matrices[k], 8+j);
+    shadetri(&gfx_matrices[k], 8+((j*2)+game->dice.gfx_ids[j]));
   }
 
   /* End the construction of the display list  */
@@ -165,11 +168,23 @@ void shadetri(Matrices* matrices, int type)
     break;
 
   case 9:
-    img = &_pp_table_dice_st_32x32_CI_4b[0];
+    img = &_pp_table_dice_sl_32x32_CI_4b[0];
     break;
 
   case 10:
+    img = &_pp_table_dice_st_32x32_CI_4b[0];
+    break;
+
+  case 11:
+    img = &_pp_table_dice_dt_32x32_CI_4b[0];
+    break;
+
+  case 12:
     img = &_pp_table_dice_bl_32x32_CI_4b[0];
+    break;
+
+  case 13:
+    img = &_pp_table_dice_or_32x32_CI_4b[0];
     break;
   }
 

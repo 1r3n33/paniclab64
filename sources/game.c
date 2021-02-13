@@ -5,7 +5,13 @@
 
 Game game;
 
-void fill(Cards *cards)
+void init_game(Game* game)
+{
+    init_cards(&game->cards);
+    init_dice(&game->dice);
+}
+
+void init_cards(Cards* cards)
 {
     u32 count = 16; // Number of cards
     cards->count = count;
@@ -15,7 +21,26 @@ void fill(Cards *cards)
     }
 }
 
-void shuffle(Cards *cards)
+void init_dice(Dice* dice)
+{
+    u32 count = 3; // Number of dice
+    dice->count = count;
+
+    dice->gfx_ids[DICE_SHAPE] = SHAPE_SQUID;
+    dice->gfx_ids[DICE_PATTERN] = PATTERN_STRIPES;
+    dice->gfx_ids[DICE_COLOR] = COLOR_BLUE;
+}
+
+void shuffle_game(Game* game)
+{
+    u64 time = osGetTime();
+    srand((unsigned)time);
+
+    shuffle_cards(&game->cards);
+    shuffle_dice(&game->dice);
+}
+
+void shuffle_cards(Cards* cards)
 {
     for (u32 i=cards->count-1; i>0; i--)
     {
@@ -26,11 +51,10 @@ void shuffle(Cards *cards)
     }
 }
 
-void init(Game * game)
+void shuffle_dice(Dice* dice)
 {
-    u64 time = osGetTime();
-    srand((unsigned)time);
-
-    fill(&game->cards);
-    shuffle(&game->cards);
+    u32 rnd = rand(); // Use random 3 lsb as 0 or 1 enum
+    dice->gfx_ids[DICE_SHAPE] = (rnd&1)>>0;
+    dice->gfx_ids[DICE_PATTERN] = (rnd&2)>>1;
+    dice->gfx_ids[DICE_COLOR] = (rnd&4)>>2;
 }
