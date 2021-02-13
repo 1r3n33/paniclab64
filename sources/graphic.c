@@ -47,7 +47,7 @@ void gfxClearCfb(void)
     G_IM_FMT_RGBA,
     G_IM_SIZ_16b,
     SCREEN_WD,
-		OS_K0_TO_PHYSICAL(nuGfxZBuffer));
+    OS_K0_TO_PHYSICAL(nuGfxZBuffer));
 
   gDPSetFillColor(
     glistp++,
@@ -68,7 +68,7 @@ void gfxClearCfb(void)
     G_IM_FMT_RGBA,
     G_IM_SIZ_16b,
     SCREEN_WD,
-		osVirtualToPhysical(nuGfxCfb_ptr));
+    osVirtualToPhysical(nuGfxCfb_ptr));
 
   u16 bkgColor = GPACK_RGBA5551(0xCA, 0xCE, 0x20, 1);
   gDPSetFillColor(

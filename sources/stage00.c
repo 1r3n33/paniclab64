@@ -12,6 +12,8 @@
 #include "../assets/graphics/sl_bl_dt_32x32_CI_4b.h"
 #include "../assets/graphics/sl_or_dt_32x32_CI_4b.h"
 #include "../assets/graphics/dice_sq_32x32_CI_4b.h"
+#include "../assets/graphics/dice_st_32x32_CI_4b.h"
+#include "../assets/graphics/dice_bl_32x32_CI_4b.h"
 
 void applyMatrices(Matrices* matrices);
 
@@ -32,15 +34,15 @@ void makeDL00(Game* game)
 
   // Compute projection matrix
   guOrtho(&gfx_dynamic.projection,
-	  -(float)SCREEN_WD/2.0F, (float)SCREEN_WD/2.0F,
-	  -(float)SCREEN_HT/2.0F, (float)SCREEN_HT/2.0F,
-	  1.0F, 10.0F, 1.0F);
+    -(float)SCREEN_WD/2.0F, (float)SCREEN_WD/2.0F,
+    -(float)SCREEN_HT/2.0F, (float)SCREEN_HT/2.0F,
+    1.0F, 10.0F, 1.0F);
 
   // Set projection matrix
   gSPMatrix(
     glistp++,
     OS_K0_TO_PHYSICAL(&gfx_dynamic.projection),
-		G_MTX_PROJECTION|G_MTX_LOAD|G_MTX_NOPUSH);
+    G_MTX_PROJECTION|G_MTX_LOAD|G_MTX_NOPUSH);
 
   // Draw cards circle
   for (u32 i = 0; i<game->cards.count; i++)
@@ -58,9 +60,9 @@ void makeDL00(Game* game)
     u32 k = game->cards.count+j;
     guTranslate(&gfx_matrices[k].translation, -40.0F+((float)j*40.0F), 0.0F, 0.0F);
     guRotate(&gfx_matrices[k].rotation, 0.0F, 0.0F, 0.0F, 1.0F);
-    guScale(&gfx_matrices[k].scale, 1.0F, 1.0F, 1.0F);
+    guScale(&gfx_matrices[k].scale, 0.8F, 0.8F, 0.8F);
 
-    shadetri(&gfx_matrices[k], 8);
+    shadetri(&gfx_matrices[k], 8+j);
   }
 
   /* End the construction of the display list  */
@@ -72,8 +74,8 @@ void makeDL00(Game* game)
 
   /* Activate the RSP task. Switch display buffers at the end of the task. */
   nuGfxTaskStart(gfx_glist,
-		 (s32)(glistp - gfx_glist) * sizeof (Gfx),
-		 NU_GFX_UCODE_F3DEX , NU_SC_SWAPBUFFER);
+     (s32)(glistp - gfx_glist) * sizeof (Gfx),
+     NU_GFX_UCODE_F3DEX , NU_SC_SWAPBUFFER);
 }
 
 // Vertex: xyz, uv, rgba
@@ -89,12 +91,17 @@ void applyMatrices(Matrices* matrices)
   gSPMatrix(
     glistp++,
     OS_K0_TO_PHYSICAL(&(matrices->rotation)),
-		G_MTX_MODELVIEW|G_MTX_LOAD|G_MTX_NOPUSH);
+    G_MTX_MODELVIEW|G_MTX_LOAD|G_MTX_NOPUSH);
 
   gSPMatrix(
     glistp++,
     OS_K0_TO_PHYSICAL(&(matrices->translation)),
-		G_MTX_MODELVIEW|G_MTX_MUL|G_MTX_NOPUSH);
+    G_MTX_MODELVIEW|G_MTX_MUL|G_MTX_NOPUSH);
+
+  gSPMatrix(
+    glistp++,
+    OS_K0_TO_PHYSICAL(&(matrices->scale)),
+    G_MTX_MODELVIEW|G_MTX_MUL|G_MTX_NOPUSH);
 }
 
 /* Draw a square  */
@@ -155,6 +162,14 @@ void shadetri(Matrices* matrices, int type)
 
   case 8:
     img = &_pp_table_dice_sq_32x32_CI_4b[0];
+    break;
+
+  case 9:
+    img = &_pp_table_dice_st_32x32_CI_4b[0];
+    break;
+
+  case 10:
+    img = &_pp_table_dice_bl_32x32_CI_4b[0];
     break;
   }
 
