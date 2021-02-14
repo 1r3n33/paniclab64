@@ -9,6 +9,7 @@ void init_game(Game* game)
 {
     init_cards(&game->cards);
     init_dice(&game->dice);
+    init_cursor(&game->cursor);
 }
 
 void init_cards(Cards* cards)
@@ -29,6 +30,12 @@ void init_dice(Dice* dice)
     dice->gfx_ids[DICE_SHAPE] = SHAPE_SQUID;
     dice->gfx_ids[DICE_PATTERN] = PATTERN_STRIPES;
     dice->gfx_ids[DICE_COLOR] = COLOR_BLUE;
+}
+
+void init_cursor(Cursor* cursor)
+{
+    cursor->card_count = 16; // Number of cards
+    cursor->cur_pos = 0;
 }
 
 void shuffle_game(Game* game)

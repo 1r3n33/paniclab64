@@ -45,6 +45,27 @@ void stage00(int pendingGfx)
   // Read data of controller 1
   nuContDataGetEx(contdata, 0);
 
+  if (contdata[0].trigger & L_JPAD)
+  {
+    game.cursor.cur_pos++;
+    if (game.cursor.cur_pos >= game.cursor.card_count)
+    {
+      game.cursor.cur_pos = 0;
+    }
+  }
+
+  if (contdata[0].trigger & R_JPAD)
+  {
+    if (game.cursor.cur_pos == 0)
+    {
+      game.cursor.cur_pos = game.cursor.card_count-1;
+    }
+    else
+    {
+      game.cursor.cur_pos--;
+    }
+  }
+
   // Shuffle cards
   if(contdata[0].trigger & START_BUTTON)
   {

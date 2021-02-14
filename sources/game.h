@@ -35,11 +35,19 @@ typedef struct
     u32 gfx_ids[MAX_DICE];
 } Dice;
 
+// Cursor
+typedef struct
+{
+    u32 card_count;
+    u32 cur_pos;
+} Cursor;
+
 // Game
 typedef struct
 {
-    Cards cards;
-    Dice  dice;
+    Cards  cards;
+    Dice   dice;
+    Cursor cursor;
 } Game;
 
 // Init the game
@@ -50,6 +58,9 @@ void init_cards(Cards* cards);
 
 // Init dice
 void init_dice(Dice* dice);
+
+// Init cursor
+void init_cursor(Cursor* cursor);
 
 // Shuffle game
 void shuffle_game(Game* game);

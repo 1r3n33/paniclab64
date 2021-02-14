@@ -22,6 +22,8 @@ void applyMatrices(Matrices* matrices);
 
 void shadetri(Matrices* matrices, int type);
 
+void renderCursor(Matrices* m);
+
 /* Make the display list and activate the task. */
 
 void makeDL00(Game* game)
@@ -68,6 +70,9 @@ void makeDL00(Game* game)
     shadetri(&gfx_matrices[k], 8+((j*2)+game->dice.gfx_ids[j]));
   }
 
+  // Draw cursor
+  renderCursor(&gfx_matrices[game->cursor.cur_pos]);
+
   /* End the construction of the display list  */
   gDPFullSync(glistp++);
   gSPEndDisplayList(glistp++);
@@ -82,11 +87,42 @@ void makeDL00(Game* game)
 }
 
 // Vertex: xyz, uv, rgba
-static Vtx shade_vtx[] =  {
+static Vtx quad_vtx[] =  {
   { -16,  16, -5, 0,  0<<6,  0<<6, 0x00, 0xff, 0x00, 0xff },
   {  16,  16, -5, 0, 31<<6,  0<<6, 0x00, 0x00, 0x00, 0xff },
   {  16, -16, -5, 0, 31<<6, 31<<6, 0x00, 0x00, 0xff, 0xff },
   { -16, -16, -5, 0,  0<<6, 31<<6, 0xff, 0x00, 0x00, 0xff },
+};
+
+static Vtx cursor_vtx[] =  {
+  // Top Left
+  { -20,  20, -4, 0, 0, 0, 0xff, 0x00, 0x00, 0xff },
+  { -16,  20, -4, 0, 0, 0, 0xff, 0x00, 0x00, 0xff },
+  { -16,  18, -4, 0, 0, 0, 0xff, 0x00, 0x00, 0xff },
+  { -18,  18, -4, 0, 0, 0, 0xff, 0x00, 0x00, 0xff },
+  { -18,  16, -4, 0, 0, 0, 0xff, 0x00, 0x00, 0xff },
+  { -20,  16, -4, 0, 0, 0, 0xff, 0x00, 0x00, 0xff },
+  // Top Right
+  {  20,  20, -4, 0, 0, 0, 0xff, 0x00, 0x00, 0xff },
+  {  16,  20, -4, 0, 0, 0, 0xff, 0x00, 0x00, 0xff },
+  {  16,  18, -4, 0, 0, 0, 0xff, 0x00, 0x00, 0xff },
+  {  18,  18, -4, 0, 0, 0, 0xff, 0x00, 0x00, 0xff },
+  {  18,  16, -4, 0, 0, 0, 0xff, 0x00, 0x00, 0xff },
+  {  20,  16, -4, 0, 0, 0, 0xff, 0x00, 0x00, 0xff },
+  // Bottom Left
+  { -20, -20, -4, 0, 0, 0, 0xff, 0x00, 0x00, 0xff },
+  { -16, -20, -4, 0, 0, 0, 0xff, 0x00, 0x00, 0xff },
+  { -16, -18, -4, 0, 0, 0, 0xff, 0x00, 0x00, 0xff },
+  { -18, -18, -4, 0, 0, 0, 0xff, 0x00, 0x00, 0xff },
+  { -18, -16, -4, 0, 0, 0, 0xff, 0x00, 0x00, 0xff },
+  { -20, -16, -4, 0, 0, 0, 0xff, 0x00, 0x00, 0xff },
+  // Bottom Right
+  {  20, -20, -4, 0, 0, 0, 0xff, 0x00, 0x00, 0xff },
+  {  16, -20, -4, 0, 0, 0, 0xff, 0x00, 0x00, 0xff },
+  {  16, -18, -4, 0, 0, 0, 0xff, 0x00, 0x00, 0xff },
+  {  18, -18, -4, 0, 0, 0, 0xff, 0x00, 0x00, 0xff },
+  {  18, -16, -4, 0, 0, 0, 0xff, 0x00, 0x00, 0xff },
+  {  20, -16, -4, 0, 0, 0, 0xff, 0x00, 0x00, 0xff },
 };
 
 void applyMatrices(Matrices* matrices)
@@ -112,7 +148,7 @@ void shadetri(Matrices* matrices, int type)
 {
   applyMatrices(matrices);
 
-  gSPVertex(glistp++,&(shade_vtx[0]),4, 0);
+  gSPVertex(glistp++,&(quad_vtx[0]),4, 0);
 
   gDPPipeSync(glistp++);
   gDPSetCycleType(glistp++,G_CYC_1CYCLE);
@@ -216,4 +252,35 @@ void shadetri(Matrices* matrices, int type)
   gSPSetGeometryMode(glistp++,G_SHADE| G_SHADING_SMOOTH);
 
   gSP2Triangles(glistp++,0,1,2,0,0,2,3,0);
+}
+
+// Render cursor
+void renderCursor(Matrices* m)
+{
+  applyMatrices(m);
+
+  gSPVertex(glistp++, &(cursor_vtx[0]), 24, 0);
+
+  gDPPipeSync(glistp++);
+  gDPSetCycleType(glistp++,G_CYC_1CYCLE);
+
+  gSPTexture(glistp++, 0, 0, 0, 0, G_OFF);
+  gDPSetCombineMode(glistp++, G_CC_SHADE, G_CC_SHADE);
+
+  gDPSetRenderMode(glistp++,G_RM_AA_OPA_SURF, G_RM_AA_OPA_SURF2);
+  gSPClearGeometryMode(glistp++,0xFFFFFFFF);
+  gSPSetGeometryMode(glistp++,G_SHADE| G_SHADING_SMOOTH);
+
+  // Top Left
+  gSP2Triangles(glistp++, 0, 1, 2, 0, 0, 2, 3, 0);
+  gSP2Triangles(glistp++, 0, 3, 4, 0, 0, 4, 5, 0);
+  // Top Right
+  gSP2Triangles(glistp++, 6,  8, 7, 0, 6,  9, 8,  0);
+  gSP2Triangles(glistp++, 6, 10, 9, 0, 6, 11, 10, 0);
+  // Bottom Left
+  gSP2Triangles(glistp++, 12, 14, 13, 0, 12, 15, 14, 0);
+  gSP2Triangles(glistp++, 12, 16, 15, 0, 12, 17, 16, 0);
+  // Bottom Right
+  gSP2Triangles(glistp++, 18, 19, 20, 0, 18, 20, 21, 0);
+  gSP2Triangles(glistp++, 18, 21, 22, 0, 18, 22, 23, 0);
 }
