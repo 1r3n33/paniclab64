@@ -24,23 +24,21 @@ APP = paniclab.out
 
 TARGETS = paniclab.n64
 
-CODEFILES = $(wildcard *.c)
+CODEFILES = $(wildcard *.c) $(wildcard game/*.c)
 
 CODEOBJECTS = $(CODEFILES:.c=.o)
 
-DATAFILES =
-
-DATAOBJECTS = $(DATAFILES:.c=.o)
-
 CODESEGMENT = codesegment.o
 
-OBJECTS = $(CODESEGMENT) $(DATAOBJECTS)
+OBJECTS = $(CODESEGMENT)
 
 default: $(TARGETS)
 
 include $(COMMONRULES)
 clean:
 	$(RM) -f $(OBJECTS) $(CODEOBJECTS) $(APP) $(TARGETS) a.out
+.c.o:
+	$(CC) $(CFLAGS) $< -o $@
 
 $(CODESEGMENT):	$(CODEOBJECTS)
 	$(LD) -o $(CODESEGMENT) -r $(CODEOBJECTS) $(NUSYSLIBDIR)/nusys.o $(LDFLAGS)

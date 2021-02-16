@@ -1,6 +1,6 @@
 #include <assert.h>
 #include <nusys.h>
-#include "game.h"
+#include "game/game.h"
 #include "graphic.h"
 
 #include "../assets/graphics/sq_bl_st_32x32_CI_4b.h"

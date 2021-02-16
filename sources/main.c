@@ -1,5 +1,5 @@
 #include <nusys.h>
-#include "game.h"
+#include "game/game.h"
 
 /* Declaration of the prototype */
 void stage00(int);
