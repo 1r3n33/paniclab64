@@ -22,7 +22,7 @@ OPTIMIZER =	-g
 
 APP = paniclab.out
 
-TARGETS = paniclab.n64
+TARGET = paniclab.n64
 
 CODEFILES = $(wildcard *.c) $(wildcard game/*.c)
 
@@ -30,19 +30,17 @@ CODEOBJECTS = $(CODEFILES:.c=.o)
 
 CODESEGMENT = codesegment.o
 
-OBJECTS = $(CODESEGMENT)
+default: $(TARGET)
 
-default: $(TARGETS)
-
-include $(COMMONRULES)
 clean:
-	$(RM) -f $(OBJECTS) $(CODEOBJECTS) $(APP) $(TARGETS) a.out
+	$(RM) -f $(CODESEGMENT) $(CODEOBJECTS) $(APP) $(TARGET) a.out
+
 .c.o:
 	$(CC) $(CFLAGS) $< -o $@
 
 $(CODESEGMENT):	$(CODEOBJECTS)
 	$(LD) -o $(CODESEGMENT) -r $(CODEOBJECTS) $(NUSYSLIBDIR)/nusys.o $(LDFLAGS)
 
-$(TARGETS):	$(OBJECTS)
-	$(MAKEROM) -s16 spec -I$(NUSYSINCDIR) -r $(TARGETS) -e $(APP)
-	$(MAKEMASK) $(TARGETS)
+$(TARGET): $(CODESEGMENT)
+	$(MAKEROM) -s16 spec -I$(NUSYSINCDIR) -r $(TARGET) -e $(APP)
+	$(MAKEMASK) $(TARGET)
