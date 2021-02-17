@@ -3,7 +3,7 @@
 
 /* Declaration of the prototype */
 void stage00(int);
-void makeDL00(Game* game);
+void makeDL00(Game *game);
 
 // Controller data
 NUContData contdata[1];
@@ -28,7 +28,7 @@ void mainproc(void)
   // The screen display ON
   nuGfxDisplayOn();
 
-  while(1)
+  while (1)
   {
   }
 }
@@ -47,33 +47,22 @@ void stage00(int pendingGfx)
 
   if (contdata[0].trigger & L_JPAD)
   {
-    game.cursor.cur_pos++;
-    if (game.cursor.cur_pos >= game.cursor.card_count)
-    {
-      game.cursor.cur_pos = 0;
-    }
+    move_cursor(&game.cursor, 1);
   }
 
   if (contdata[0].trigger & R_JPAD)
   {
-    if (game.cursor.cur_pos == 0)
-    {
-      game.cursor.cur_pos = game.cursor.card_count-1;
-    }
-    else
-    {
-      game.cursor.cur_pos--;
-    }
+    move_cursor(&game.cursor, -1);
   }
 
   // Shuffle cards
-  if(contdata[0].trigger & START_BUTTON)
+  if (contdata[0].trigger & START_BUTTON)
   {
     shuffle_game(&game);
   }
 
   // It provides the display process if there is no RCP task that is processing.
-  if(pendingGfx < 1)
+  if (pendingGfx < 1)
   {
     makeDL00(&game);
   }
