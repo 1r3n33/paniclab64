@@ -18,7 +18,7 @@ LCINCS = -I. -I$(NUSYSINCDIR) -I$(NUSTDINCDIR) -I$(ROOT)/usr/include/PR
 LCOPTS = -G 0
 LDFLAGS = $(MKDEPOPT) -L$(LIB) -L$(NUSYSLIBDIR) -L$(NUSTDLIBDIR) -lnusys_d -lgultra_d -L$(GCCDIR)/MIPSE/LIB -lkmc
 
-OPTIMIZER =	-g
+OPTIMIZER = -g
 
 APP = paniclab.out
 
@@ -38,7 +38,7 @@ clean:
 .c.o:
 	$(CC) $(CFLAGS) $< -o $@
 
-$(CODESEGMENT):	$(CODEOBJECTS)
+$(CODESEGMENT): $(CODEOBJECTS)
 	$(LD) -o $(CODESEGMENT) -r $(CODEOBJECTS) $(NUSYSLIBDIR)/nusys.o $(LDFLAGS)
 
 $(TARGET): $(CODESEGMENT)
