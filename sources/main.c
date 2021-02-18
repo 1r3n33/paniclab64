@@ -45,6 +45,16 @@ void stage00(int pendingGfx)
   // Read data of controller 1
   nuContDataGetEx(contdata, 0);
 
+  if (contdata[0].trigger & A_BUTTON)
+  {
+    u32 res = check_selection(&game);
+    if (res > 0)
+    {
+      reset_cursor(&game.cursor);
+      shuffle_game(&game);
+    }
+  }
+
   if (contdata[0].trigger & L_JPAD)
   {
     move_cursor(&game.cursor, 1);

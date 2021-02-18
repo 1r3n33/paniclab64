@@ -12,6 +12,9 @@ typedef struct
 // Init cursor
 void init_cursor(Cursor *cursor);
 
+// Reset cursor
+void reset_cursor(Cursor *cursor);
+
 // Move cursor
 void move_cursor(Cursor *cursor, s32 dir);
 

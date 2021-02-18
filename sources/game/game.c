@@ -18,7 +18,8 @@ void init_cards(Cards *cards)
     cards->count = count;
     for (u32 i = 0; i < count; i++)
     {
-        cards->gfx_ids[i] = i;
+        cards->flags[i] = i & 7;
+        cards->gfx_ids[i] = i & 7;
     }
 }
 
@@ -46,16 +47,30 @@ void shuffle_cards(Cards *cards)
     for (u32 i = cards->count - 1; i > 0; i--)
     {
         u32 rnd = rand() % (i + 1);
-        u32 id = cards->gfx_ids[rnd];
+
+        u32 flags = cards->flags[rnd];
+        u32 gfx_id = cards->gfx_ids[rnd];
+
+        cards->flags[rnd] = cards->flags[i];
+        cards->flags[i] = flags;
+
         cards->gfx_ids[rnd] = cards->gfx_ids[i];
-        cards->gfx_ids[i] = id;
+        cards->gfx_ids[i] = gfx_id;
     }
 }
 
 void shuffle_dice(Dice *dice)
 {
     u32 rnd = rand(); // Use random 3 lsb as 0 or 1 enum
+    dice->flags = rnd & 7;
     dice->gfx_ids[DICE_SHAPE] = (rnd & 1) >> 0;
     dice->gfx_ids[DICE_PATTERN] = (rnd & 2) >> 1;
     dice->gfx_ids[DICE_COLOR] = (rnd & 4) >> 2;
+}
+
+int check_selection(Game *game)
+{
+    u32 cur = game->cursor.cur_pos;
+    u32 flags = game->cards.flags[cur];
+    return game->dice.flags == flags;
 }

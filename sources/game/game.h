@@ -20,6 +20,7 @@
 typedef struct
 {
     u32 count;
+    u32 flags[MAX_CARDS]; // shape-pattern-color
     u32 gfx_ids[MAX_CARDS];
 } Cards;
 
@@ -33,6 +34,7 @@ typedef struct
 typedef struct
 {
     u32 count;
+    u32 flags; // shape-pattern-color
     u32 gfx_ids[MAX_DICE];
 } Dice;
 
@@ -61,6 +63,9 @@ void shuffle_cards(Cards *cards);
 
 // Shuffle dice
 void shuffle_dice(Dice *dice);
+
+// Verify that cursor selection match dice configuration
+int check_selection(Game *game);
 
 extern Game game;
 
