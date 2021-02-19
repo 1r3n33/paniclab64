@@ -3,6 +3,7 @@
 
 #include <nusys.h>
 #include "cursor.h"
+#include "dice.h"
 
 // Alien properties
 #define SHAPE_SQUID 0  // one eyed
@@ -24,20 +25,6 @@ typedef struct
     u32 gfx_ids[MAX_CARDS];
 } Cards;
 
-// Dice
-#define DICE_SHAPE 0
-#define DICE_PATTERN 1
-#define DICE_COLOR 2
-
-#define MAX_DICE 4
-
-typedef struct
-{
-    u32 count;
-    u32 flags; // shape-pattern-color
-    u32 gfx_ids[MAX_DICE];
-} Dice;
-
 // Game
 typedef struct
 {
@@ -52,17 +39,11 @@ void init_game(Game *game);
 // Init cards
 void init_cards(Cards *cards);
 
-// Init dice
-void init_dice(Dice *dice);
-
 // Shuffle game
 void shuffle_game(Game *game);
 
 // Shuffle cards
 void shuffle_cards(Cards *cards);
-
-// Shuffle dice
-void shuffle_dice(Dice *dice);
 
 // Verify that cursor selection match dice configuration
 int check_selection(Game *game);

@@ -23,16 +23,6 @@ void init_cards(Cards *cards)
     }
 }
 
-void init_dice(Dice *dice)
-{
-    u32 count = 3; // Number of dice
-    dice->count = count;
-
-    dice->gfx_ids[DICE_SHAPE] = SHAPE_SQUID;
-    dice->gfx_ids[DICE_PATTERN] = PATTERN_STRIPES;
-    dice->gfx_ids[DICE_COLOR] = COLOR_BLUE;
-}
-
 void shuffle_game(Game *game)
 {
     u64 time = osGetTime();
@@ -57,15 +47,6 @@ void shuffle_cards(Cards *cards)
         cards->gfx_ids[rnd] = cards->gfx_ids[i];
         cards->gfx_ids[i] = gfx_id;
     }
-}
-
-void shuffle_dice(Dice *dice)
-{
-    u32 rnd = rand(); // Use random 3 lsb as 0 or 1 enum
-    dice->flags = rnd & 7;
-    dice->gfx_ids[DICE_SHAPE] = (rnd & 1) >> 0;
-    dice->gfx_ids[DICE_PATTERN] = (rnd & 2) >> 1;
-    dice->gfx_ids[DICE_COLOR] = (rnd & 4) >> 2;
 }
 
 int check_selection(Game *game)
