@@ -17,10 +17,18 @@
 #include "../assets/graphics/dice_dt_32x32_CI_4b.h"
 #include "../assets/graphics/dice_bl_32x32_CI_4b.h"
 #include "../assets/graphics/dice_or_32x32_CI_4b.h"
+#include "../assets/graphics/dice_rb_32x32_CI_4b.h"
+#include "../assets/graphics/dice_rw_32x32_CI_4b.h"
+#include "../assets/graphics/dice_yb_32x32_CI_4b.h"
+#include "../assets/graphics/dice_yw_32x32_CI_4b.h"
+#include "../assets/graphics/dice_bb_32x32_CI_4b.h"
+#include "../assets/graphics/dice_bw_32x32_CI_4b.h"
 
 void applyMatrices(Matrices *matrices);
 
 void shadetri(Matrices *matrices, int type);
+
+void renderDice(Dice *dice, u32 id);
 
 void renderCursor(Matrices *m);
 
@@ -60,15 +68,7 @@ void makeDL00(Game *game)
   }
 
   // Draw dice
-  for (u32 j = 0; j < game->dice.count; j++)
-  {
-    u32 k = game->cards.count + j;
-    guTranslate(&gfx_matrices[k].translation, -40.0F + ((float)j * 40.0F), 0.0F, 0.0F);
-    guRotate(&gfx_matrices[k].rotation, 0.0F, 0.0F, 0.0F, 1.0F);
-    guScale(&gfx_matrices[k].scale, 0.8F, 0.8F, 0.8F);
-
-    shadetri(&gfx_matrices[k], 8 + ((j * 2) + game->dice.gfx_ids[j]));
-  }
+  renderDice(&game->dice, game->cards.count);
 
   // Draw cursor
   renderCursor(&gfx_matrices[game->cursor.cur_pos]);
@@ -222,6 +222,30 @@ void shadetri(Matrices *matrices, int type)
   case 13:
     img = &_pp_table_dice_or_32x32_CI_4b[0];
     break;
+
+  case 14:
+    img = &_pp_table_dice_rb_32x32_CI_4b[0];
+    break;
+
+  case 15:
+    img = &_pp_table_dice_rw_32x32_CI_4b[0];
+    break;
+
+  case 16:
+    img = &_pp_table_dice_yb_32x32_CI_4b[0];
+    break;
+
+  case 17:
+    img = &_pp_table_dice_yw_32x32_CI_4b[0];
+    break;
+
+  case 18:
+    img = &_pp_table_dice_bb_32x32_CI_4b[0];
+    break;
+
+  case 19:
+    img = &_pp_table_dice_bw_32x32_CI_4b[0];
+    break;
   }
 
   gDPLoadTextureBlock_4b(glistp++,
@@ -252,6 +276,34 @@ void shadetri(Matrices *matrices, int type)
   gSPSetGeometryMode(glistp++, G_SHADE | G_SHADING_SMOOTH);
 
   gSP2Triangles(glistp++, 0, 1, 2, 0, 0, 2, 3, 0);
+}
+
+// Render dice
+void renderDice(Dice *dice, u32 id)
+{
+  guTranslate(&gfx_matrices[id].translation, -20.0F, 20.0F, 0.0F);
+  guRotate(&gfx_matrices[id].rotation, 0.0F, 0.0F, 0.0F, 1.0F);
+  guScale(&gfx_matrices[id].scale, 0.8F, 0.8F, 0.8F);
+  shadetri(&gfx_matrices[id], 8 + dice->gfx_ids[0]);
+  id++;
+
+  guTranslate(&gfx_matrices[id].translation, 20.0F, 20.0F, 0.0F);
+  guRotate(&gfx_matrices[id].rotation, 0.0F, 0.0F, 0.0F, 1.0F);
+  guScale(&gfx_matrices[id].scale, 0.8F, 0.8F, 0.8F);
+  shadetri(&gfx_matrices[id], 10 + dice->gfx_ids[1]);
+  id++;
+
+  guTranslate(&gfx_matrices[id].translation, -20.0F, -20.0F, 0.0F);
+  guRotate(&gfx_matrices[id].rotation, 0.0F, 0.0F, 0.0F, 1.0F);
+  guScale(&gfx_matrices[id].scale, 0.8F, 0.8F, 0.8F);
+  shadetri(&gfx_matrices[id], 12 + dice->gfx_ids[2]);
+  id++;
+
+  guTranslate(&gfx_matrices[id].translation, 20.0F, -20.0F, 0.0F);
+  guRotate(&gfx_matrices[id].rotation, 0.0F, 0.0F, 0.0F, 1.0F);
+  guScale(&gfx_matrices[id].scale, 0.8F, 0.8F, 0.8F);
+  shadetri(&gfx_matrices[id], 14 + dice->gfx_ids[3]);
+  id++;
 }
 
 // Render cursor

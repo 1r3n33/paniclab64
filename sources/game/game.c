@@ -52,6 +52,7 @@ void shuffle_cards(Cards *cards)
 int check_selection(Game *game)
 {
     u32 cur = game->cursor.cur_pos;
-    u32 flags = game->cards.flags[cur];
-    return game->dice.flags == flags;
+    u32 card = game->cards.flags[cur];
+    u32 dice = game->dice.flags;
+    return card == dice;
 }
