@@ -2,6 +2,7 @@
 #include <nusys.h>
 #include "game/game.h"
 #include "graphic.h"
+#include "graphics/graphics.h"
 
 #include "../assets/graphics/sq_bl_st_32x32_CI_4b.h"
 #include "../assets/graphics/sq_or_st_32x32_CI_4b.h"
@@ -24,11 +25,11 @@
 #include "../assets/graphics/dice_bb_32x32_CI_4b.h"
 #include "../assets/graphics/dice_bw_32x32_CI_4b.h"
 
-void applyMatrices(Matrices *matrices);
-
 void shadetri(Matrices *matrices, int type);
 
-void renderDice(Dice *dice, u32 id);
+u32 renderCards(Cards *cards, u32 id);
+
+u32 renderDice(Dice *dice, u32 id);
 
 void renderCursor(Matrices *m);
 
@@ -57,21 +58,12 @@ void makeDL00(Game *game)
       OS_K0_TO_PHYSICAL(&gfx_dynamic.projection),
       G_MTX_PROJECTION | G_MTX_LOAD | G_MTX_NOPUSH);
 
-  // Draw cards circle
-  for (u32 i = 0; i < game->cards.count; i++)
-  {
-    guTranslate(&gfx_matrices[i].translation, 0.0F, 100.0F, 0.0F);
-    guRotate(&gfx_matrices[i].rotation, (360.0F / (float)game->cards.count) * (float)i, 0.0F, 0.0F, 1.0F);
-    guScale(&gfx_matrices[i].scale, 1.0F, 1.0F, 1.0F);
-
-    shadetri(&gfx_matrices[i], game->cards.gfx_ids[i] & 7);
-  }
-
-  // Draw dice
-  renderDice(&game->dice, game->cards.count);
+  u32 mtx_id = 0;
+  mtx_id = renderCards(&game->cards, mtx_id);
+  mtx_id = renderDice(&game->dice, mtx_id);
 
   // Draw cursor
-  renderCursor(&gfx_matrices[game->cursor.cur_pos]);
+  renderCursor(&graphics.matrices[game->cursor.cur_pos]);
 
   /* End the construction of the display list  */
   gDPFullSync(glistp++);
@@ -125,28 +117,10 @@ static Vtx cursor_vtx[] = {
     {20, -16, -4, 0, 0, 0, 0xff, 0x00, 0x00, 0xff},
 };
 
-void applyMatrices(Matrices *matrices)
-{
-  gSPMatrix(
-      glistp++,
-      OS_K0_TO_PHYSICAL(&(matrices->rotation)),
-      G_MTX_MODELVIEW | G_MTX_LOAD | G_MTX_NOPUSH);
-
-  gSPMatrix(
-      glistp++,
-      OS_K0_TO_PHYSICAL(&(matrices->translation)),
-      G_MTX_MODELVIEW | G_MTX_MUL | G_MTX_NOPUSH);
-
-  gSPMatrix(
-      glistp++,
-      OS_K0_TO_PHYSICAL(&(matrices->scale)),
-      G_MTX_MODELVIEW | G_MTX_MUL | G_MTX_NOPUSH);
-}
-
 /* Draw a square  */
 void shadetri(Matrices *matrices, int type)
 {
-  applyMatrices(matrices);
+  glistp = apply_matrices(glistp, matrices);
 
   gSPVertex(glistp++, &(quad_vtx[0]), 4, 0);
 
@@ -278,38 +252,46 @@ void shadetri(Matrices *matrices, int type)
   gSP2Triangles(glistp++, 0, 1, 2, 0, 0, 2, 3, 0);
 }
 
-// Render dice
-void renderDice(Dice *dice, u32 id)
+u32 renderCards(Cards *cards, u32 id)
 {
-  guTranslate(&gfx_matrices[id].translation, -20.0F, 20.0F, 0.0F);
-  guRotate(&gfx_matrices[id].rotation, 0.0F, 0.0F, 0.0F, 1.0F);
-  guScale(&gfx_matrices[id].scale, 0.8F, 0.8F, 0.8F);
-  shadetri(&gfx_matrices[id], 8 + dice->gfx_ids[0]);
+  f32 fr = 360.0f / (float)cards->count;
+  f32 fi = 0.0f;
+
+  for (u32 i = 0; i < cards->count; i++, fi += 1.0f)
+  {
+    u32 j = id + i;
+    set_card_matrices(&graphics.matrices[j], 100.0f, fr * fi);
+    shadetri(&graphics.matrices[j], cards->gfx_ids[i] & 7);
+  }
+
+  return id + cards->count;
+}
+
+u32 renderDice(Dice *dice, u32 id)
+{
+  set_dice_matrices(&graphics.matrices[id], -20.0f, 20.0f, 0.8f);
+  shadetri(&graphics.matrices[id], 8 + dice->gfx_ids[0]);
   id++;
 
-  guTranslate(&gfx_matrices[id].translation, 20.0F, 20.0F, 0.0F);
-  guRotate(&gfx_matrices[id].rotation, 0.0F, 0.0F, 0.0F, 1.0F);
-  guScale(&gfx_matrices[id].scale, 0.8F, 0.8F, 0.8F);
-  shadetri(&gfx_matrices[id], 10 + dice->gfx_ids[1]);
+  set_dice_matrices(&graphics.matrices[id], 20.0f, 20.0f, 0.8f);
+  shadetri(&graphics.matrices[id], 10 + dice->gfx_ids[1]);
   id++;
 
-  guTranslate(&gfx_matrices[id].translation, -20.0F, -20.0F, 0.0F);
-  guRotate(&gfx_matrices[id].rotation, 0.0F, 0.0F, 0.0F, 1.0F);
-  guScale(&gfx_matrices[id].scale, 0.8F, 0.8F, 0.8F);
-  shadetri(&gfx_matrices[id], 12 + dice->gfx_ids[2]);
+  set_dice_matrices(&graphics.matrices[id], -20.0f, -20.0f, 0.8f);
+  shadetri(&graphics.matrices[id], 12 + dice->gfx_ids[2]);
   id++;
 
-  guTranslate(&gfx_matrices[id].translation, 20.0F, -20.0F, 0.0F);
-  guRotate(&gfx_matrices[id].rotation, 0.0F, 0.0F, 0.0F, 1.0F);
-  guScale(&gfx_matrices[id].scale, 0.8F, 0.8F, 0.8F);
-  shadetri(&gfx_matrices[id], 14 + dice->gfx_ids[3]);
+  set_dice_matrices(&graphics.matrices[id], 20.0f, -20.0f, 0.8f);
+  shadetri(&graphics.matrices[id], 14 + dice->gfx_ids[3]);
   id++;
+
+  return id;
 }
 
 // Render cursor
 void renderCursor(Matrices *m)
 {
-  applyMatrices(m);
+  glistp = apply_matrices(glistp, m);
 
   gSPVertex(glistp++, &(cursor_vtx[0]), 24, 0);
 
