@@ -2,7 +2,6 @@
 #include "graphic.h"
 
 Gfx gfx_glist[GFX_GLIST_LEN];
-Dynamic gfx_dynamic;
 Gfx *glistp;
 
 /*----------------------------------------------------------------------------

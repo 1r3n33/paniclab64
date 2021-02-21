@@ -2,6 +2,7 @@
 #define GRAPHICS_H
 
 #include "matrices.h"
+#include "projection.h"
 
 typedef struct
 {

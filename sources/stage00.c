@@ -46,17 +46,7 @@ void makeDL00(Game *game)
   /* Clear the frame buffer and the Z-buffer  */
   gfxClearCfb();
 
-  // Compute projection matrix
-  guOrtho(&gfx_dynamic.projection,
-          -(float)SCREEN_WD / 2.0F, (float)SCREEN_WD / 2.0F,
-          -(float)SCREEN_HT / 2.0F, (float)SCREEN_HT / 2.0F,
-          1.0F, 10.0F, 1.0F);
-
-  // Set projection matrix
-  gSPMatrix(
-      glistp++,
-      OS_K0_TO_PHYSICAL(&gfx_dynamic.projection),
-      G_MTX_PROJECTION | G_MTX_LOAD | G_MTX_NOPUSH);
+  glistp = apply_projection(glistp, (f32)SCREEN_WD, (f32)SCREEN_HT);
 
   u32 mtx_id = 0;
   mtx_id = renderCards(&game->cards, mtx_id);

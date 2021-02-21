@@ -8,15 +8,7 @@
 /* The maximum length of the display list of one task  */
 #define GFX_GLIST_LEN 2048
 
-/*-------------------------- define structure ------------------------------ */
-/* The projection-matrix structure  */
-typedef struct
-{
-  Mtx projection;
-} Dynamic;
-
 /*-------------------------------- parameter---------------------------------*/
-extern Dynamic gfx_dynamic;
 extern Gfx *glistp;
 extern Gfx gfx_glist[GFX_GLIST_LEN];
 /*-------------------------------- function ---------------------------------*/
