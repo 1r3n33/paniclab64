@@ -4,28 +4,7 @@
 #include "graphic.h"
 #include "graphics/graphics.h"
 
-#include "../assets/graphics/sq_bl_st_32x32_CI_4b.h"
-#include "../assets/graphics/sq_or_st_32x32_CI_4b.h"
-#include "../assets/graphics/sq_bl_dt_32x32_CI_4b.h"
-#include "../assets/graphics/sq_or_dt_32x32_CI_4b.h"
-#include "../assets/graphics/sl_bl_st_32x32_CI_4b.h"
-#include "../assets/graphics/sl_or_st_32x32_CI_4b.h"
-#include "../assets/graphics/sl_bl_dt_32x32_CI_4b.h"
-#include "../assets/graphics/sl_or_dt_32x32_CI_4b.h"
-#include "../assets/graphics/dice_sq_32x32_CI_4b.h"
-#include "../assets/graphics/dice_sl_32x32_CI_4b.h"
-#include "../assets/graphics/dice_st_32x32_CI_4b.h"
-#include "../assets/graphics/dice_dt_32x32_CI_4b.h"
-#include "../assets/graphics/dice_bl_32x32_CI_4b.h"
-#include "../assets/graphics/dice_or_32x32_CI_4b.h"
-#include "../assets/graphics/dice_rb_32x32_CI_4b.h"
-#include "../assets/graphics/dice_rw_32x32_CI_4b.h"
-#include "../assets/graphics/dice_yb_32x32_CI_4b.h"
-#include "../assets/graphics/dice_yw_32x32_CI_4b.h"
-#include "../assets/graphics/dice_bb_32x32_CI_4b.h"
-#include "../assets/graphics/dice_bw_32x32_CI_4b.h"
-
-void shadetri(Matrices *matrices, int type);
+void renderQuad(Matrices *mtx, u32 tex_id);
 
 u32 renderCards(Cards *cards, u32 id);
 
@@ -108,131 +87,19 @@ static Vtx cursor_vtx[] = {
 };
 
 /* Draw a square  */
-void shadetri(Matrices *matrices, int type)
+void renderQuad(Matrices *mtx, u32 tex_id)
 {
-  glistp = apply_matrices(glistp, matrices);
+  glistp = apply_matrices(glistp, mtx);
 
   gSPVertex(glistp++, &(quad_vtx[0]), 4, 0);
 
   gDPPipeSync(glistp++);
   gDPSetCycleType(glistp++, G_CYC_1CYCLE);
 
-  // Set Texture
-  /* Enable texture, set scaling parameters */
-  gSPTexture(glistp++, 0x8000, 0x8000, 0, G_TX_RENDERTILE, G_ON);
-
   /* Specify back surface culling */
   gSPSetGeometryMode(glistp++, G_CULL_BACK);
 
-  /* Switch to combine mode using texture color */
-  gDPSetCombineMode(glistp++, G_CC_DECALRGBA, G_CC_DECALRGBA);
-
-  /* Load texture */
-  PalPixel *img = 0;
-  switch (type)
-  {
-  case 0b000: // blue-stripes-squid
-    img = &_pp_table_sq_bl_st_32x32_CI_4b[0];
-    break;
-
-  case 0b001: // blue-stripes-slug
-    img = &_pp_table_sl_bl_st_32x32_CI_4b[0];
-    break;
-
-  case 0b010: // blue-dots-squid
-    img = &_pp_table_sq_bl_dt_32x32_CI_4b[0];
-    break;
-
-  case 0b011: // blue-dots-slug
-    img = &_pp_table_sl_bl_dt_32x32_CI_4b[0];
-    break;
-
-  case 0b100: // orange-stripes-squid
-    img = &_pp_table_sq_or_st_32x32_CI_4b[0];
-    break;
-
-  case 0b101: // orange-stripes-slug
-    img = &_pp_table_sl_or_st_32x32_CI_4b[0];
-    break;
-
-  case 0b110: // orange-dots-squid
-    img = &_pp_table_sq_or_dt_32x32_CI_4b[0];
-    break;
-
-  case 0b111: // orange-dots-slug
-    img = &_pp_table_sl_or_dt_32x32_CI_4b[0];
-    break;
-
-  case 8:
-    img = &_pp_table_dice_sq_32x32_CI_4b[0];
-    break;
-
-  case 9:
-    img = &_pp_table_dice_sl_32x32_CI_4b[0];
-    break;
-
-  case 10:
-    img = &_pp_table_dice_st_32x32_CI_4b[0];
-    break;
-
-  case 11:
-    img = &_pp_table_dice_dt_32x32_CI_4b[0];
-    break;
-
-  case 12:
-    img = &_pp_table_dice_bl_32x32_CI_4b[0];
-    break;
-
-  case 13:
-    img = &_pp_table_dice_or_32x32_CI_4b[0];
-    break;
-
-  case 14:
-    img = &_pp_table_dice_rb_32x32_CI_4b[0];
-    break;
-
-  case 15:
-    img = &_pp_table_dice_rw_32x32_CI_4b[0];
-    break;
-
-  case 16:
-    img = &_pp_table_dice_yb_32x32_CI_4b[0];
-    break;
-
-  case 17:
-    img = &_pp_table_dice_yw_32x32_CI_4b[0];
-    break;
-
-  case 18:
-    img = &_pp_table_dice_bb_32x32_CI_4b[0];
-    break;
-
-  case 19:
-    img = &_pp_table_dice_bw_32x32_CI_4b[0];
-    break;
-  }
-
-  gDPLoadTextureBlock_4b(glistp++,
-                         img->pixel.p4,           /* Pointer to texture image */
-                         G_IM_FMT_CI,             /* Texel format */
-                         32, 32,                  /* Image width and height */
-                         0,                       /* LUT (palette) index */
-                         G_TX_WRAP, G_TX_WRAP,    /* Clamp, wrap, mirror frag in s direction */
-                         5, 5,                    /* s, t masks */
-                         G_TX_NOLOD, G_TX_NOLOD); /* Shift (not shifted here) */
-
-  /* Texture perspective correction is turned on during mapping */
-  gDPSetTexturePersp(glistp++, G_TP_PERSP);
-  /* Set texture filter */
-  gDPSetTextureFilter(glistp++, G_TF_BILERP);
-  gDPSetTextureConvert(glistp++, G_TC_FILT);
-  /* This can be ignored until LOD or detail texture is explained */
-  gDPSetTextureLOD(glistp++, G_TL_TILE);
-  gDPSetTextureDetail(glistp++, G_TD_CLAMP);
-
-  /* Texture palette */
-  gDPSetTextureLUT(glistp++, G_TT_RGBA16);
-  gDPLoadTLUT_pal16(glistp++, 0, img->ppal);
+  glistp = apply_texture(glistp, tex_id);
 
   gDPSetRenderMode(glistp++, G_RM_AA_OPA_SURF, G_RM_AA_OPA_SURF2);
 
@@ -251,7 +118,7 @@ u32 renderCards(Cards *cards, u32 id)
   {
     u32 j = id + i;
     set_card_matrices(&graphics.matrices[j], 100.0f, fr * fi);
-    shadetri(&graphics.matrices[j], cards->gfx_ids[i] & 7);
+    renderQuad(&graphics.matrices[j], cards->gfx_ids[i]);
   }
 
   return id + cards->count;
@@ -260,19 +127,19 @@ u32 renderCards(Cards *cards, u32 id)
 u32 renderDice(Dice *dice, u32 id)
 {
   set_dice_matrices(&graphics.matrices[id], -20.0f, 20.0f, 0.8f);
-  shadetri(&graphics.matrices[id], 8 + dice->gfx_ids[0]);
+  renderQuad(&graphics.matrices[id], 11 + dice->gfx_ids[0]);
   id++;
 
   set_dice_matrices(&graphics.matrices[id], 20.0f, 20.0f, 0.8f);
-  shadetri(&graphics.matrices[id], 10 + dice->gfx_ids[1]);
+  renderQuad(&graphics.matrices[id], 13 + dice->gfx_ids[1]);
   id++;
 
   set_dice_matrices(&graphics.matrices[id], -20.0f, -20.0f, 0.8f);
-  shadetri(&graphics.matrices[id], 12 + dice->gfx_ids[2]);
+  renderQuad(&graphics.matrices[id], 15 + dice->gfx_ids[2]);
   id++;
 
   set_dice_matrices(&graphics.matrices[id], 20.0f, -20.0f, 0.8f);
-  shadetri(&graphics.matrices[id], 14 + dice->gfx_ids[3]);
+  renderQuad(&graphics.matrices[id], 17 + dice->gfx_ids[3]);
   id++;
 
   return id;

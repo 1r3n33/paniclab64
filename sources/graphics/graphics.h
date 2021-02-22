@@ -3,6 +3,7 @@
 
 #include "matrices.h"
 #include "projection.h"
+#include "textures.h"
 
 typedef struct
 {

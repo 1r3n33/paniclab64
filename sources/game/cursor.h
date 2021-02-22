@@ -10,7 +10,7 @@ typedef struct
 } Cursor;
 
 // Init cursor
-void init_cursor(Cursor *cursor);
+void init_cursor(Cursor *cursor, u32 card_count);
 
 // Reset cursor
 void reset_cursor(Cursor *cursor);

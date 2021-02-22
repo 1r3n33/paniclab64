@@ -1,8 +1,8 @@
 #include "cursor.h"
 
-void init_cursor(Cursor *cursor)
+void init_cursor(Cursor *cursor, u32 card_count)
 {
-    cursor->card_count = 16; // Number of cards
+    cursor->card_count = card_count;
     cursor->cur_pos = 0;
 }
 

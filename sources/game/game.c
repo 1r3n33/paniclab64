@@ -9,18 +9,27 @@ void init_game(Game *game)
 {
     init_cards(&game->cards);
     init_dice(&game->dice);
-    init_cursor(&game->cursor);
+    init_cursor(&game->cursor, game->cards.count);
 }
 
 void init_cards(Cards *cards)
 {
-    u32 count = 16; // Number of cards
-    cards->count = count;
-    for (u32 i = 0; i < count; i++)
+    cards->count = 8 + 3; // Number of cards
+
+    // 8 first cards are aliens
+    for (u32 i = 0; i < 8; i++)
     {
         cards->flags[i] = i & 7;
         cards->gfx_ids[i] = i & 7;
     }
+
+    // 3 next cards are directions
+    cards->flags[8] = 0xFFffFFff;
+    cards->gfx_ids[8] = 8;
+    cards->flags[9] = 0xFFffFFff;
+    cards->gfx_ids[9] = 9;
+    cards->flags[10] = 0xFFffFFff;
+    cards->gfx_ids[10] = 10;
 }
 
 void shuffle_game(Game *game)

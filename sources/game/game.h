@@ -5,18 +5,8 @@
 #include "cursor.h"
 #include "dice.h"
 
-// Alien properties
-#define SHAPE_SQUID 0  // one eyed
-#define SHAPE_SLUGGY 1 // two eyed
-
-#define PATTERN_STRIPES 0
-#define PATTERN_DOTS 1
-
-#define COLOR_BLUE 0
-#define COLOR_ORANGE 1
-
 // Cards
-#define MAX_CARDS 16
+#define MAX_CARDS 32
 
 typedef struct
 {
