@@ -14,7 +14,7 @@ void init_game(Game *game)
 
 void init_cards(Cards *cards)
 {
-    cards->count = 8 + 3; // Number of cards
+    cards->count = 8 + 3 + 3; // Number of cards
 
     // 8 first cards are aliens
     for (u32 i = 0; i < 8; i++)
@@ -30,6 +30,14 @@ void init_cards(Cards *cards)
     cards->gfx_ids[9] = 9;
     cards->flags[10] = 0xFFffFFff;
     cards->gfx_ids[10] = 10;
+
+    // 3 next cards are swaps
+    cards->flags[11] = 0xFFffFFff;
+    cards->gfx_ids[11] = 11;
+    cards->flags[12] = 0xFFffFFff;
+    cards->gfx_ids[12] = 12;
+    cards->flags[13] = 0xFFffFFff;
+    cards->gfx_ids[13] = 13;
 }
 
 void shuffle_game(Game *game)

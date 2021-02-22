@@ -23,6 +23,9 @@
 #include "../../assets/graphics/dir_b_32x32_CI_4b.h"
 #include "../../assets/graphics/dir_y_32x32_CI_4b.h"
 #include "../../assets/graphics/dir_r_32x32_CI_4b.h"
+#include "../../assets/graphics/swap_shape_32x32_CI_4b.h"
+#include "../../assets/graphics/swap_pattern_32x32_CI_4b.h"
+#include "../../assets/graphics/swap_color_32x32_CI_4b.h"
 
 static PalPixel *textures[32] = {
     _pp_table_sq_bl_st_32x32_CI_4b,
@@ -36,6 +39,9 @@ static PalPixel *textures[32] = {
     _pp_table_dir_b_32x32_CI_4b,
     _pp_table_dir_y_32x32_CI_4b,
     _pp_table_dir_r_32x32_CI_4b,
+    _pp_table_swap_shape_32x32_CI_4b,
+    _pp_table_swap_pattern_32x32_CI_4b,
+    _pp_table_swap_color_32x32_CI_4b,
     _pp_table_dice_sq_32x32_CI_4b,
     _pp_table_dice_sl_32x32_CI_4b,
     _pp_table_dice_st_32x32_CI_4b,
