@@ -13,6 +13,10 @@ typedef struct
     u32 count;
     u32 flags[MAX_CARDS]; // shape-pattern-color
     u32 gfx_ids[MAX_CARDS];
+
+    u32 blue_dir;
+    u32 yellow_dir;
+    u32 red_dir;
 } Cards;
 
 // Game

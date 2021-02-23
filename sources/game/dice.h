@@ -14,6 +14,7 @@ typedef struct
 {
     u32 count;
     u32 flags; // shape-pattern-color
+    u32 dir;
     u32 gfx_ids[MAX_DICE];
 } Dice;
 
