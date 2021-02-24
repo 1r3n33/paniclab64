@@ -136,6 +136,9 @@ int check_selection(Game *game)
     // Get initial flags (shape-pattern-color)
     u32 flags = game->dice.flags;
 
+    // Count number of swap to avoid infinite loop
+    u32 swap = 0;
+
     // Find the correct card pos
     s32 pos = start;
     while (1)
@@ -152,16 +155,26 @@ int check_selection(Game *game)
         if (f == FLAGS_SWAP_SHAPE)
         {
             flags ^= 0b001;
+            swap++;
         }
         // Swap pattern flag
         if (f == FLAGS_SWAP_PATTERN)
         {
             flags ^= 0b010;
+            swap++;
         }
         // Swap color flag
         if (f == FLAGS_SWAP_COLOR)
         {
             flags ^= 0b100;
+            swap++;
+        }
+
+        // If flags go back to original, the game cannot be resolved
+        // Stop on the swap card
+        if (swap == 6)
+        {
+            break;
         }
 
         // Compute next pos
