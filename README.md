@@ -6,3 +6,4 @@ N64 homebrew inspired by [Panic lab from Gigamic](https://en.gigamic.com/game/pa
 ![Screen2](./screenshots/screenshot002.png)
 ![Screen3](./screenshots/screenshot003.png)
 ![Screen4](./screenshots/screenshot004.png)
+![Screen5](./screenshots/screenshot005.png)

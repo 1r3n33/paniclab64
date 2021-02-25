@@ -127,19 +127,19 @@ u32 renderCards(Cards *cards, u32 id)
 u32 renderDice(Dice *dice, u32 id)
 {
   set_dice_matrices(&graphics.matrices[id], -20.0f, 20.0f, 0.8f);
-  renderQuad(&graphics.matrices[id], 14 + dice->gfx_ids[0]);
+  renderQuad(&graphics.matrices[id], 15 + dice->gfx_ids[0]);
   id++;
 
   set_dice_matrices(&graphics.matrices[id], 20.0f, 20.0f, 0.8f);
-  renderQuad(&graphics.matrices[id], 16 + dice->gfx_ids[1]);
+  renderQuad(&graphics.matrices[id], 17 + dice->gfx_ids[1]);
   id++;
 
   set_dice_matrices(&graphics.matrices[id], -20.0f, -20.0f, 0.8f);
-  renderQuad(&graphics.matrices[id], 18 + dice->gfx_ids[2]);
+  renderQuad(&graphics.matrices[id], 19 + dice->gfx_ids[2]);
   id++;
 
   set_dice_matrices(&graphics.matrices[id], 20.0f, -20.0f, 0.8f);
-  renderQuad(&graphics.matrices[id], 20 + dice->gfx_ids[3]);
+  renderQuad(&graphics.matrices[id], 21 + dice->gfx_ids[3]);
   id++;
 
   return id;

@@ -11,6 +11,8 @@
 #define FLAGS_SWAP_PATTERN 0x00020001
 #define FLAGS_SWAP_COLOR 0x00020002
 
+#define FLAGS_VENT 0x00040000
+
 Game game;
 
 void init_game(Game *game)
@@ -22,7 +24,7 @@ void init_game(Game *game)
 
 void init_cards(Cards *cards)
 {
-    cards->count = 8 + 3 + 3; // Number of cards
+    cards->count = 8 + 3 + 3 + 3; // Number of cards
 
     // 8 first cards are aliens
     for (u32 i = 0; i < 8; i++)
@@ -50,6 +52,14 @@ void init_cards(Cards *cards)
     cards->gfx_ids[12] = 12;
     cards->flags[13] = FLAGS_SWAP_COLOR;
     cards->gfx_ids[13] = 13;
+
+    // 3 next cards are vents
+    cards->flags[14] = FLAGS_VENT;
+    cards->gfx_ids[14] = 14;
+    cards->flags[15] = FLAGS_VENT;
+    cards->gfx_ids[15] = 14;
+    cards->flags[16] = FLAGS_VENT;
+    cards->gfx_ids[16] = 14;
 }
 
 void shuffle_game(Game *game)
@@ -139,42 +149,54 @@ int check_selection(Game *game)
     // Count number of swap to avoid infinite loop
     u32 swap = 0;
 
+    // Know when to check if flags match
+    u32 check = 1;
+
     // Find the correct card pos
     s32 pos = start;
     while (1)
     {
         u32 f = game->cards.flags[pos];
 
-        // Exit if card matches flags
-        if (f == flags)
+        if (check)
         {
-            break;
+            // Exit if card matches flags
+            if (f == flags)
+            {
+                break;
+            }
+
+            // Swap shape flag
+            if (f == FLAGS_SWAP_SHAPE)
+            {
+                flags ^= 0b001;
+                swap++;
+            }
+            // Swap pattern flag
+            if (f == FLAGS_SWAP_PATTERN)
+            {
+                flags ^= 0b010;
+                swap++;
+            }
+            // Swap color flag
+            if (f == FLAGS_SWAP_COLOR)
+            {
+                flags ^= 0b100;
+                swap++;
+            }
+
+            // If flags go back to original, the game cannot be resolved
+            // Stop on the swap card
+            if (swap == 6)
+            {
+                break;
+            }
         }
 
-        // Swap shape flag
-        if (f == FLAGS_SWAP_SHAPE)
+        // Enter/Exit air vents
+        if (f == FLAGS_VENT)
         {
-            flags ^= 0b001;
-            swap++;
-        }
-        // Swap pattern flag
-        if (f == FLAGS_SWAP_PATTERN)
-        {
-            flags ^= 0b010;
-            swap++;
-        }
-        // Swap color flag
-        if (f == FLAGS_SWAP_COLOR)
-        {
-            flags ^= 0b100;
-            swap++;
-        }
-
-        // If flags go back to original, the game cannot be resolved
-        // Stop on the swap card
-        if (swap == 6)
-        {
-            break;
+            check = !check;
         }
 
         // Compute next pos
