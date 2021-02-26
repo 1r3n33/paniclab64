@@ -1,6 +1,7 @@
 #ifndef GRAPHICS_H
 #define GRAPHICS_H
 
+#include "fonts.h"
 #include "matrices.h"
 #include "projection.h"
 #include "textures.h"
