@@ -10,6 +10,9 @@ TRANS = $(N64KITDIR)/niff/mtv/exe/trans
 %64x64_I_4b.h: %64x64_I_4b.sgi
 	$(TRANS) -s 4 -f I -w 64 -h 64 -o $@ $<
 
+%128x64_I_4b.h: %128x64_I_4b.sgi
+	$(TRANS) -s 4 -f I -w 128 -h 64 -o $@ $<
+
 SGIFILES = $(wildcard *.sgi)
 HFILES = $(SGIFILES:.sgi=.h)
 
