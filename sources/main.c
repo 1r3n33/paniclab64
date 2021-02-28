@@ -1,5 +1,6 @@
 #include <nusys.h>
 #include "game/game.h"
+#include "graphics/graphics.h"
 
 /* Declaration of the prototype */
 void stage00(int);
@@ -50,8 +51,13 @@ void stage00(int pendingGfx)
     u32 res = check_selection(&game);
     if (res > 0)
     {
+      add_to_score(0, 100);
       reset_cursor(&game.cursor);
       shuffle_game(&game);
+    }
+    else
+    {
+      add_to_score(0, -50);
     }
   }
 
@@ -70,6 +76,10 @@ void stage00(int pendingGfx)
   {
     shuffle_game(&game);
   }
+
+  // Map game data to graphics data
+  score_to_string(0, graphics.text[0]);
+  score_to_string(1, graphics.text[1]);
 
   // It provides the display process if there is no RCP task that is processing.
   if (pendingGfx < 1)

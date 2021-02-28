@@ -3,6 +3,6 @@
 
 #include <nusys.h>
 
-Gfx *render_string(Gfx *glistp, char *str, f32 x, f32 y);
+Gfx *render_string(Gfx *glistp, char *str, u32 mtx_id, f32 x, f32 y);
 
 #endif // FONTS_H

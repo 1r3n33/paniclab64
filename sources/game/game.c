@@ -20,6 +20,7 @@ void init_game(Game *game)
     init_cards(&game->cards);
     init_dice(&game->dice);
     init_cursor(&game->cursor, game->cards.count);
+    init_scores();
 }
 
 void init_cards(Cards *cards)

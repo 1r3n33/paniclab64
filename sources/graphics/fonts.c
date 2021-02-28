@@ -16,6 +16,16 @@
 Mtx glyph_mtxs[32];
 
 static Vtx glyphes[128][4] = {
+    ['0'] = GLYPH(6, 10, 53, 1, 63, 7),
+    ['1'] = GLYPH(6, 10, 53, 7, 63, 13),
+    ['2'] = GLYPH(6, 10, 53, 13, 63, 19),
+    ['3'] = GLYPH(6, 10, 53, 20, 63, 26),
+    ['4'] = GLYPH(6, 10, 53, 27, 63, 33),
+    ['5'] = GLYPH(6, 10, 53, 34, 63, 40),
+    ['6'] = GLYPH(6, 10, 53, 41, 63, 47),
+    ['7'] = GLYPH(6, 10, 53, 48, 63, 54),
+    ['8'] = GLYPH(6, 10, 53, 55, 63, 61),
+    ['9'] = GLYPH(6, 10, 53, 62, 63, 68),
     ['A'] = GLYPH(5, 10, 1, 1, 11, 6),
     ['B'] = GLYPH(5, 10, 1, 7, 11, 12),
     ['C'] = GLYPH(5, 10, 1, 13, 11, 18),
@@ -25,6 +35,16 @@ static Vtx glyphes[128][4] = {
 };
 
 static u32 spaces[128] = {
+    ['0'] = 6 + 1,
+    ['1'] = 6 + 1,
+    ['2'] = 6 + 1,
+    ['3'] = 6 + 1,
+    ['4'] = 6 + 1,
+    ['5'] = 6 + 1,
+    ['6'] = 6 + 1,
+    ['7'] = 6 + 1,
+    ['8'] = 6 + 1,
+    ['9'] = 6 + 1,
     ['A'] = 5 + 1,
     ['B'] = 5 + 1,
     ['C'] = 5 + 1,
@@ -79,14 +99,15 @@ Gfx *render_glyph(Gfx *glistp, Mtx *m, Vtx *vtx)
     return glistp;
 }
 
-Gfx *render_string(Gfx *glistp, char *str, f32 x, f32 y)
+Gfx *render_string(Gfx *glistp, char *str, u32 mtx_id, f32 x, f32 y)
 {
     glistp = apply_fonts_texture(glistp);
 
     gDPPipeSync(glistp++);
     gDPSetCycleType(glistp++, G_CYC_1CYCLE);
 
-    gDPSetRenderMode(glistp++, G_RM_AA_OPA_SURF, G_RM_AA_OPA_SURF2);
+    // Enable blending
+    gDPSetRenderMode(glistp++, G_RM_AA_XLU_SURF2, G_RM_AA_XLU_SURF2);
 
     gSPClearGeometryMode(glistp++, 0xFFFFFFFF);
     gSPSetGeometryMode(glistp++, G_SHADE | G_SHADING_SMOOTH);
@@ -94,8 +115,8 @@ Gfx *render_string(Gfx *glistp, char *str, f32 x, f32 y)
     u32 i = 0;
     while (str[i])
     {
-        guTranslate(&glyph_mtxs[i], x, y, 0.0f);
-        glistp = render_glyph(glistp, &glyph_mtxs[i], glyphes[str[i]]);
+        guTranslate(&glyph_mtxs[mtx_id + i], x, y, 0.0f);
+        glistp = render_glyph(glistp, &glyph_mtxs[mtx_id + i], glyphes[str[i]]);
         x += spaces[str[i]];
         i++;
     }

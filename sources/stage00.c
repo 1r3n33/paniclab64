@@ -13,7 +13,6 @@ u32 renderDice(Dice *dice, u32 id);
 void renderCursor(Matrices *m);
 
 /* Make the display list and activate the task. */
-
 void makeDL00(Game *game)
 {
   /* Specify the display list buffer  */
@@ -31,8 +30,12 @@ void makeDL00(Game *game)
   mtx_id = renderCards(&game->cards, mtx_id);
   mtx_id = renderDice(&game->dice, mtx_id);
 
-  // Draw cursor
+  // Render cursor
   renderCursor(&graphics.matrices[game->cursor.cur_pos]);
+
+  // Render scores
+  glistp = render_string(glistp, graphics.text[0], 0, -150.0f, 100.0f);
+  glistp = render_string(glistp, graphics.text[1], 8, 100.0f, 100.0f);
 
   /* End the construction of the display list  */
   gDPFullSync(glistp++);

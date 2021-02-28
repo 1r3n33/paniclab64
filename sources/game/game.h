@@ -4,6 +4,7 @@
 #include <nusys.h>
 #include "cursor.h"
 #include "dice.h"
+#include "scores.h"
 
 // Cards
 #define MAX_CARDS 32
