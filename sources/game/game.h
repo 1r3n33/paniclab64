@@ -2,7 +2,7 @@
 #define GAME_H
 
 #include <nusys.h>
-#include "cursor.h"
+#include "cursors.h"
 #include "dice.h"
 #include "scores.h"
 
@@ -25,7 +25,6 @@ typedef struct
 {
     Cards cards;
     Dice dice;
-    Cursor cursor;
 } Game;
 
 // Init the game
@@ -40,8 +39,8 @@ void shuffle_game(Game *game);
 // Shuffle cards
 void shuffle_cards(Cards *cards);
 
-// Verify that cursor selection match dice configuration
-int check_selection(Game *game);
+// Get position that matches dice configuration
+u32 get_solution(Game *game);
 
 extern Game game;
 

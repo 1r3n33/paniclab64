@@ -10,7 +10,7 @@ u32 renderCards(Cards *cards, u32 id);
 
 u32 renderDice(Dice *dice, u32 id);
 
-void renderCursor(Matrices *m);
+void renderCursor(u32 cursor_id, Matrices *m);
 
 /* Make the display list and activate the task. */
 void makeDL00(Game *game)
@@ -30,8 +30,9 @@ void makeDL00(Game *game)
   mtx_id = renderCards(&game->cards, mtx_id);
   mtx_id = renderDice(&game->dice, mtx_id);
 
-  // Render cursor
-  renderCursor(&graphics.matrices[game->cursor.cur_pos]);
+  // Render cursors
+  renderCursor(0, &graphics.matrices[graphics.cursors[0]]);
+  renderCursor(1, &graphics.matrices[graphics.cursors[1]]);
 
   // Render scores
   glistp = render_string(glistp, graphics.text[0], 0, -150.0f, 100.0f);
@@ -149,7 +150,7 @@ u32 renderDice(Dice *dice, u32 id)
 }
 
 // Render cursor
-void renderCursor(Matrices *m)
+void renderCursor(u32 cursor_id, Matrices *m)
 {
   glistp = apply_matrices(glistp, m);
 

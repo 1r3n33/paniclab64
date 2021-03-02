@@ -17,9 +17,11 @@ Game game;
 
 void init_game(Game *game)
 {
+    u32 player_count = 2;
+
     init_cards(&game->cards);
     init_dice(&game->dice);
-    init_cursor(&game->cursor, game->cards.count);
+    init_cursors(player_count, game->cards.count);
     init_scores();
 }
 
@@ -106,7 +108,7 @@ void shuffle_cards(Cards *cards)
     }
 }
 
-int check_selection(Game *game)
+u32 get_solution(Game *game)
 {
     // Initialize start position and direction
     s32 start = 0;
@@ -212,6 +214,5 @@ int check_selection(Game *game)
         }
     }
 
-    // Correct if the cursor pos is correct card pos
-    return game->cursor.cur_pos == pos;
+    return pos;
 }

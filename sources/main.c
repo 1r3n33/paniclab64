@@ -3,11 +3,10 @@
 #include "graphics/graphics.h"
 
 /* Declaration of the prototype */
-void stage00(int);
+void update(int);
 void makeDL00(Game *game);
 
-// Controller data
-NUContData contdata[1];
+NUContData contdata[MAXCONTROLLERS];
 
 /*------------------------
   Main
@@ -24,13 +23,47 @@ void mainproc(void)
   nuContInit();
 
   // Register call-back
-  nuGfxFuncSet((NUGfxFunc)stage00);
+  nuGfxFuncSet((NUGfxFunc)update);
 
   // The screen display ON
   nuGfxDisplayOn();
 
   while (1)
   {
+  }
+}
+
+void update_player(u32 player_id)
+{
+  if (contdata[player_id].trigger & A_BUTTON)
+  {
+    u32 solution = get_solution(&game);
+    if (cursor_equals(player_id, solution))
+    {
+      add_to_score(player_id, 100);
+      reset_cursors();
+      shuffle_game(&game);
+    }
+    else
+    {
+      add_to_score(player_id, -50);
+    }
+  }
+
+  if (contdata[player_id].trigger & L_JPAD)
+  {
+    move_cursor(player_id, 1);
+  }
+
+  if (contdata[player_id].trigger & R_JPAD)
+  {
+    move_cursor(player_id, -1);
+  }
+
+  // Shuffle cards
+  if (contdata[player_id].trigger & START_BUTTON)
+  {
+    shuffle_game(&game);
   }
 }
 
@@ -41,43 +74,15 @@ void mainproc(void)
   function is the total number of RCP tasks that are currently processing
   and waiting for the process.
 -----------------------------------------------------------------------------*/
-void stage00(int pendingGfx)
+void update(int pendingGfx)
 {
-  // Read data of controller 1
-  nuContDataGetEx(contdata, 0);
+  nuContDataGetExAll(contdata);
 
-  if (contdata[0].trigger & A_BUTTON)
-  {
-    u32 res = check_selection(&game);
-    if (res > 0)
-    {
-      add_to_score(0, 100);
-      reset_cursor(&game.cursor);
-      shuffle_game(&game);
-    }
-    else
-    {
-      add_to_score(0, -50);
-    }
-  }
-
-  if (contdata[0].trigger & L_JPAD)
-  {
-    move_cursor(&game.cursor, 1);
-  }
-
-  if (contdata[0].trigger & R_JPAD)
-  {
-    move_cursor(&game.cursor, -1);
-  }
-
-  // Shuffle cards
-  if (contdata[0].trigger & START_BUTTON)
-  {
-    shuffle_game(&game);
-  }
+  update_player(0);
+  update_player(1);
 
   // Map game data to graphics data
+  cursors_to_gfx(graphics.cursors);
   score_to_string(0, graphics.text[0]);
   score_to_string(1, graphics.text[1]);
 

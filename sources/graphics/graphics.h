@@ -9,6 +9,7 @@
 typedef struct
 {
     Matrices matrices[MATRICES_LEN];
+    u32 cursors[4];
     char text[32][32];
 } Graphics;
 
