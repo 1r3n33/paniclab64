@@ -3,7 +3,7 @@
 
 #include <nusys.h>
 
-#define MATRICES_LEN 32
+#define MATRICES_LEN 80
 
 typedef struct
 {
@@ -11,6 +11,8 @@ typedef struct
     Mtx rotation;
     Mtx scale;
 } Matrices;
+
+void set_titlescreen_matrices(Matrices *m, f32 x, f32 y);
 
 void set_card_matrices(Matrices *m, f32 y, f32 rot);
 
