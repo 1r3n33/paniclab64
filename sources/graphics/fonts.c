@@ -16,6 +16,7 @@
 Mtx glyph_mtxs[32];
 
 static Vtx glyphes[128][4] = {
+    [' '] = GLYPH(0, 0, 0, 0, 0, 0),
     ['0'] = GLYPH(6, 10, 53, 1, 63, 7),
     ['1'] = GLYPH(6, 10, 53, 7, 63, 13),
     ['2'] = GLYPH(6, 10, 53, 13, 63, 19),
@@ -29,12 +30,20 @@ static Vtx glyphes[128][4] = {
     ['A'] = GLYPH(5, 10, 1, 1, 11, 6),
     ['B'] = GLYPH(5, 10, 1, 7, 11, 12),
     ['C'] = GLYPH(5, 10, 1, 13, 11, 18),
+    ['P'] = GLYPH(5, 10, 1, 93, 11, 98),
+    ['R'] = GLYPH(5, 10, 1, 105, 11, 110),
+    ['S'] = GLYPH(5, 10, 1, 111, 11, 116),
+    ['T'] = GLYPH(5, 10, 1, 117, 11, 122),
     ['U'] = GLYPH(5, 10, 12, 1, 22, 6),
     ['V'] = GLYPH(5, 10, 12, 7, 22, 12),
     ['W'] = GLYPH(7, 10, 12, 13, 22, 20),
+    ['e'] = GLYPH(4, 6, 27, 23, 33, 27),
+    ['r'] = GLYPH(4, 6, 27, 91, 33, 95),
+    ['s'] = GLYPH(4, 6, 27, 96, 33, 100),
 };
 
 static u32 spaces[128] = {
+    [' '] = 4 + 1,
     ['0'] = 6 + 1,
     ['1'] = 6 + 1,
     ['2'] = 6 + 1,
@@ -48,18 +57,22 @@ static u32 spaces[128] = {
     ['A'] = 5 + 1,
     ['B'] = 5 + 1,
     ['C'] = 5 + 1,
+    ['P'] = 5 + 1,
+    ['R'] = 5 + 1,
+    ['S'] = 5 + 1,
+    ['T'] = 5 + 1,
     ['U'] = 5 + 1,
     ['V'] = 5 + 1,
     ['W'] = 7 + 1,
+    ['e'] = 4 + 1,
+    ['r'] = 4 + 1,
+    ['s'] = 4 + 1,
 };
 
 Gfx *apply_fonts_texture(Gfx *glistp)
 {
     // Enable texture, set scaling parameters
     gSPTexture(glistp++, 0x8000, 0x8000, 0, G_TX_RENDERTILE, G_ON);
-
-    // Switch to combine mode using texture color
-    gDPSetCombineMode(glistp++, G_CC_DECALRGBA, G_CC_DECALRGBA);
 
     gDPLoadTextureBlock_4b(glistp++,
                            _pp_table_fonts_128x64_I_4b->pixel.p4, // Pointer to texture image
@@ -99,6 +112,15 @@ Gfx *render_glyph(Gfx *glistp, Mtx *m, Vtx *vtx)
     return glistp;
 }
 
+u32 font_colors[32][4] = {
+    {0x00, 0x00, 0x00, 0x00}, // Not applicable
+    {0x00, 0x00, 0x00, 0xFF}, // Black
+    {0x1c, 0x91, 0x9b, 0xFF}, // Ref Blue
+    {0x62, 0x26, 0x8d, 0xFF}, // Ref Purple
+    {0xf3, 0x6a, 0x23, 0xFF}, // Ref Orange
+    {0xed, 0x27, 0x44, 0xFF}, // Ref Red
+};
+
 Gfx *render_string(Gfx *glistp, char *str, u32 mtx_id, f32 x, f32 y)
 {
     glistp = apply_fonts_texture(glistp);
@@ -112,12 +134,25 @@ Gfx *render_string(Gfx *glistp, char *str, u32 mtx_id, f32 x, f32 y)
     gSPClearGeometryMode(glistp++, 0xFFFFFFFF);
     gSPSetGeometryMode(glistp++, G_SHADE | G_SHADING_SMOOTH);
 
+    gDPSetCombineMode(glistp++, G_CC_MODULATEIDECALA_PRIM, G_CC_MODULATEIDECALA_PRIM);
+    gDPSetPrimColor(glistp++, 0, 0, 0xFF, 0xFF, 0xFF, 0xFF);
+
     u32 i = 0;
+    u32 j = 0;
     while (str[i])
     {
-        guTranslate(&glyph_mtxs[mtx_id + i], x, y, 0.0f);
-        glistp = render_glyph(glistp, &glyph_mtxs[mtx_id + i], glyphes[str[i]]);
-        x += spaces[str[i]];
+        if (str[i] < 32)
+        {
+            u32 *color = font_colors[str[i]];
+            gDPSetPrimColor(glistp++, 0, 0, color[0], color[1], color[2], color[3]);
+        }
+        else
+        {
+            guTranslate(&glyph_mtxs[mtx_id + i], x, y, 0.0f);
+            glistp = render_glyph(glistp, &glyph_mtxs[mtx_id + i], glyphes[str[i]]);
+            x += spaces[str[i]];
+            j++;
+        }
         i++;
     }
 

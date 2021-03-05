@@ -71,6 +71,9 @@ void render_titlescreen()
         }
     }
 
+    glistp = render_string(glistp, "\2P\3r\2e\3s\2s \3S\2T\3A\2R\3T", 0, -30.0f, 5.0f);
+    glistp = render_string(glistp, "\4P\5r\4e\5s\4s \5S\4T\5A\4R\5T", 16, -30.0f, -10.0f);
+
     // End the construction of the display list
     gDPFullSync(glistp++);
     gSPEndDisplayList(glistp++);
