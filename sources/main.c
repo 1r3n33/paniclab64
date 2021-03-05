@@ -1,37 +1,11 @@
 #include <nusys.h>
 #include "game/game.h"
 #include "graphics/graphics.h"
+#include "graphics/render.h"
 
-/* Declaration of the prototype */
-void update(int);
 void makeDL00(Game *game);
 
 NUContData contdata[MAXCONTROLLERS];
-
-/*------------------------
-  Main
---------------------------*/
-void mainproc(void)
-{
-  init_game(&game);
-  shuffle_game(&game);
-
-  // Initialization of graphics
-  nuGfxInit();
-
-  // Initialization of controllers
-  nuContInit();
-
-  // Register call-back
-  nuGfxFuncSet((NUGfxFunc)update);
-
-  // The screen display ON
-  nuGfxDisplayOn();
-
-  while (1)
-  {
-  }
-}
 
 void update_player(u32 player_id)
 {
@@ -67,14 +41,7 @@ void update_player(u32 player_id)
   }
 }
 
-/*-----------------------------------------------------------------------------
-  The call-back function
-
-  pendingGfx which is passed from Nusystem as the argument of the call-back
-  function is the total number of RCP tasks that are currently processing
-  and waiting for the process.
------------------------------------------------------------------------------*/
-void update(int pendingGfx)
+void game_loop(int pendingGfx)
 {
   nuContDataGetExAll(contdata);
 
@@ -86,9 +53,44 @@ void update(int pendingGfx)
   score_to_string(0, graphics.text[0]);
   score_to_string(1, graphics.text[1]);
 
-  // It provides the display process if there is no RCP task that is processing.
   if (pendingGfx < 1)
   {
     makeDL00(&game);
+  }
+}
+
+void titlescreen_loop(int pendingGfx)
+{
+  nuContDataGetExAll(contdata);
+  if (contdata[0].trigger & START_BUTTON)
+  {
+    nuGfxFuncSet((NUGfxFunc)game_loop);
+  }
+
+  if (pendingGfx < 1)
+  {
+    render_titlescreen();
+  }
+}
+
+void mainproc(void)
+{
+  init_game(&game);
+  shuffle_game(&game);
+
+  // Initialization of graphics
+  nuGfxInit();
+
+  // Initialization of controllers
+  nuContInit();
+
+  // Register call-back
+  nuGfxFuncSet((NUGfxFunc)titlescreen_loop);
+
+  // The screen display ON
+  nuGfxDisplayOn();
+
+  while (1)
+  {
   }
 }
