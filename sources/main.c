@@ -49,6 +49,7 @@ void game_loop(int pendingGfx)
   update_player(1);
 
   // Map game data to graphics data
+  graphics.card_count = cards_to_gfx(graphics.card_gfx_ids);
   cursors_to_gfx(graphics.cursors);
   score_to_string(0, graphics.text[0]);
   score_to_string(1, graphics.text[1]);

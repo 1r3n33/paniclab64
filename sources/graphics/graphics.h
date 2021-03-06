@@ -10,8 +10,13 @@
 typedef struct
 {
     Matrices matrices[MATRICES_LEN];
+
     u32 cursors[4];
+
     char text[32][32];
+
+    u32 card_count;
+    u32 card_gfx_ids[32];
 } Graphics;
 
 extern Graphics graphics;

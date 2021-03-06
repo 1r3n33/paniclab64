@@ -4,11 +4,24 @@
 
 Gfx *renderQuad(Gfx *gfx, Matrices *mtx, u32 tex_id);
 
-Gfx *renderCards(Gfx *gfx, Cards *cards, u32 id);
-
 Gfx *renderDice(Gfx *gfx, Dice *dice, u32 id);
 
 Gfx *renderCursor(Gfx *gfx, u32 cursor_id, Matrices *m);
+
+Gfx *renderCards(Gfx *gfx, u32 card_count, u32 *card_gfx_ids, u32 id)
+{
+  f32 fr = 360.0f / (float)card_count;
+  f32 fi = 0.0f;
+
+  for (u32 i = 0; i < card_count; i++, fi += 1.0f)
+  {
+    u32 j = id + i;
+    set_card_matrices(&graphics.matrices[j], 100.0f, fr * fi);
+    gfx = renderQuad(gfx, &graphics.matrices[j], card_gfx_ids[i]);
+  }
+
+  return gfx;
+}
 
 /* Make the display list and activate the task. */
 void makeDL00(Game *game)
@@ -21,7 +34,7 @@ void makeDL00(Game *game)
 
   gfx = apply_projection(gfx, (f32)SCREEN_WD, (f32)SCREEN_HT);
 
-  gfx = renderCards(gfx, &game->cards, 0);
+  gfx = renderCards(gfx, graphics.card_count, graphics.card_gfx_ids, 0);
   gfx = renderDice(gfx, &game->dice, 32);
 
   // Render cursors
@@ -95,21 +108,6 @@ Gfx *renderQuad(Gfx *gfx, Matrices *mtx, u32 tex_id)
   gSPSetGeometryMode(gfx++, G_SHADE | G_SHADING_SMOOTH);
 
   gSP2Triangles(gfx++, 0, 1, 2, 0, 0, 2, 3, 0);
-
-  return gfx;
-}
-
-Gfx *renderCards(Gfx *gfx, Cards *cards, u32 id)
-{
-  f32 fr = 360.0f / (float)cards->count;
-  f32 fi = 0.0f;
-
-  for (u32 i = 0; i < cards->count; i++, fi += 1.0f)
-  {
-    u32 j = id + i;
-    set_card_matrices(&graphics.matrices[j], 100.0f, fr * fi);
-    gfx = renderQuad(gfx, &graphics.matrices[j], cards->gfx_ids[i]);
-  }
 
   return gfx;
 }

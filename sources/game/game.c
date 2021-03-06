@@ -1,17 +1,9 @@
 #include <nusys.h>
 #include <os_time.h>
 #include <stdlib.h>
+#include "cards.h"
+#include "flags.h"
 #include "game.h"
-
-#define FLAGS_DIR_BLUE 0x00010000
-#define FLAGS_DIR_YELLOW 0x00010001
-#define FLAGS_DIR_RED 0x00010002
-
-#define FLAGS_SWAP_SHAPE 0x00020000
-#define FLAGS_SWAP_PATTERN 0x00020001
-#define FLAGS_SWAP_COLOR 0x00020002
-
-#define FLAGS_VENT 0x00040000
 
 Game game;
 
@@ -19,50 +11,14 @@ void init_game(Game *game)
 {
     u32 player_count = 2;
 
-    init_cards(&game->cards);
+    u32 card_count = init_cards();
+    game->card_count = card_count;
+
     init_dice(&game->dice);
-    init_cursors(player_count, game->cards.count);
+
+    init_cursors(player_count, card_count);
+
     init_scores();
-}
-
-void init_cards(Cards *cards)
-{
-    cards->count = 8 + 3 + 3 + 3; // Number of cards
-
-    // 8 first cards are aliens
-    for (u32 i = 0; i < 8; i++)
-    {
-        cards->flags[i] = i & 7;
-        cards->gfx_ids[i] = i & 7;
-    }
-
-    // 3 next cards are directions
-    cards->flags[8] = FLAGS_DIR_BLUE;
-    cards->gfx_ids[8] = 8;
-    cards->flags[9] = FLAGS_DIR_YELLOW;
-    cards->gfx_ids[9] = 9;
-    cards->flags[10] = FLAGS_DIR_RED;
-    cards->gfx_ids[10] = 10;
-
-    cards->blue_dir = 8;
-    cards->yellow_dir = 9;
-    cards->red_dir = 10;
-
-    // 3 next cards are swaps
-    cards->flags[11] = FLAGS_SWAP_SHAPE;
-    cards->gfx_ids[11] = 11;
-    cards->flags[12] = FLAGS_SWAP_PATTERN;
-    cards->gfx_ids[12] = 12;
-    cards->flags[13] = FLAGS_SWAP_COLOR;
-    cards->gfx_ids[13] = 13;
-
-    // 3 next cards are vents
-    cards->flags[14] = FLAGS_VENT;
-    cards->gfx_ids[14] = 14;
-    cards->flags[15] = FLAGS_VENT;
-    cards->gfx_ids[15] = 14;
-    cards->flags[16] = FLAGS_VENT;
-    cards->gfx_ids[16] = 14;
 }
 
 void shuffle_game(Game *game)
@@ -70,81 +26,16 @@ void shuffle_game(Game *game)
     u64 time = osGetTime();
     srand((unsigned)time);
 
-    shuffle_cards(&game->cards);
+    shuffle_cards();
     shuffle_dice(&game->dice);
-}
-
-void shuffle_cards(Cards *cards)
-{
-    for (u32 i = cards->count - 1; i > 0; i--)
-    {
-        u32 rnd = rand() % (i + 1);
-
-        u32 flags = cards->flags[rnd];
-        u32 gfx_id = cards->gfx_ids[rnd];
-
-        cards->flags[rnd] = cards->flags[i];
-        cards->flags[i] = flags;
-
-        cards->gfx_ids[rnd] = cards->gfx_ids[i];
-        cards->gfx_ids[i] = gfx_id;
-    }
-
-    // Keep track of the dir cards (starting points)
-    for (u32 i = 0; i < cards->count; i++)
-    {
-        if (cards->flags[i] == FLAGS_DIR_BLUE)
-        {
-            cards->blue_dir = i;
-        }
-        if (cards->flags[i] == FLAGS_DIR_YELLOW)
-        {
-            cards->yellow_dir = i;
-        }
-        if (cards->flags[i] == FLAGS_DIR_RED)
-        {
-            cards->red_dir = i;
-        }
-    }
 }
 
 u32 get_solution(Game *game)
 {
     // Initialize start position and direction
-    s32 start = 0;
-    s32 dir = 0;
-    switch (game->dice.dir)
-    {
-    case 0: // blue-black clockwise
-        start = game->cards.blue_dir;
-        dir = -1;
-        break;
-
-    case 1: // blue-white anti-clockwise
-        start = game->cards.blue_dir;
-        dir = 1;
-        break;
-
-    case 2: // yellow-black clockwise
-        start = game->cards.yellow_dir;
-        dir = -1;
-        break;
-
-    case 3: // yellow-white anti-clockwise
-        start = game->cards.yellow_dir;
-        dir = 1;
-        break;
-
-    case 4: // red-black clockwise
-        start = game->cards.red_dir;
-        dir = -1;
-        break;
-
-    case 5: // red-white anti-clockwise
-        start = game->cards.red_dir;
-        dir = 1;
-        break;
-    }
+    s32 start_dir = get_cards_start_dir(game->dice.dir);
+    s32 start = start_dir > 0 ? start_dir : -start_dir;
+    s32 dir = start_dir > 0 ? 1 : -1;
 
     // Get initial flags (shape-pattern-color)
     u32 flags = game->dice.flags;
@@ -159,7 +50,7 @@ u32 get_solution(Game *game)
     s32 pos = start;
     while (1)
     {
-        u32 f = game->cards.flags[pos];
+        u32 f = get_card_flags(pos);
 
         if (check)
         {
@@ -206,11 +97,11 @@ u32 get_solution(Game *game)
         pos += dir;
         while (pos < 0)
         {
-            pos += game->cards.count;
+            pos += game->card_count;
         }
-        while (pos >= game->cards.count)
+        while (pos >= game->card_count)
         {
-            pos -= game->cards.count;
+            pos -= game->card_count;
         }
     }
 
