@@ -1,6 +1,4 @@
-#include <assert.h>
 #include <nusys.h>
-#include "../graphic.h"
 #include "graphics.h"
 #include "render.h"
 
@@ -38,51 +36,38 @@ Gfx *render_quad(Gfx *gfx, u32 id, f32 x, f32 y)
 
 void render_titlescreen()
 {
-    // Specify the display list buffer
-    glistp = gfx_glist;
-
     // The initialization of RCP
-    gfxRCPInit();
+    Gfx *gfx = gfxBegin();
 
     // Clear the frame buffer and the Z-buffer
-    gfxClearCfb();
+    gfx = gfxClearCfb(gfx);
 
-    glistp = apply_projection(glistp, (f32)SCREEN_WD, (f32)SCREEN_HT);
+    gfx = apply_projection(gfx, (f32)SCREEN_WD, (f32)SCREEN_HT);
 
     // Setup texturing
-    gSPTexture(glistp++, 0x8000, 0x8000, 0, G_TX_RENDERTILE, G_ON);
-    gDPSetTextureLUT(glistp++, G_TT_RGBA16);
-    gDPLoadTLUT_pal256(glistp++, _pp_table_titlescreen_32x32_CI_8b[0].ppal);
-    gDPSetTexturePersp(glistp++, G_TP_PERSP);
-    gDPSetTextureFilter(glistp++, G_TF_BILERP);
+    gSPTexture(gfx++, 0x8000, 0x8000, 0, G_TX_RENDERTILE, G_ON);
+    gDPSetTextureLUT(gfx++, G_TT_RGBA16);
+    gDPLoadTLUT_pal256(gfx++, _pp_table_titlescreen_32x32_CI_8b[0].ppal);
+    gDPSetTexturePersp(gfx++, G_TP_PERSP);
+    gDPSetTextureFilter(gfx++, G_TF_BILERP);
 
     // Setup rendering
-    gDPSetCycleType(glistp++, G_CYC_1CYCLE);
-    gSPClearGeometryMode(glistp++, 0xFFFFFFFF);
-    gDPSetCombineMode(glistp++, G_CC_DECALRGBA, G_CC_DECALRGBA);
+    gDPSetCycleType(gfx++, G_CYC_1CYCLE);
+    gSPClearGeometryMode(gfx++, 0xFFFFFFFF);
+    gDPSetCombineMode(gfx++, G_CC_DECALRGBA, G_CC_DECALRGBA);
 
     u32 tile_id = 0;
     for (s32 y = 120; y > -120; y -= 32)
     {
         for (s32 x = -160; x < 160; x += 32)
         {
-            glistp = render_quad(glistp, tile_id, (f32)(x + 16), (f32)(y - 16));
+            gfx = render_quad(gfx, tile_id, (f32)(x + 16), (f32)(y - 16));
             tile_id++;
         }
     }
 
-    glistp = render_string(glistp, "\2P\3r\2e\3s\2s \3S\2T\3A\2R\3T", 0, -30.0f, 5.0f);
-    glistp = render_string(glistp, "\4P\5r\4e\5s\4s \5S\4T\5A\4R\5T", 16, -30.0f, -10.0f);
+    gfx = render_string(gfx, "\2P\3r\2e\3s\2s \3S\2T\3A\2R\3T", 0, -30.0f, 5.0f);
+    gfx = render_string(gfx, "\4P\5r\4e\5s\4s \5S\4T\5A\4R\5T", 16, -30.0f, -10.0f);
 
-    // End the construction of the display list
-    gDPFullSync(glistp++);
-    gSPEndDisplayList(glistp++);
-
-    // Check if all are put in the array
-    assert(glistp - gfx_glist < GFX_GLIST_LEN);
-
-    // Activate the RSP task. Switch display buffers at the end of the task.
-    nuGfxTaskStart(gfx_glist,
-                   (s32)(glistp - gfx_glist) * sizeof(Gfx),
-                   NU_GFX_UCODE_F3DEX, NU_SC_SWAPBUFFER);
+    gfxEnd(gfx);
 }

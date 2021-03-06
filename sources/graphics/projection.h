@@ -3,6 +3,6 @@
 
 #include <nusys.h>
 
-Gfx *apply_projection(Gfx *glistp, f32 w, f32 h);
+Gfx *apply_projection(Gfx *gfx, f32 w, f32 h);
 
 #endif // PROJECTION_H

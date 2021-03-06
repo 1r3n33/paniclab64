@@ -57,15 +57,15 @@ static PalPixel *textures[32] = {
     _pp_table_dice_rb_32x32_CI_4b,
     _pp_table_dice_rw_32x32_CI_4b};
 
-Gfx *apply_texture(Gfx *glistp, u32 tex_id)
+Gfx *apply_texture(Gfx *gfx, u32 tex_id)
 {
     // Enable texture, set scaling parameters
-    gSPTexture(glistp++, 0x8000, 0x8000, 0, G_TX_RENDERTILE, G_ON);
+    gSPTexture(gfx++, 0x8000, 0x8000, 0, G_TX_RENDERTILE, G_ON);
 
     // Switch to combine mode using texture color
-    gDPSetCombineMode(glistp++, G_CC_DECALRGBA, G_CC_DECALRGBA);
+    gDPSetCombineMode(gfx++, G_CC_DECALRGBA, G_CC_DECALRGBA);
 
-    gDPLoadTextureBlock_4b(glistp++,
+    gDPLoadTextureBlock_4b(gfx++,
                            textures[tex_id]->pixel.p4, // Pointer to texture image
                            G_IM_FMT_CI,                // Texel format
                            32, 32,                     // Image width and height
@@ -75,17 +75,17 @@ Gfx *apply_texture(Gfx *glistp, u32 tex_id)
                            G_TX_NOLOD, G_TX_NOLOD);    // Shift (not shifted here)
 
     // Texture palette
-    gDPSetTextureLUT(glistp++, G_TT_RGBA16);
-    gDPLoadTLUT_pal16(glistp++, 0, textures[tex_id]->ppal);
+    gDPSetTextureLUT(gfx++, G_TT_RGBA16);
+    gDPLoadTLUT_pal16(gfx++, 0, textures[tex_id]->ppal);
 
     // Texture perspective correction is turned on during mapping
-    gDPSetTexturePersp(glistp++, G_TP_PERSP);
+    gDPSetTexturePersp(gfx++, G_TP_PERSP);
     // Set texture filter
-    gDPSetTextureFilter(glistp++, G_TF_BILERP);
-    gDPSetTextureConvert(glistp++, G_TC_FILT);
+    gDPSetTextureFilter(gfx++, G_TF_BILERP);
+    gDPSetTextureConvert(gfx++, G_TC_FILT);
     // This can be ignored until LOD or detail texture is explained
-    gDPSetTextureLOD(glistp++, G_TL_TILE);
-    gDPSetTextureDetail(glistp++, G_TD_CLAMP);
+    gDPSetTextureLOD(gfx++, G_TL_TILE);
+    gDPSetTextureDetail(gfx++, G_TD_CLAMP);
 
-    return glistp;
+    return gfx;
 }

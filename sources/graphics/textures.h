@@ -31,6 +31,6 @@
 #define TEXID_DICE_DIR_RED_BLACK 25
 #define TEXID_DICE_DIR_RED_WHITE 26
 
-Gfx *apply_texture(Gfx *glistp, u32 tex_id);
+Gfx *apply_texture(Gfx *gfx, u32 tex_id);
 
 #endif // TEXTURES_H

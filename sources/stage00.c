@@ -1,54 +1,38 @@
-#include <assert.h>
 #include <nusys.h>
 #include "game/game.h"
-#include "graphic.h"
 #include "graphics/graphics.h"
 
-void renderQuad(Matrices *mtx, u32 tex_id);
+Gfx *renderQuad(Gfx *gfx, Matrices *mtx, u32 tex_id);
 
-u32 renderCards(Cards *cards, u32 id);
+Gfx *renderCards(Gfx *gfx, Cards *cards, u32 id);
 
-u32 renderDice(Dice *dice, u32 id);
+Gfx *renderDice(Gfx *gfx, Dice *dice, u32 id);
 
-void renderCursor(u32 cursor_id, Matrices *m);
+Gfx *renderCursor(Gfx *gfx, u32 cursor_id, Matrices *m);
 
 /* Make the display list and activate the task. */
 void makeDL00(Game *game)
 {
-  /* Specify the display list buffer  */
-  glistp = gfx_glist;
-
   /*  The initialization of RCP  */
-  gfxRCPInit();
+  Gfx *gfx = gfxBegin();
 
   /* Clear the frame buffer and the Z-buffer  */
-  gfxClearCfb();
+  gfx = gfxClearCfb(gfx);
 
-  glistp = apply_projection(glistp, (f32)SCREEN_WD, (f32)SCREEN_HT);
+  gfx = apply_projection(gfx, (f32)SCREEN_WD, (f32)SCREEN_HT);
 
-  u32 mtx_id = 0;
-  mtx_id = renderCards(&game->cards, mtx_id);
-  mtx_id = renderDice(&game->dice, mtx_id);
+  gfx = renderCards(gfx, &game->cards, 0);
+  gfx = renderDice(gfx, &game->dice, 32);
 
   // Render cursors
-  renderCursor(0, &graphics.matrices[graphics.cursors[0]]);
-  renderCursor(1, &graphics.matrices[graphics.cursors[1]]);
+  gfx = renderCursor(gfx, 0, &graphics.matrices[graphics.cursors[0]]);
+  gfx = renderCursor(gfx, 1, &graphics.matrices[graphics.cursors[1]]);
 
   // Render scores
-  glistp = render_string(glistp, graphics.text[0], 0, -150.0f, 100.0f);
-  glistp = render_string(glistp, graphics.text[1], 8, 100.0f, 100.0f);
+  gfx = render_string(gfx, graphics.text[0], 0, -150.0f, 100.0f);
+  gfx = render_string(gfx, graphics.text[1], 8, 100.0f, 100.0f);
 
-  /* End the construction of the display list  */
-  gDPFullSync(glistp++);
-  gSPEndDisplayList(glistp++);
-
-  /* Check if all are put in the array  */
-  assert(glistp - gfx_glist < GFX_GLIST_LEN);
-
-  /* Activate the RSP task. Switch display buffers at the end of the task. */
-  nuGfxTaskStart(gfx_glist,
-                 (s32)(glistp - gfx_glist) * sizeof(Gfx),
-                 NU_GFX_UCODE_F3DEX, NU_SC_SWAPBUFFER);
+  gfxEnd(gfx);
 }
 
 // Vertex: xyz, uv, rgba
@@ -91,29 +75,31 @@ static Vtx cursor_vtx[] = {
 };
 
 /* Draw a square  */
-void renderQuad(Matrices *mtx, u32 tex_id)
+Gfx *renderQuad(Gfx *gfx, Matrices *mtx, u32 tex_id)
 {
-  glistp = apply_matrices(glistp, mtx);
+  gfx = apply_matrices(gfx, mtx);
 
-  gSPVertex(glistp++, &(quad_vtx[0]), 4, 0);
+  gSPVertex(gfx++, &(quad_vtx[0]), 4, 0);
 
-  gDPPipeSync(glistp++);
-  gDPSetCycleType(glistp++, G_CYC_1CYCLE);
+  gDPPipeSync(gfx++);
+  gDPSetCycleType(gfx++, G_CYC_1CYCLE);
 
   /* Specify back surface culling */
-  gSPSetGeometryMode(glistp++, G_CULL_BACK);
+  gSPSetGeometryMode(gfx++, G_CULL_BACK);
 
-  glistp = apply_texture(glistp, tex_id);
+  gfx = apply_texture(gfx, tex_id);
 
-  gDPSetRenderMode(glistp++, G_RM_AA_OPA_SURF, G_RM_AA_OPA_SURF2);
+  gDPSetRenderMode(gfx++, G_RM_AA_OPA_SURF, G_RM_AA_OPA_SURF2);
 
-  gSPClearGeometryMode(glistp++, 0xFFFFFFFF);
-  gSPSetGeometryMode(glistp++, G_SHADE | G_SHADING_SMOOTH);
+  gSPClearGeometryMode(gfx++, 0xFFFFFFFF);
+  gSPSetGeometryMode(gfx++, G_SHADE | G_SHADING_SMOOTH);
 
-  gSP2Triangles(glistp++, 0, 1, 2, 0, 0, 2, 3, 0);
+  gSP2Triangles(gfx++, 0, 1, 2, 0, 0, 2, 3, 0);
+
+  return gfx;
 }
 
-u32 renderCards(Cards *cards, u32 id)
+Gfx *renderCards(Gfx *gfx, Cards *cards, u32 id)
 {
   f32 fr = 360.0f / (float)cards->count;
   f32 fi = 0.0f;
@@ -122,31 +108,31 @@ u32 renderCards(Cards *cards, u32 id)
   {
     u32 j = id + i;
     set_card_matrices(&graphics.matrices[j], 100.0f, fr * fi);
-    renderQuad(&graphics.matrices[j], cards->gfx_ids[i]);
+    gfx = renderQuad(gfx, &graphics.matrices[j], cards->gfx_ids[i]);
   }
 
-  return id + cards->count;
+  return gfx;
 }
 
-u32 renderDice(Dice *dice, u32 id)
+Gfx *renderDice(Gfx *gfx, Dice *dice, u32 id)
 {
   set_dice_matrices(&graphics.matrices[id], -20.0f, 20.0f, 0.8f);
-  renderQuad(&graphics.matrices[id], 15 + dice->gfx_ids[0]);
+  gfx = renderQuad(gfx, &graphics.matrices[id], 15 + dice->gfx_ids[0]);
   id++;
 
   set_dice_matrices(&graphics.matrices[id], 20.0f, 20.0f, 0.8f);
-  renderQuad(&graphics.matrices[id], 17 + dice->gfx_ids[1]);
+  gfx = renderQuad(gfx, &graphics.matrices[id], 17 + dice->gfx_ids[1]);
   id++;
 
   set_dice_matrices(&graphics.matrices[id], -20.0f, -20.0f, 0.8f);
-  renderQuad(&graphics.matrices[id], 19 + dice->gfx_ids[2]);
+  gfx = renderQuad(gfx, &graphics.matrices[id], 19 + dice->gfx_ids[2]);
   id++;
 
   set_dice_matrices(&graphics.matrices[id], 20.0f, -20.0f, 0.8f);
-  renderQuad(&graphics.matrices[id], 21 + dice->gfx_ids[3]);
+  gfx = renderQuad(gfx, &graphics.matrices[id], 21 + dice->gfx_ids[3]);
   id++;
 
-  return id;
+  return gfx;
 }
 
 // Render cursor
@@ -157,35 +143,37 @@ u32 cursor_colors[4][4] = {
     {0x00, 0x00, 0x00, 0xff},
 };
 
-void renderCursor(u32 cursor_id, Matrices *m)
+Gfx *renderCursor(Gfx *gfx, u32 cursor_id, Matrices *m)
 {
-  glistp = apply_matrices(glistp, m);
+  gfx = apply_matrices(gfx, m);
 
-  gSPVertex(glistp++, &(cursor_vtx[0]), 24, 0);
+  gSPVertex(gfx++, &(cursor_vtx[0]), 24, 0);
 
-  gDPPipeSync(glistp++);
-  gDPSetCycleType(glistp++, G_CYC_1CYCLE);
+  gDPPipeSync(gfx++);
+  gDPSetCycleType(gfx++, G_CYC_1CYCLE);
 
-  gSPTexture(glistp++, 0, 0, 0, 0, G_OFF);
-  gDPSetCombineMode(glistp++, G_CC_PRIMITIVE, G_CC_PRIMITIVE);
+  gSPTexture(gfx++, 0, 0, 0, 0, G_OFF);
+  gDPSetCombineMode(gfx++, G_CC_PRIMITIVE, G_CC_PRIMITIVE);
 
-  gDPSetRenderMode(glistp++, G_RM_AA_OPA_SURF, G_RM_AA_OPA_SURF2);
-  gSPClearGeometryMode(glistp++, 0xFFFFFFFF);
+  gDPSetRenderMode(gfx++, G_RM_AA_OPA_SURF, G_RM_AA_OPA_SURF2);
+  gSPClearGeometryMode(gfx++, 0xFFFFFFFF);
 
   gDPSetPrimColor(
-      glistp++, 0, 0,
+      gfx++, 0, 0,
       cursor_colors[cursor_id][0], cursor_colors[cursor_id][1], cursor_colors[cursor_id][2], cursor_colors[cursor_id][3]);
 
   // Top Left
-  gSP2Triangles(glistp++, 0, 1, 2, 0, 0, 2, 3, 0);
-  gSP2Triangles(glistp++, 0, 3, 4, 0, 0, 4, 5, 0);
+  gSP2Triangles(gfx++, 0, 1, 2, 0, 0, 2, 3, 0);
+  gSP2Triangles(gfx++, 0, 3, 4, 0, 0, 4, 5, 0);
   // Top Right
-  gSP2Triangles(glistp++, 6, 8, 7, 0, 6, 9, 8, 0);
-  gSP2Triangles(glistp++, 6, 10, 9, 0, 6, 11, 10, 0);
+  gSP2Triangles(gfx++, 6, 8, 7, 0, 6, 9, 8, 0);
+  gSP2Triangles(gfx++, 6, 10, 9, 0, 6, 11, 10, 0);
   // Bottom Left
-  gSP2Triangles(glistp++, 12, 14, 13, 0, 12, 15, 14, 0);
-  gSP2Triangles(glistp++, 12, 16, 15, 0, 12, 17, 16, 0);
+  gSP2Triangles(gfx++, 12, 14, 13, 0, 12, 15, 14, 0);
+  gSP2Triangles(gfx++, 12, 16, 15, 0, 12, 17, 16, 0);
   // Bottom Right
-  gSP2Triangles(glistp++, 18, 19, 20, 0, 18, 20, 21, 0);
-  gSP2Triangles(glistp++, 18, 21, 22, 0, 18, 22, 23, 0);
+  gSP2Triangles(gfx++, 18, 19, 20, 0, 18, 20, 21, 0);
+  gSP2Triangles(gfx++, 18, 21, 22, 0, 18, 22, 23, 0);
+
+  return gfx;
 }

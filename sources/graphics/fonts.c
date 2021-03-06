@@ -69,12 +69,12 @@ static u32 spaces[128] = {
     ['s'] = 4 + 1,
 };
 
-Gfx *apply_fonts_texture(Gfx *glistp)
+Gfx *apply_fonts_texture(Gfx *gfx)
 {
     // Enable texture, set scaling parameters
-    gSPTexture(glistp++, 0x8000, 0x8000, 0, G_TX_RENDERTILE, G_ON);
+    gSPTexture(gfx++, 0x8000, 0x8000, 0, G_TX_RENDERTILE, G_ON);
 
-    gDPLoadTextureBlock_4b(glistp++,
+    gDPLoadTextureBlock_4b(gfx++,
                            _pp_table_fonts_128x64_I_4b->pixel.p4, // Pointer to texture image
                            G_IM_FMT_I,                            // Texel format
                            128, 64,                               // Image width and height
@@ -84,32 +84,32 @@ Gfx *apply_fonts_texture(Gfx *glistp)
                            G_TX_NOLOD, G_TX_NOLOD);               // Shift (not shifted here)
 
     // Texture palette
-    gDPSetTextureLUT(glistp++, G_TT_NONE);
+    gDPSetTextureLUT(gfx++, G_TT_NONE);
 
     // Texture perspective correction is turned on during mapping
-    gDPSetTexturePersp(glistp++, G_TP_PERSP);
+    gDPSetTexturePersp(gfx++, G_TP_PERSP);
     // Set texture filter
-    gDPSetTextureFilter(glistp++, G_TF_POINT);
-    gDPSetTextureConvert(glistp++, G_TC_FILT);
+    gDPSetTextureFilter(gfx++, G_TF_POINT);
+    gDPSetTextureConvert(gfx++, G_TC_FILT);
 
     // This can be ignored until LOD or detail texture is explained
-    gDPSetTextureLOD(glistp++, G_TL_TILE);
-    gDPSetTextureDetail(glistp++, G_TD_CLAMP);
+    gDPSetTextureLOD(gfx++, G_TL_TILE);
+    gDPSetTextureDetail(gfx++, G_TD_CLAMP);
 
-    return glistp;
+    return gfx;
 }
 
-Gfx *render_glyph(Gfx *glistp, Mtx *m, Vtx *vtx)
+Gfx *render_glyph(Gfx *gfx, Mtx *m, Vtx *vtx)
 {
     gSPMatrix(
-        glistp++,
+        gfx++,
         OS_K0_TO_PHYSICAL(m),
         G_MTX_MODELVIEW | G_MTX_LOAD | G_MTX_NOPUSH);
 
-    gSPVertex(glistp++, vtx, 4, 0);
-    gSP2Triangles(glistp++, 0, 1, 2, 0, 0, 2, 3, 0);
+    gSPVertex(gfx++, vtx, 4, 0);
+    gSP2Triangles(gfx++, 0, 1, 2, 0, 0, 2, 3, 0);
 
-    return glistp;
+    return gfx;
 }
 
 u32 font_colors[32][4] = {
@@ -121,21 +121,20 @@ u32 font_colors[32][4] = {
     {0xed, 0x27, 0x44, 0xFF}, // Ref Red
 };
 
-Gfx *render_string(Gfx *glistp, char *str, u32 mtx_id, f32 x, f32 y)
+Gfx *render_string(Gfx *gfx, char *str, u32 mtx_id, f32 x, f32 y)
 {
-    glistp = apply_fonts_texture(glistp);
+    gfx = apply_fonts_texture(gfx);
 
-    gDPPipeSync(glistp++);
-    gDPSetCycleType(glistp++, G_CYC_1CYCLE);
+    gDPPipeSync(gfx++);
+    gDPSetCycleType(gfx++, G_CYC_1CYCLE);
 
     // Enable blending
-    gDPSetRenderMode(glistp++, G_RM_AA_XLU_SURF2, G_RM_AA_XLU_SURF2);
+    gDPSetRenderMode(gfx++, G_RM_AA_XLU_SURF2, G_RM_AA_XLU_SURF2);
 
-    gSPClearGeometryMode(glistp++, 0xFFFFFFFF);
-    gSPSetGeometryMode(glistp++, G_SHADE | G_SHADING_SMOOTH);
+    gSPClearGeometryMode(gfx++, 0xFFFFFFFF);
 
-    gDPSetCombineMode(glistp++, G_CC_MODULATEIDECALA_PRIM, G_CC_MODULATEIDECALA_PRIM);
-    gDPSetPrimColor(glistp++, 0, 0, 0xFF, 0xFF, 0xFF, 0xFF);
+    gDPSetCombineMode(gfx++, G_CC_MODULATEIDECALA_PRIM, G_CC_MODULATEIDECALA_PRIM);
+    gDPSetPrimColor(gfx++, 0, 0, 0xFF, 0xFF, 0xFF, 0xFF);
 
     u32 i = 0;
     u32 j = 0;
@@ -144,17 +143,16 @@ Gfx *render_string(Gfx *glistp, char *str, u32 mtx_id, f32 x, f32 y)
         if (str[i] < 32)
         {
             u32 *color = font_colors[str[i]];
-            gDPSetPrimColor(glistp++, 0, 0, color[0], color[1], color[2], color[3]);
+            gDPSetPrimColor(gfx++, 0, 0, color[0], color[1], color[2], color[3]);
         }
         else
         {
-            guTranslate(&glyph_mtxs[mtx_id + i], x, y, 0.0f);
-            glistp = render_glyph(glistp, &glyph_mtxs[mtx_id + i], glyphes[str[i]]);
+            guTranslate(&glyph_mtxs[mtx_id + j], x, y, 0.0f);
+            gfx = render_glyph(gfx, &glyph_mtxs[mtx_id + j], glyphes[str[i]]);
             x += spaces[str[i]];
             j++;
         }
         i++;
     }
-
-    return glistp;
+    return gfx;
 }

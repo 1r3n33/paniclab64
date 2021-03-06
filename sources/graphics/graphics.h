@@ -2,6 +2,7 @@
 #define GRAPHICS_H
 
 #include "fonts.h"
+#include "init.h"
 #include "matrices.h"
 #include "projection.h"
 #include "textures.h"
