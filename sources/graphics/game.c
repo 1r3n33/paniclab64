@@ -24,7 +24,7 @@ Gfx *renderCards(Gfx *gfx, u32 card_count, u32 *card_gfx_ids, u32 id)
 }
 
 /* Make the display list and activate the task. */
-void makeDL00(Game *game)
+void render_game(Game *game)
 {
   /*  The initialization of RCP  */
   Gfx *gfx = gfxBegin();

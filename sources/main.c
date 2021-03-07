@@ -1,7 +1,8 @@
 #include <nusys.h>
 #include "game/game.h"
 #include "graphics/graphics.h"
-#include "graphics/render.h"
+#include "graphics/game.h"
+#include "graphics/titlescreen.h"
 
 void makeDL00(Game *game);
 
@@ -56,7 +57,7 @@ void game_loop(int pendingGfx)
 
   if (pendingGfx < 1)
   {
-    makeDL00(&game);
+    render_game(&game);
   }
 }
 

@@ -1,6 +1,6 @@
 #include <nusys.h>
 #include "graphics.h"
-#include "render.h"
+#include "titlescreen.h"
 
 #include "../../assets/graphics/titlescreen_32x32_CI_8b.h"
 
