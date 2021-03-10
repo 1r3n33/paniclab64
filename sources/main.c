@@ -1,10 +1,10 @@
 #include <nusys.h>
 #include "game/game.h"
+#include "game/menu.h"
 #include "graphics/graphics.h"
 #include "graphics/game.h"
+#include "graphics/menu.h"
 #include "graphics/titlescreen.h"
-
-void makeDL00(Game *game);
 
 NUContData contdata[MAXCONTROLLERS];
 
@@ -61,12 +61,63 @@ void game_loop(int pendingGfx)
   }
 }
 
-void titlescreen_loop(int pendingGfx)
+void titlescreen_loop(int pendingGfx);
+
+void menu_loop(int pendingGfx)
 {
   nuContDataGetExAll(contdata);
   if (contdata[0].trigger & START_BUTTON)
   {
     nuGfxFuncSet((NUGfxFunc)game_loop);
+  }
+
+  if (contdata[0].trigger & A_BUTTON)
+  {
+    s32 next = menu_action();
+    if (next < 0)
+    {
+      nuGfxFuncSet((NUGfxFunc)titlescreen_loop);
+    }
+    else if (next > 0)
+    {
+      nuGfxFuncSet((NUGfxFunc)game_loop);
+    }
+  }
+
+  if (contdata[0].trigger & U_JPAD)
+  {
+    menu_up();
+  }
+
+  if (contdata[0].trigger & D_JPAD)
+  {
+    menu_down();
+  }
+
+  if (contdata[0].trigger & L_JPAD)
+  {
+    menu_left();
+  }
+
+  if (contdata[0].trigger & R_JPAD)
+  {
+    menu_right();
+  }
+
+  menu_to_gfx(graphics.text);
+
+  if (pendingGfx < 1)
+  {
+    render_menu();
+  }
+}
+
+void titlescreen_loop(int pendingGfx)
+{
+  nuContDataGetExAll(contdata);
+  if (contdata[0].trigger & START_BUTTON)
+  {
+    nuGfxFuncSet((NUGfxFunc)menu_loop);
   }
 
   if (pendingGfx < 1)
@@ -77,6 +128,7 @@ void titlescreen_loop(int pendingGfx)
 
 void mainproc(void)
 {
+  init_menu();
   init_game(&game);
   shuffle_game(&game);
 

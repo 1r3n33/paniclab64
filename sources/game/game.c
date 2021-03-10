@@ -1,7 +1,6 @@
 #include <nusys.h>
 #include <os_time.h>
 #include <stdlib.h>
-#include "cards.h"
 #include "flags.h"
 #include "game.h"
 
