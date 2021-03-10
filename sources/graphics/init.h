@@ -13,6 +13,6 @@
 Gfx *gfxBegin(void);
 void gfxEnd(Gfx *gfx);
 
-Gfx *gfxClearCfb(Gfx *gfx);
+Gfx *gfxClearCfb(Gfx *gfx, u16 rgba, u16 z);
 
 #endif // INIT_H

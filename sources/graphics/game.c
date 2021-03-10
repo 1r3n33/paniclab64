@@ -30,7 +30,7 @@ void render_game(Game *game)
   Gfx *gfx = gfxBegin();
 
   /* Clear the frame buffer and the Z-buffer  */
-  gfx = gfxClearCfb(gfx);
+  gfx = gfxClearCfb(gfx, GPACK_RGBA5551(0xE0, 0xE0, 0x60, 0xFF), G_MAXFBZ);
 
   gfx = apply_projection(gfx, (f32)SCREEN_WD, (f32)SCREEN_HT);
 

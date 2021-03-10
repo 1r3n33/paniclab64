@@ -73,7 +73,7 @@ void gfxEnd(Gfx *gfx)
   Using nuGfxZBuffer (the address of the Z-buffer) and nuGfxCfb_ptr (the
   address of the frame buffer) which are global variables of NuSYSTEM.
 ----------------------------------------------------------------------------*/
-Gfx *gfxClearCfb(Gfx *gfx)
+Gfx *gfxClearCfb(Gfx *gfx, u16 rgba, u16 z)
 {
 	gDPSetCycleType(
 		gfx++,
@@ -93,7 +93,7 @@ Gfx *gfxClearCfb(Gfx *gfx)
 
 	gDPSetFillColor(
 		gfx++,
-		(GPACK_ZDZ(G_MAXFBZ, 0) << 16 | GPACK_ZDZ(G_MAXFBZ, 0)));
+		(GPACK_ZDZ(z, 0) << 16 | GPACK_ZDZ(z, 0)));
 
 	gDPFillRectangle(
 		gfx++,
@@ -112,10 +112,9 @@ Gfx *gfxClearCfb(Gfx *gfx)
 		SCREEN_WD,
 		osVirtualToPhysical(nuGfxCfb_ptr));
 
-	u16 bkgColor = GPACK_RGBA5551(0xCA, 0xCE, 0x20, 1);
 	gDPSetFillColor(
 		gfx++,
-		(bkgColor << 16 | bkgColor));
+		(rgba << 16 | rgba));
 
 	gDPFillRectangle(
 		gfx++,
