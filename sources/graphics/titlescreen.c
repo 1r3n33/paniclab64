@@ -66,8 +66,7 @@ void render_titlescreen()
         }
     }
 
-    gfx = render_string(gfx, "\2P\3r\2e\3s\2s \3S\2T\3A\2R\3T", 0, -30.0f, 5.0f);
-    gfx = render_string(gfx, "\4P\5r\4e\5s\4s \5S\4T\5A\4R\5T", 16, -30.0f, -10.0f);
+    gfx = render_string(gfx, "\4P\5r\4e\5s\4s \5S\4T\5A\4R\5T", 16, -30.0f, -5.0f);
 
     gfxEnd(gfx);
 }

@@ -9,6 +9,8 @@
 
 typedef struct
 {
+    u32 selection;
+
     Matrices matrices[MATRICES_LEN];
 
     u32 cursors[4];

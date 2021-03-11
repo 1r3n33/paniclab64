@@ -150,7 +150,7 @@ char *get_flags_value_string(u32 value)
     }
 }
 
-void menu_to_gfx(char text[32][32])
+u32 menu_to_gfx(char text[32][32])
 {
     if (selection == MENU_SELECTION_PLAYER1)
     {
@@ -232,19 +232,38 @@ void menu_to_gfx(char text[32][32])
 
     if (selection == MENU_SELECTION_BACK)
     {
-        strcpy(text[12], "\x02""B""\x03""a""\x02""c""\x03""k");
+        strcpy(text[12], "\x02"
+                         "B"
+                         "\x03"
+                         "a"
+                         "\x02"
+                         "c"
+                         "\x03"
+                         "k");
     }
     else
     {
-        strcpy(text[12], "\x08""Back");
+        strcpy(text[12], "\x08"
+                         "Back");
     }
 
     if (selection == MENU_SELECTION_START)
     {
-        strcpy(text[13], "\x04""S""\x05""t""\x04""a""\x05""r""\x04""t");
+        strcpy(text[13], "\x04"
+                         "S"
+                         "\x05"
+                         "t"
+                         "\x04"
+                         "a"
+                         "\x05"
+                         "r"
+                         "\x04"
+                         "t");
     }
     else
     {
         strcpy(text[13], "\x08Start");
     }
+
+    return selection;
 }

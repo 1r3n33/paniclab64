@@ -13,6 +13,14 @@
             {0, 0, 0, 0, MAKE_U(l), MAKE_V(b), 0xff, 0xff, 0xff, 0xff}, \
     }
 
+#define GLYPH2(pt, pl, pb, pr, tt, tl, tb, tr)                              \
+    {                                                                       \
+        {pl, pt, 0, 0, MAKE_U(tl), MAKE_V(tt), 0xff, 0xff, 0xff, 0xff},     \
+            {pr, pt, 0, 0, MAKE_U(tr), MAKE_V(tt), 0xff, 0xff, 0xff, 0xff}, \
+            {pr, pb, 0, 0, MAKE_U(tr), MAKE_V(tb), 0xff, 0xff, 0xff, 0xff}, \
+            {pl, pb, 0, 0, MAKE_U(tl), MAKE_V(tb), 0xff, 0xff, 0xff, 0xff}, \
+    }
+
 Mtx glyph_mtxs[256];
 
 static Vtx glyphes[128][4] = {
@@ -59,17 +67,17 @@ static Vtx glyphes[128][4] = {
     ['d'] = GLYPH(5, 10, 23, 17, 33, 22),
     ['e'] = GLYPH(4, 6, 27, 23, 33, 27),
     ['f'] = GLYPH(5, 10, 23, 28, 33, 33),
-    ['g'] = GLYPH(5, 8, 27, 34, 35, 39),
+    ['g'] = GLYPH2(6, 0, -2, 5, 27, 34, 35, 39),
     ['h'] = GLYPH(4, 10, 23, 40, 33, 44),
     ['i'] = GLYPH(3, 9, 24, 45, 33, 48),
-    ['j'] = GLYPH(4, 11, 24, 49, 35, 53),
+    ['j'] = GLYPH2(9, 0, -2, 4, 24, 49, 35, 53),
     ['k'] = GLYPH(4, 10, 23, 54, 33, 58),
     ['l'] = GLYPH(3, 10, 23, 59, 33, 62),
     ['m'] = GLYPH(6, 6, 27, 63, 33, 69),
     ['n'] = GLYPH(4, 6, 27, 70, 33, 74),
     ['o'] = GLYPH(4, 6, 27, 75, 33, 79),
-    ['p'] = GLYPH(4, 8, 27, 80, 35, 84),
-    ['q'] = GLYPH(5, 8, 27, 85, 35, 90),
+    ['p'] = GLYPH2(6, 0, -2, 4, 27, 80, 35, 84),
+    ['q'] = GLYPH2(6, 0, -2, 5, 27, 85, 35, 90),
     ['r'] = GLYPH(4, 6, 27, 91, 33, 95),
     ['s'] = GLYPH(4, 6, 27, 96, 33, 100),
     ['t'] = GLYPH(4, 10, 23, 101, 33, 105),
@@ -77,7 +85,7 @@ static Vtx glyphes[128][4] = {
     ['v'] = GLYPH(4, 6, 27, 111, 33, 115),
     ['w'] = GLYPH(6, 6, 27, 116, 33, 122),
     ['x'] = GLYPH(5, 6, 34, 1, 40, 6),
-    ['y'] = GLYPH(4, 8, 34, 7, 42, 11),
+    ['y'] = GLYPH2(6, 0, -2, 4, 34, 7, 42, 11),
     ['z'] = GLYPH(4, 6, 34, 12, 40, 16),
 };
 
@@ -210,7 +218,7 @@ Gfx *render_string(Gfx *gfx, char *str, u32 mtx_id, f32 x, f32 y)
     gDPSetCycleType(gfx++, G_CYC_1CYCLE);
 
     // Enable blending
-    gDPSetRenderMode(gfx++, G_RM_AA_XLU_SURF2, G_RM_AA_XLU_SURF2);
+    gDPSetRenderMode(gfx++, G_RM_AA_XLU_SURF, G_RM_AA_XLU_SURF2);
 
     gSPClearGeometryMode(gfx++, 0xFFFFFFFF);
 

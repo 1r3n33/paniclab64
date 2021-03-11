@@ -104,7 +104,7 @@ void menu_loop(int pendingGfx)
     menu_right();
   }
 
-  menu_to_gfx(graphics.text);
+  graphics.selection = menu_to_gfx(graphics.text);
 
   if (pendingGfx < 1)
   {
@@ -117,6 +117,7 @@ void titlescreen_loop(int pendingGfx)
   nuContDataGetExAll(contdata);
   if (contdata[0].trigger & START_BUTTON)
   {
+    init_menu();
     nuGfxFuncSet((NUGfxFunc)menu_loop);
   }
 
@@ -128,7 +129,6 @@ void titlescreen_loop(int pendingGfx)
 
 void mainproc(void)
 {
-  init_menu();
   init_game(&game);
   shuffle_game(&game);
 
