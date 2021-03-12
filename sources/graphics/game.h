@@ -1,8 +1,6 @@
 #ifndef GRAPHICS_GAME_H
 #define GRAPHICS_GAME_H
 
-#include "../game/game.h"
-
-void render_game(Game *game);
+void render_game();
 
 #endif // GRAPHICS_GAME_H

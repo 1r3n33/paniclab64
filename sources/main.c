@@ -8,6 +8,9 @@
 
 NUContData contdata[MAXCONTROLLERS];
 
+void menu_loop(int pendingGfx);
+void titlescreen_loop(int pendingGfx);
+
 void update_player(u32 player_id)
 {
   if (contdata[player_id].trigger & A_BUTTON)
@@ -38,7 +41,7 @@ void update_player(u32 player_id)
   // Shuffle cards
   if (contdata[player_id].trigger & START_BUTTON)
   {
-    shuffle_game(&game);
+    nuGfxFuncSet((NUGfxFunc)menu_loop);
   }
 }
 
@@ -51,7 +54,8 @@ void game_loop(int pendingGfx)
 
   // Map game data to graphics data
   graphics.card_count = cards_to_gfx(graphics.card_gfx_ids);
-  cursors_to_gfx(graphics.cursors);
+  graphics.dice_count = dice_to_gfx(&game.dice, graphics.dice_gfx_ids);
+  graphics.cursor_count = cursors_to_gfx(graphics.cursors);
   score_to_string(0, graphics.text[0]);
   score_to_string(1, graphics.text[1]);
 
@@ -61,13 +65,15 @@ void game_loop(int pendingGfx)
   }
 }
 
-void titlescreen_loop(int pendingGfx);
-
 void menu_loop(int pendingGfx)
 {
   nuContDataGetExAll(contdata);
   if (contdata[0].trigger & START_BUTTON)
   {
+    u32 player_count = get_settings_player_count();
+    u32 settings_flags = get_settings_flags();
+    init_game(&game, player_count, settings_flags);
+    shuffle_game(&game);
     nuGfxFuncSet((NUGfxFunc)game_loop);
   }
 
@@ -80,6 +86,10 @@ void menu_loop(int pendingGfx)
     }
     else if (next > 0)
     {
+      u32 player_count = get_settings_player_count();
+      u32 settings_flags = get_settings_flags();
+      init_game(&game, player_count, settings_flags);
+      shuffle_game(&game);
       nuGfxFuncSet((NUGfxFunc)game_loop);
     }
   }
@@ -129,9 +139,6 @@ void titlescreen_loop(int pendingGfx)
 
 void mainproc(void)
 {
-  init_game(&game);
-  shuffle_game(&game);
-
   // Initialization of graphics
   nuGfxInit();
 

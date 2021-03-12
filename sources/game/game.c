@@ -6,14 +6,12 @@
 
 Game game;
 
-void init_game(Game *game)
+void init_game(Game *game, u32 player_count, u32 settings_flags)
 {
-    u32 player_count = 2;
-
-    u32 card_count = init_cards();
+    u32 card_count = init_cards(settings_flags);
     game->card_count = card_count;
 
-    init_dice(&game->dice);
+    init_dice(&game->dice, settings_flags);
 
     init_cursors(player_count, card_count);
 

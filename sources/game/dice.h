@@ -3,25 +3,19 @@
 
 #include <nusys.h>
 
-#define DICE_SHAPE 0
-#define DICE_PATTERN 1
-#define DICE_COLOR 2
-#define DICE_DIR 3
-
-#define MAX_DICE 4
-
 typedef struct
 {
     u32 count;
     u32 flags; // shape-pattern-color
     u32 dir;
-    u32 gfx_ids[MAX_DICE];
 } Dice;
 
 // Init dice
-void init_dice(Dice *dice);
+void init_dice(Dice *dice, u32 settings_flags);
 
 // Shuffle dice
 void shuffle_dice(Dice *dice);
+
+u32 dice_to_gfx(Dice *dice, u32 *dice_gfx_ids);
 
 #endif // DICE_H

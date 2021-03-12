@@ -56,10 +56,12 @@ int cursor_equals(u32 player_id, u32 value)
 }
 
 // Map to graphics data
-void cursors_to_gfx(u32 *gfx_cursors)
+u32 cursors_to_gfx(u32 *gfx_cursors)
 {
     gfx_cursors[0] = cursors.pos[0];
     gfx_cursors[1] = cursors.pos[1];
     gfx_cursors[2] = cursors.pos[2];
     gfx_cursors[3] = cursors.pos[3];
+
+    return cursors.player_count;
 }

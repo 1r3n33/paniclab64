@@ -1,38 +1,62 @@
 #include <stdlib.h>
 #include "cards.h"
 #include "flags.h"
+#include "settings.h"
 
 Cards cards;
 
-u32 init_cards()
+u32 init_cards(u32 settings_flags)
 {
-    cards.count = 8 + 3 + 3 + 3; // Number of cards
+    u32 mutations = settings_flags & SETTINGS_FLAG_MUTATIONS;
+    u32 air_vents = settings_flags & SETTINGS_FLAG_AIRVENTS;
+    u32 directions = mutations | air_vents;
 
-    // 8 first cards are aliens
-    for (u32 i = 0; i < 8; i++)
+    // 8 cards are amoebas
+    u32 i;
+    for (i = 0; i < 8; i++)
     {
         cards.flags[i] = i & 7;
     }
 
-    // 3 next cards are directions
-    cards.flags[8] = FLAGS_DIR_BLUE;
-    cards.flags[9] = FLAGS_DIR_YELLOW;
-    cards.flags[10] = FLAGS_DIR_RED;
+    if (directions)
+    {
+        // 3 cards are directions
+        cards.flags[i] = FLAGS_DIR_BLUE;
+        cards.blue_dir = i;
+        i++;
 
-    cards.blue_dir = 8;
-    cards.yellow_dir = 9;
-    cards.red_dir = 10;
+        cards.flags[i] = FLAGS_DIR_YELLOW;
+        cards.yellow_dir = i;
+        i++;
 
-    // 3 next cards are swaps
-    cards.flags[11] = FLAGS_SWAP_SHAPE;
-    cards.flags[12] = FLAGS_SWAP_PATTERN;
-    cards.flags[13] = FLAGS_SWAP_COLOR;
+        cards.flags[i] = FLAGS_DIR_RED;
+        cards.red_dir = i;
+        i++;
+    }
+    else
+    {
+        cards.blue_dir = 0;
+        cards.yellow_dir = 0;
+        cards.red_dir = 0;
+    }
 
-    // 3 next cards are vents
-    cards.flags[14] = FLAGS_VENT;
-    cards.flags[15] = FLAGS_VENT;
-    cards.flags[16] = FLAGS_VENT;
+    if (mutations)
+    {
+        // 3 cards are mutations
+        cards.flags[i++] = FLAGS_SWAP_SHAPE;
+        cards.flags[i++] = FLAGS_SWAP_PATTERN;
+        cards.flags[i++] = FLAGS_SWAP_COLOR;
+    }
 
+    if (air_vents)
+    {
+        // 3 cards are air vents
+        cards.flags[i++] = FLAGS_VENT;
+        cards.flags[i++] = FLAGS_VENT;
+        cards.flags[i++] = FLAGS_VENT;
+    }
+
+    cards.count = i;
     return cards.count;
 }
 

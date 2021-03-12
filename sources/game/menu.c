@@ -1,5 +1,6 @@
 #include <string.h>
 #include "menu.h"
+#include "settings.h"
 
 #define MENU_SELECTION_PLAYER1 0
 #define MENU_SELECTION_PLAYER2 1
@@ -10,31 +11,12 @@
 #define MENU_SELECTION_START 6
 #define MENU_SELECTION_BACK 7
 
-#define MENU_PLAYER_OFF 0
-#define MENU_PLAYER_ON 1
-#define MENU_PLAYER_AI 2
-
-#define MENU_FLAG_MUTATIONS 0x01
-#define MENU_FLAG_AIRVENTS 0x02
-
-typedef struct
-{
-    u32 players[NU_CONT_MAXCONTROLLERS];
-    u32 flags;
-} Settings;
-
-Settings settings;
-
 s32 selection;
 
 void init_menu()
 {
     selection = MENU_SELECTION_PLAYER1;
-    settings.players[0] = MENU_PLAYER_ON;
-    settings.players[1] = MENU_PLAYER_ON;
-    settings.players[2] = MENU_PLAYER_OFF;
-    settings.players[3] = MENU_PLAYER_OFF;
-    settings.flags = MENU_FLAG_MUTATIONS | MENU_FLAG_AIRVENTS;
+    init_settings();
 }
 
 void menu_up()
@@ -67,20 +49,15 @@ void menu_change(s32 sel, s32 d)
     case MENU_SELECTION_PLAYER2:
     case MENU_SELECTION_PLAYER3:
     case MENU_SELECTION_PLAYER4:
-        value = (s32)settings.players[sel] + d;
-        if (value > MENU_PLAYER_AI)
-            value = MENU_PLAYER_OFF;
-        else if (value < 0)
-            value = MENU_PLAYER_AI;
-        settings.players[sel] = value;
+        change_settings_player(sel, d);
         break;
 
     case MENU_SELECTION_MUTATIONS:
-        settings.flags ^= MENU_FLAG_MUTATIONS;
+        change_settings_flags(SETTINGS_FLAG_MUTATIONS);
         break;
 
     case MENU_SELECTION_AIRVENTS:
-        settings.flags ^= MENU_FLAG_AIRVENTS;
+        change_settings_flags(SETTINGS_FLAG_AIRVENTS);
         break;
     }
 }
@@ -123,33 +100,6 @@ s32 menu_action()
     return 0;
 }
 
-char *get_player_value_string(u32 value)
-{
-    switch (value)
-    {
-    case MENU_PLAYER_OFF:
-        return "Off";
-
-    case MENU_PLAYER_ON:
-        return "On";
-
-    case MENU_PLAYER_AI:
-        return "AI";
-    }
-}
-
-char *get_flags_value_string(u32 value)
-{
-    if (value)
-    {
-        return "On";
-    }
-    else
-    {
-        return "Off";
-    }
-}
-
 u32 menu_to_gfx(char text[32][32])
 {
     if (selection == MENU_SELECTION_PLAYER1)
@@ -163,7 +113,7 @@ u32 menu_to_gfx(char text[32][32])
         strcpy(text[1], "\x08");
     }
     strcat(text[0], "Player 1");
-    strcat(text[1], get_player_value_string(settings.players[0]));
+    strcat(text[1], get_settings_player_string(0));
 
     if (selection == MENU_SELECTION_PLAYER2)
     {
@@ -176,7 +126,7 @@ u32 menu_to_gfx(char text[32][32])
         strcpy(text[3], "\x08");
     }
     strcat(text[2], "Player 2");
-    strcat(text[3], get_player_value_string(settings.players[1]));
+    strcat(text[3], get_settings_player_string(1));
 
     if (selection == MENU_SELECTION_PLAYER3)
     {
@@ -189,7 +139,7 @@ u32 menu_to_gfx(char text[32][32])
         strcpy(text[5], "\x08");
     }
     strcat(text[4], "Player 3");
-    strcat(text[5], get_player_value_string(settings.players[2]));
+    strcat(text[5], get_settings_player_string(2));
 
     if (selection == MENU_SELECTION_PLAYER4)
     {
@@ -202,7 +152,7 @@ u32 menu_to_gfx(char text[32][32])
         strcpy(text[7], "\x08");
     }
     strcat(text[6], "Player 4");
-    strcat(text[7], get_player_value_string(settings.players[3]));
+    strcat(text[7], get_settings_player_string(3));
 
     if (selection == MENU_SELECTION_MUTATIONS)
     {
@@ -215,7 +165,7 @@ u32 menu_to_gfx(char text[32][32])
         strcpy(text[9], "\x08");
     }
     strcat(text[8], "Mutations");
-    strcat(text[9], get_flags_value_string(settings.flags & MENU_FLAG_MUTATIONS));
+    strcat(text[9], get_settings_flags_string(SETTINGS_FLAG_MUTATIONS));
 
     if (selection == MENU_SELECTION_AIRVENTS)
     {
@@ -228,7 +178,7 @@ u32 menu_to_gfx(char text[32][32])
         strcpy(text[11], "\x08");
     }
     strcat(text[10], "Air vents");
-    strcat(text[11], get_flags_value_string(settings.flags & MENU_FLAG_AIRVENTS));
+    strcat(text[11], get_settings_flags_string(SETTINGS_FLAG_AIRVENTS));
 
     if (selection == MENU_SELECTION_BACK)
     {

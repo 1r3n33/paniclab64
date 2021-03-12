@@ -23,6 +23,6 @@ void move_cursor(u32 player_id, s32 dir);
 int cursor_equals(u32 player_id, u32 value);
 
 // Map to graphics data
-void cursors_to_gfx(u32 *gfx_cursors);
+u32 cursors_to_gfx(u32 *gfx_cursors);
 
 #endif // CURSOR_H

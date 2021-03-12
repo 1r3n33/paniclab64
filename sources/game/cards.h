@@ -17,7 +17,7 @@ typedef struct
 } Cards;
 
 // Init cards
-u32 init_cards();
+u32 init_cards(u32 settings_flags);
 
 // Shuffle cards
 void shuffle_cards();
