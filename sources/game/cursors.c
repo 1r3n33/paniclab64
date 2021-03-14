@@ -37,6 +37,12 @@ void reset_cursors()
     }
 }
 
+// Set cursor
+void set_cursor(u32 player_id, u32 value)
+{
+    cursors.pos[player_id] = value;
+}
+
 void move_cursor(u32 player_id, s32 dir)
 {
     cursors.pos[player_id] += dir;

@@ -1,4 +1,6 @@
+#include <math.h>
 #include <nusys.h>
+#include <stdlib.h>
 #include "game/game.h"
 #include "game/menu.h"
 #include "graphics/graphics.h"
@@ -38,6 +40,20 @@ void update_player(u32 player_id)
     move_cursor(player_id, -1);
   }
 
+  if (abs(contdata[player_id].stick_x) > 30 || abs(contdata[player_id].stick_y) > 30)
+  {
+    f32 x = ((f32)contdata[player_id].stick_x) / 128.0f;
+    f32 y = ((f32)contdata[player_id].stick_y) / 128.0f;
+    f32 a = atan2f(y, x);            // -pi..pi (-pi is left)
+    f32 sa = a + (0.5f * (f32)M_PI); // shifted so -pi is north
+    while (sa > (f32)M_PI)
+      sa -= 2.0f * (f32)M_PI;                      // recentered to -pi..pi
+    f32 b = (sa + (f32)M_PI) / (2.0f * (f32)M_PI); // 0..1
+    f32 c = b * (f32)game.card_count;              // 0..n (0 is north and it matches first card index)
+    u32 d = ((u32)c) % game.card_count;            // 0..n-1
+    set_cursor(player_id, d);
+  }
+
   // Shuffle cards
   if (contdata[player_id].trigger & START_BUTTON)
   {
@@ -65,9 +81,18 @@ void game_loop(int pendingGfx)
   }
 }
 
+u32 stick_throttling = 0;
+
 void menu_loop(int pendingGfx)
 {
   nuContDataGetExAll(contdata);
+  if (stick_throttling > 0)
+  {
+    contdata[0].stick_x = 0;
+    contdata[0].stick_y = 0;
+    stick_throttling--;
+  }
+
   if (contdata[0].trigger & START_BUTTON)
   {
     u32 player_count = get_settings_player_count();
@@ -94,24 +119,28 @@ void menu_loop(int pendingGfx)
     }
   }
 
-  if (contdata[0].trigger & U_JPAD)
+  if (contdata[0].trigger & U_JPAD || contdata[0].stick_y > 50)
   {
     menu_up();
+    stick_throttling = 8;
   }
 
-  if (contdata[0].trigger & D_JPAD)
+  if (contdata[0].trigger & D_JPAD || contdata[0].stick_y < -50)
   {
     menu_down();
+    stick_throttling = 8;
   }
 
-  if (contdata[0].trigger & L_JPAD)
+  if (contdata[0].trigger & L_JPAD || contdata[0].stick_x < -50)
   {
     menu_left();
+    stick_throttling = 8;
   }
 
-  if (contdata[0].trigger & R_JPAD)
+  if (contdata[0].trigger & R_JPAD || contdata[0].stick_x > 50)
   {
     menu_right();
+    stick_throttling = 8;
   }
 
   graphics.selection = menu_to_gfx(graphics.text);

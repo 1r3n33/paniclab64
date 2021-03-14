@@ -16,6 +16,9 @@ void init_cursors(u32 player_count, u32 card_count);
 // Reset all cursors
 void reset_cursors();
 
+// Set cursor
+void set_cursor(u32 player_id, u32 value);
+
 // Move cursor
 void move_cursor(u32 player_id, s32 dir);
 

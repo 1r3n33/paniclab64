@@ -16,7 +16,7 @@ INC = $(ROOT)/usr/include
 LCDEFS = -DNU_DEBUG -DF3DEX_GBI_2
 LCINCS = -I. -I$(NUSYSINCDIR) -I$(NUSTDINCDIR) -I$(ROOT)/usr/include/PR
 LCOPTS = -G 0
-LDFLAGS = $(MKDEPOPT) -L$(LIB) -L$(NUSYSLIBDIR) -L$(NUSTDLIBDIR) -lnusys_d -lgultra_d -L$(GCCDIR)/MIPSE/LIB -lkmc
+LDFLAGS = $(MKDEPOPT) -L$(LIB) -L$(NUSYSLIBDIR) -lnusys_d -L$(NUSTDLIBDIR) -lnustd_d -lgultra_d -L$(GCCDIR)/MIPSE/LIB -lkmc
 
 OPTIMIZER = -g
 
