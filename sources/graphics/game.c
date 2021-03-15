@@ -132,6 +132,22 @@ Gfx *renderCursors(Gfx *gfx, u32 cursor_count, u32 *cursors)
   return gfx;
 }
 
+f32 scores_pos[4][2] = {
+    {-150.0f, 100.0f},
+    {100.0f, 100.0f},
+    {-150.0f, -105.0f},
+    {100.0f, -105.0f},
+};
+
+Gfx *renderScores(Gfx *gfx, u32 count)
+{
+  for (u32 i = 0; i < count; i++)
+  {
+    gfx = render_string(gfx, graphics.text[i], i * 8, scores_pos[i][0], scores_pos[i][1]);
+  }
+  return gfx;
+}
+
 /* Make the display list and activate the task. */
 void render_game()
 {
@@ -146,10 +162,7 @@ void render_game()
   gfx = renderCards(gfx, graphics.card_count, graphics.card_gfx_ids, 0);
   gfx = renderDice(gfx, graphics.dice_count, graphics.dice_gfx_ids, 32);
   gfx = renderCursors(gfx, graphics.cursor_count, graphics.cursors);
-
-  // Render scores
-  gfx = render_string(gfx, graphics.text[0], 0, -150.0f, 100.0f);
-  gfx = render_string(gfx, graphics.text[1], 8, 100.0f, 100.0f);
+  gfx = renderScores(gfx, graphics.cursor_count);
 
   gfxEnd(gfx);
 }
