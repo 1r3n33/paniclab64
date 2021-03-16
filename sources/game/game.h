@@ -1,5 +1,5 @@
-#ifndef GAME_H
-#define GAME_H
+#ifndef GAME_GAME_H
+#define GAME_GAME_H
 
 #include <nusys.h>
 #include "cards.h"
@@ -26,4 +26,4 @@ u32 get_solution(Game *game);
 
 extern Game game;
 
-#endif // GAME_H
+#endif // GAME_GAME_H

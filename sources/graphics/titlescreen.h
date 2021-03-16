@@ -1,6 +1,6 @@
-#ifndef TITLESCREEN_H
-#define TITLESCREEN_H
+#ifndef GRAPHICS_TITLESCREEN_H
+#define GRAPHICS_TITLESCREEN_H
 
 void render_titlescreen();
 
-#endif // TITLESCREEN_H
+#endif // GRAPHICS_TITLESCREEN_H
