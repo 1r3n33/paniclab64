@@ -34,6 +34,43 @@ Gfx *render_quad(Gfx *gfx, u32 id, f32 x, f32 y)
     return gfx;
 }
 
+Mtx triangle_mtx;
+
+Vtx triangle_vtx[6] = {
+    {0, 6, 0, 0, 0, 0, 0x00, 0x00, 0x00, 0xff},
+    {6, 3, 0, 0, 0, 0, 0x00, 0x00, 0x00, 0xff},
+    {0, 0, 0, 0, 0, 0, 0x00, 0x00, 0x00, 0xff},
+};
+
+f32 triangle_pos[] = {9.0f, -11.0f};
+
+u32 triangle_col[2][4] = {
+    {0x1c, 0x91, 0x9b, 0xFF},
+    {0xf3, 0x6a, 0x23, 0xFF},
+};
+
+Gfx *render_titlescreen_selection(Gfx *gfx, u32 selection)
+{
+    gSPTexture(gfx++, 0, 0, 0, 0, G_OFF);
+    gDPSetRenderMode(gfx++, G_RM_AA_OPA_SURF, G_RM_AA_OPA_SURF2);
+    gDPSetCombineMode(gfx++, G_CC_PRIMITIVE, G_CC_PRIMITIVE);
+    gDPSetPrimColor(
+        gfx++, 0, 0,
+        triangle_col[selection][0], triangle_col[selection][1], triangle_col[selection][2], triangle_col[selection][3]);
+    gSPClearGeometryMode(gfx++, 0xFFFFFFFF);
+
+    guTranslate(&triangle_mtx, -42.0f, triangle_pos[selection], 0.0f);
+    gSPMatrix(
+        gfx++,
+        OS_K0_TO_PHYSICAL(&triangle_mtx),
+        G_MTX_MODELVIEW | G_MTX_LOAD | G_MTX_NOPUSH);
+
+    gSPVertex(gfx++, triangle_vtx, 3, 0);
+    gSP1Triangle(gfx++, 0, 1, 2, 0);
+
+    return gfx;
+}
+
 void render_titlescreen()
 {
     // The initialization of RCP
@@ -66,7 +103,10 @@ void render_titlescreen()
         }
     }
 
-    gfx = render_string(gfx, "\4P\5r\4e\5s\4s \5S\4T\5A\4R\5T", 16, -30.0f, -5.0f);
+    gfx = render_string(gfx, "\2S\3t\2o\3r\2y \3m\2o\3d\2e", 0, -30.0f, 8.0f);
+    gfx = render_string(gfx, "\4B\5a\4t\5t\4l\5e \4m\5o\4d\5e", 16, -30.0f, -12.0f);
+
+    gfx = render_titlescreen_selection(gfx, graphics.selection);
 
     gfxEnd(gfx);
 }
