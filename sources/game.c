@@ -1,4 +1,5 @@
 #include <nusys.h>
+#include "ai/ai.h"
 #include "controls/controls.h"
 #include "game.h"
 #include "game/game.h"
@@ -8,7 +9,9 @@
 
 void update_player(u32 player_id)
 {
-    NUContData *controller = controls_get(player_id);
+    NUContData *controller = ai_is_enabled(player_id)
+                                 ? ai_controls_get(player_id)
+                                 : controls_get(player_id);
 
     if (controller->trigger & A_BUTTON)
     {

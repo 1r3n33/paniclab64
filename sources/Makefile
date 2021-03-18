@@ -24,7 +24,7 @@ APP = paniclab.out
 
 TARGET = paniclab.n64
 
-CODEFILES = $(wildcard *.c) $(wildcard game/*.c) $(wildcard graphics/*.c) $(wildcard controls/*.c)
+CODEFILES = $(wildcard *.c) $(wildcard game/*.c) $(wildcard graphics/*.c) $(wildcard controls/*.c) $(wildcard ai/*.c)
 
 CODEOBJECTS = $(CODEFILES:.c=.o)
 
