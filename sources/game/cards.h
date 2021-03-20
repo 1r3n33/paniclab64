@@ -22,7 +22,7 @@ u32 init_cards(u32 settings_flags);
 // Shuffle cards
 void shuffle_cards();
 
-s32 get_cards_start_dir(u32 dice_dir);
+u32 get_cards_start(u32 dice_dir);
 
 u32 get_card_flags(u32 card_id);
 

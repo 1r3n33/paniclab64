@@ -30,9 +30,8 @@ void shuffle_game(Game *game)
 u32 get_solution(Game *game)
 {
     // Initialize start position and direction
-    s32 start_dir = get_cards_start_dir(game->dice.dir);
-    s32 start = start_dir > 0 ? start_dir : -start_dir;
-    s32 dir = start_dir > 0 ? 1 : -1;
+    s32 start = get_cards_start(game->dice.dir);
+    s32 dir = game->dice.dir & 1 ? 1 : -1;
 
     // Get initial flags (shape-pattern-color)
     u32 flags = game->dice.flags;

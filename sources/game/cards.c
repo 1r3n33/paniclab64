@@ -90,25 +90,19 @@ void shuffle_cards()
     }
 }
 
-s32 get_cards_start_dir(u32 dice_dir)
+u32 get_cards_start(u32 dice_dir)
 {
     switch (dice_dir)
     {
     case 0: // blue-black clockwise
-        return -cards.blue_dir;
-
     case 1: // blue-white anti-clockwise
         return cards.blue_dir;
 
     case 2: // yellow-black clockwise
-        return -cards.yellow_dir;
-
     case 3: // yellow-white anti-clockwise
         return cards.yellow_dir;
 
     case 4: // red-black clockwise
-        return -cards.red_dir;
-
     case 5: // red-white anti-clockwise
         return cards.red_dir;
     }
