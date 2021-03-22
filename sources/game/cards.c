@@ -5,6 +5,11 @@
 
 Cards cards;
 
+Cards *get_cards()
+{
+    return &cards;
+}
+
 u32 init_cards(u32 settings_flags)
 {
     u32 mutations = settings_flags & SETTINGS_FLAG_MUTATIONS;

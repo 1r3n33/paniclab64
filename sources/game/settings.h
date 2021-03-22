@@ -16,6 +16,8 @@ typedef struct
     u32 flags;
 } Settings;
 
+Settings *get_settings();
+
 void init_settings();
 
 void change_settings_player(s32 player_id, s32 d);

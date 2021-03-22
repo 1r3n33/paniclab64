@@ -2,6 +2,11 @@
 
 Settings settings;
 
+Settings *get_settings()
+{
+    return &settings;
+}
+
 void init_settings()
 {
     settings.players[0] = SETTINGS_PLAYER_ON;

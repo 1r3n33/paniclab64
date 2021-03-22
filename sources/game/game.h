@@ -24,6 +24,8 @@ void shuffle_game(Game *game);
 // Get position that matches dice configuration
 u32 get_solution(Game *game);
 
+Dice *get_dice();
+
 extern Game game;
 
 #endif // GAME_GAME_H

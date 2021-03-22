@@ -16,6 +16,8 @@ typedef struct
     u32 red_dir;
 } Cards;
 
+Cards *get_cards();
+
 // Init cards
 u32 init_cards(u32 settings_flags);
 

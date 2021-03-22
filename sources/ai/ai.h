@@ -2,8 +2,12 @@
 #define AI_H
 
 #include <nusys.h>
+#include "../game/cards.h"
+#include "../game/cursors.h"
+#include "../game/dice.h"
+#include "../game/settings.h"
 
-void ai_init(u32 settings_players[4]);
+void ai_init(Settings *settings, Cards *cards, Dice *dice, Cursors *cursors);
 
 u32 ai_is_enabled(u32 player_id);
 

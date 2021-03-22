@@ -103,3 +103,8 @@ u32 get_solution(Game *game)
 
     return pos;
 }
+
+Dice *get_dice()
+{
+    return &game.dice;
+}

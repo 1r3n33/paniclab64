@@ -1,4 +1,5 @@
 #include <nusys.h>
+#include "ai/ai.h"
 #include "controls/controls.h"
 #include "game.h"
 #include "game/game.h"
@@ -19,6 +20,7 @@ void menu_loop(int pendingGfx)
         u32 settings_flags = get_settings_flags();
         init_game(&game, player_count, settings_flags);
         shuffle_game(&game);
+        ai_init(get_settings(), get_cards(), get_dice(), get_cursors());
         nuGfxFuncSet((NUGfxFunc)game_loop);
     }
 
@@ -35,6 +37,7 @@ void menu_loop(int pendingGfx)
             u32 settings_flags = get_settings_flags();
             init_game(&game, player_count, settings_flags);
             shuffle_game(&game);
+            ai_init(get_settings(), get_cards(), get_dice(), get_cursors());
             nuGfxFuncSet((NUGfxFunc)game_loop);
         }
     }

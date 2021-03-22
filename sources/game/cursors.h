@@ -10,6 +10,8 @@ typedef struct
     s32 pos[4];
 } Cursors;
 
+Cursors *get_cursors();
+
 // Init all cursors
 void init_cursors(u32 player_count, u32 card_count);
 

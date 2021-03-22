@@ -2,6 +2,11 @@
 
 Cursors cursors;
 
+Cursors *get_cursors()
+{
+    return &cursors;
+}
+
 void init_cursors(u32 player_count, u32 card_count)
 {
     cursors.player_count = player_count;
