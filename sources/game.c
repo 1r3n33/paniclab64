@@ -21,6 +21,7 @@ void update_player(u32 player_id)
             add_to_score(player_id, 100);
             reset_cursors();
             shuffle_game(&game);
+            ai_init(get_settings(), get_cards(), get_dice(), get_cursors());
         }
         else
         {
