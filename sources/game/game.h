@@ -8,24 +8,13 @@
 #include "scores.h"
 #include "settings.h"
 
-// Game
-typedef struct
-{
-    u32 card_count;
-    Dice dice;
-} Game;
-
 // Init the game
-void init_game(Game *game, u32 player_count, u32 settings_flags);
+void init_game(u32 player_count, u32 settings_flags);
 
 // Shuffle game
-void shuffle_game(Game *game);
+void shuffle_game();
 
 // Get position that matches dice configuration
-u32 get_solution(Game *game);
-
-Dice *get_dice();
-
-extern Game game;
+u32 get_solution();
 
 #endif // GAME_GAME_H

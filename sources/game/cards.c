@@ -95,6 +95,11 @@ void shuffle_cards()
     }
 }
 
+u32 get_cards_count()
+{
+    return cards.count;
+}
+
 u32 get_cards_start(u32 dice_dir)
 {
     switch (dice_dir)

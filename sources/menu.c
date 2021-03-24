@@ -18,8 +18,8 @@ void menu_loop(int pendingGfx)
     {
         u32 player_count = get_settings_player_count();
         u32 settings_flags = get_settings_flags();
-        init_game(&game, player_count, settings_flags);
-        shuffle_game(&game);
+        init_game(player_count, settings_flags);
+        shuffle_game();
         ai_init(get_settings(), get_cards(), get_dice(), get_cursors());
         nuGfxFuncSet((NUGfxFunc)game_loop);
     }
@@ -35,8 +35,8 @@ void menu_loop(int pendingGfx)
         {
             u32 player_count = get_settings_player_count();
             u32 settings_flags = get_settings_flags();
-            init_game(&game, player_count, settings_flags);
-            shuffle_game(&game);
+            init_game(player_count, settings_flags);
+            shuffle_game();
             ai_init(get_settings(), get_cards(), get_dice(), get_cursors());
             nuGfxFuncSet((NUGfxFunc)game_loop);
         }

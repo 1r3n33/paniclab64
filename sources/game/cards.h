@@ -18,11 +18,11 @@ typedef struct
 
 Cards *get_cards();
 
-// Init cards
 u32 init_cards(u32 settings_flags);
 
-// Shuffle cards
 void shuffle_cards();
+
+u32 get_cards_count();
 
 u32 get_cards_start(u32 dice_dir);
 

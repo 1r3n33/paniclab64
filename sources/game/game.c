@@ -4,37 +4,37 @@
 #include "flags.h"
 #include "game.h"
 
-Game game;
-
-void init_game(Game *game, u32 player_count, u32 settings_flags)
+void init_game(u32 player_count, u32 settings_flags)
 {
     u32 card_count = init_cards(settings_flags);
-    game->card_count = card_count;
 
-    init_dice(&game->dice, settings_flags);
+    init_dice(settings_flags);
 
     init_cursors(player_count, card_count);
 
     init_scores();
 }
 
-void shuffle_game(Game *game)
+void shuffle_game()
 {
     u64 time = osGetTime();
     srand((unsigned)time);
 
     shuffle_cards();
-    shuffle_dice(&game->dice);
+    shuffle_dice();
 }
 
-u32 get_solution(Game *game)
+u32 get_solution()
 {
+    Dice *dice = get_dice();
+    u32 card_count = get_cards_count();
+
     // Initialize start position and direction
-    s32 start = get_cards_start(game->dice.dir);
-    s32 dir = game->dice.dir & 1 ? 1 : -1;
+    s32 start = get_cards_start(dice->dir);
+    s32 dir = dice->dir & 1 ? 1 : -1;
 
     // Get initial flags (shape-pattern-color)
-    u32 flags = game->dice.flags;
+    u32 flags = dice->flags;
 
     // Count number of swap to avoid infinite loop
     u32 swap = 0;
@@ -93,18 +93,13 @@ u32 get_solution(Game *game)
         pos += dir;
         while (pos < 0)
         {
-            pos += game->card_count;
+            pos += card_count;
         }
-        while (pos >= game->card_count)
+        while (pos >= card_count)
         {
-            pos -= game->card_count;
+            pos -= card_count;
         }
     }
 
     return pos;
-}
-
-Dice *get_dice()
-{
-    return &game.dice;
 }

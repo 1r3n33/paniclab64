@@ -10,12 +10,12 @@ typedef struct
     u32 dir;
 } Dice;
 
-// Init dice
-void init_dice(Dice *dice, u32 settings_flags);
+Dice *get_dice();
 
-// Shuffle dice
-void shuffle_dice(Dice *dice);
+void init_dice(u32 settings_flags);
 
-u32 dice_to_gfx(Dice *dice, u32 *dice_gfx_ids);
+void shuffle_dice();
+
+u32 dice_to_gfx(u32 *dice_gfx_ids);
 
 #endif // DICE_H
