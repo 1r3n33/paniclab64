@@ -16,6 +16,8 @@ Starting from the arrow indicated by the direction die, each players tries to fi
 
 ## Controls
 
+![STICK](./manual/Button-N64-Stick.svg) Rotate stick to move cursor around the circle
+
 ![DPAD](./manual/Button-N64-D-Pad.svg) Left and Right to move cursor around the circle
 
 ![A](./manual/Button-N64-A.svg) A to validate selection
