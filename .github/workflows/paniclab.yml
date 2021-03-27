@@ -1,0 +1,118 @@
+name: Panic lab 64 CI
+
+on: push
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+      # Prepare installation
+      # This is the minimum additional installation required.
+      # The ubuntu-latest image has already a lot of dependencies.
+      # More complete list of dependencies includes:
+      # - bison
+      # - build-essential
+      # - flex
+      # - git
+      # - libgmp-dev
+      # - libmpc-dev
+      # - libmpfr-dev
+      # - p7zip-full
+      # - wget
+      # - wine32
+      # See https://github.com/tj90241/n64chain#building
+      - name: Prepare installation
+        run: |
+          sudo dpkg --add-architecture i386 # required to install wine32
+          sudo apt-get update
+          sudo apt-get install -y git
+          sudo apt-get install -y libmpc-dev # required to build toolchain
+          sudo apt-get install -y libmpfr-dev # required to build toolchain
+          sudo apt-get install -y wine32 # required to build graphics
+      # Install N64 SDK
+      # Extract the already packaged N64 SDK from https://ultra64.ca/files/software/other/sdks/n64sdk.7z
+      # This is not the latest version of the N64 SDK. The most up to date materials can be installed from:
+      # - https://ultra64.ca/files/software/nintendo/Nintendo_64_OS-PC_v2.0L/Nintendo_64_OS-PC_v2.0L.iso
+      # - https://ultra64.ca/files/software/nintendo/Nintendo_64_Developers_Toolkit_v5.2/Nintendo_64_Developers_Toolkit_v5.2.zip
+      - name: Install N64 SDK
+        run: |
+          mkdir n64sdk
+          pushd n64sdk
+          wget -nv https://ultra64.ca/files/software/other/sdks/n64sdk.7z
+          7z x n64sdk.7z
+          popd
+      # Install N64 toolchain
+      # Following instructions from https://github.com/trhodeos/modern-n64sdk
+      # This step takes a lot of time. Could it be simply replaced by 'sudo apt install gcc-10-mips-linux-gnu'?
+      - name: Install N64 toolchain
+        run: |
+          git clone https://github.com/tj90241/n64chain.git
+          pushd n64chain/tools
+          bash build-posix64-toolchain.sh
+          popd
+      # Install additional tools
+      # Additional tools are needed to finalize rom creation:
+      # - spicy: Assemble segments into an n64-executable file
+      # - makemask: Convert n64-executable file into a form that can be executed on N64 console/emulator
+      - name: Install additional tools
+        run: |
+          pushd n64chain/tools
+          wget -nv https://github.com/trhodeos/spicy/releases/download/v0.5.0/spicy_0.5.0_linux_amd64.tar.gz
+          tar -xf spicy_0.5.0_linux_amd64.tar.gz -C bin
+          wget -nv https://github.com/trhodeos/makemask/releases/download/v0.2.0/makemask_0.2.0_linux_amd64.tar.gz
+          tar -xf makemask_0.2.0_linux_amd64.tar.gz -C bin
+          popd
+      # Patch N64 SDK
+      # Patch file includes the following changes:
+      # - Binding to N64 toolchain as explained in https://github.com/trhodeos/modern-n64sdk#apply-patches-to-n64sdk
+      # - wine wrapper to execute trans.exe image converter when building graphics
+      # - Renaming libkmc.a
+      - name: Patch N64 SDK
+        run: |
+          patch -i .github/workflows/n64sdk.patch -p0
+          chmod +x n64sdk/nintendo/n64kit/niff/mtv/exe/trans
+      # Build graphics
+      # Convert .sgi graphic files to .h code files.
+      - name: Build graphics
+        run: |
+          export N64_SDK=$(pwd)/n64sdk/
+          export N64KITDIR=$N64_SDK/nintendo/n64kit/
+          make -C assets/graphics
+      # Build code
+      # Compile code and graphics into rom.
+      - name: Build code
+        run: |
+          export N64_SDK=$(pwd)/n64sdk/
+          export N64_TOOLCHAIN=$(pwd)/n64chain/tools/
+          export PATH=$N64_TOOLCHAIN/bin:$PATH
+          export ROOT=$N64_SDK/ultra/
+          export N64KITDIR=$N64_SDK/nintendo/n64kit/
+          export GCCDIR=$ROOT/GCC
+          make -C sources
+      # Set release tag
+      - name: Set release tag
+        run: |
+          echo "RELEASE_TAG=$(date +%F)" >> $GITHUB_ENV
+      # Create release
+      - name: Create release
+        id: create_release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: ${{ env.RELEASE_TAG }}
+          draft: false
+          prerelease: false
+      # Upload rom
+      - name: Upload rom
+        id: upload_rom
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: ./sources/paniclab.n64
+          asset_name: paniclab.n64
+          asset_content_type: application/octet-stream
