@@ -2,6 +2,9 @@
 
 N64 homebrew inspired by [Panic lab from Gigamic](https://en.gigamic.com/game/panic-lab).
 
+[![Build](https://github.com/1r3n33/paniclab64/actions/workflows/paniclab.yml/badge.svg)](https://github.com/1r3n33/paniclab64/actions/workflows/paniclab.yml)
+[![Download](https://img.shields.io/badge/download-latest-blue)](https://github.com/1r3n33/paniclab64/releases/latest)
+
 ![Screen1](./screenshots/screenshot001.png)
 ![Screen2](./screenshots/screenshot002.png)
 ![Screen3](./screenshots/screenshot003.png)
