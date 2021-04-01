@@ -1,8 +1,9 @@
 #include <nusys.h>
 #include "controls/controls.h"
+#include "game.h"
+#include "game/game.h"
 #include "graphics/story.h"
 #include "story.h"
-#include "titlescreen.h"
 
 void story_loop(int pending_gfx)
 {
@@ -11,7 +12,10 @@ void story_loop(int pending_gfx)
 
     if (controller->trigger)
     {
-        nuGfxFuncSet((NUGfxFunc)titlescreen_loop);
+        init_game(1, 0);
+        shuffle_game();
+        game_loop_init(1, (NUGfxFunc)story_loop);
+        nuGfxFuncSet((NUGfxFunc)game_loop);
     }
 
     if (pending_gfx < 1)
