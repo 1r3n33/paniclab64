@@ -3,7 +3,7 @@
 
 Gfx *renderQuad(Gfx *gfx, Matrices *mtx, u32 tex_id);
 
-Gfx *renderCards(Gfx *gfx, u32 card_count, u32 *card_gfx_ids, u32 id)
+Gfx *renderCards(Gfx *gfx, u32 card_count, u32 *card_gfx_ids, u32 *cursors, u32 id)
 {
   f32 fr = 360.0f / (float)card_count;
   f32 fi = 0.0f;
@@ -11,7 +11,15 @@ Gfx *renderCards(Gfx *gfx, u32 card_count, u32 *card_gfx_ids, u32 id)
   for (u32 i = 0; i < card_count; i++, fi += 1.0f)
   {
     u32 j = id + i;
-    set_card_matrices(&graphics.matrices[j], 100.0f, fr * fi);
+
+    f32 scale = 1.0f;
+    scale = (i == cursors[0]) ? 1.2f : scale;
+    scale = (i == cursors[1]) ? 1.2f : scale;
+    scale = (i == cursors[2]) ? 1.2f : scale;
+    scale = (i == cursors[3]) ? 1.2f : scale;
+
+    set_card_matrices(&graphics.matrices[j], 100.0f, fr * fi, scale);
+
     gfx = renderQuad(gfx, &graphics.matrices[j], card_gfx_ids[i]);
   }
 
@@ -159,7 +167,7 @@ void render_game()
 
   gfx = apply_projection(gfx, (f32)SCREEN_WD, (f32)SCREEN_HT);
 
-  gfx = renderCards(gfx, graphics.card_count, graphics.card_gfx_ids, 0);
+  gfx = renderCards(gfx, graphics.card_count, graphics.card_gfx_ids, graphics.cursors, 0);
   gfx = renderDice(gfx, graphics.dice_count, graphics.dice_gfx_ids, 32);
   gfx = renderCursors(gfx, graphics.cursor_count, graphics.cursors);
   gfx = renderScores(gfx, graphics.cursor_count);

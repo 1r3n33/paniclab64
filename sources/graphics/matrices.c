@@ -8,11 +8,11 @@ void set_titlescreen_matrices(Matrices *m, f32 x, f32 y)
     guScale(&m->scale, 1.0f, 1.0f, 1.0f);
 }
 
-void set_card_matrices(Matrices *m, f32 y, f32 rot)
+void set_card_matrices(Matrices *m, f32 y, f32 r, f32 s)
 {
     guTranslate(&m->translation, 0.0f, y, 0.0f);
-    guRotate(&m->rotation, rot, 0.0f, 0.0f, 1.0f);
-    guScale(&m->scale, 1.0f, 1.0f, 1.0f);
+    guRotate(&m->rotation, r, 0.0f, 0.0f, 1.0f);
+    guScale(&m->scale, s, s, s);
 }
 
 void set_dice_matrices(Matrices *m, f32 x, f32 y, f32 s)

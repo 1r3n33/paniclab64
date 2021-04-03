@@ -16,6 +16,11 @@ void init_cursors(u32 player_count, u32 card_count)
 
 void reset_cursors()
 {
+    cursors.pos[0] = -1;
+    cursors.pos[1] = -1;
+    cursors.pos[2] = -1;
+    cursors.pos[3] = -1;
+
     switch (cursors.player_count)
     {
     case 1:
