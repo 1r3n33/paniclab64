@@ -12,7 +12,7 @@ void story_loop(int pending_gfx)
 
     if (controller->trigger)
     {
-        init_game(1, 0);
+        init_game(1, SETTINGS_FLAG_SHAPE_0);
         shuffle_game();
         game_loop_init(1, (NUGfxFunc)story_loop);
         nuGfxFuncSet((NUGfxFunc)game_loop);

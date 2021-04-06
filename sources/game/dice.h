@@ -5,8 +5,12 @@
 
 typedef struct
 {
-    u32 count;
+    // Some game settings (story mode) force shape, patterns, color.
+    u32 forced_flags_clear;
+    u32 forced_flags_set;
     u32 flags; // shape-pattern-color
+
+    u32 is_dir_enabled;
     u32 dir;
 } Dice;
 

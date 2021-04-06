@@ -28,8 +28,33 @@ Gfx *renderCards(Gfx *gfx, u32 card_count, u32 *card_gfx_ids, u32 *cursors, u32 
 
 Gfx *renderDice(Gfx *gfx, u32 dice_count, u32 *dice_gfx_ids, u32 id)
 {
-  if (dice_count == 4)
+  switch (dice_count)
   {
+  case 2:
+    set_dice_matrices(&graphics.matrices[id], -20.0f, 0.0f, 0.8f);
+    gfx = renderQuad(gfx, &graphics.matrices[id], dice_gfx_ids[0]);
+    id++;
+
+    set_dice_matrices(&graphics.matrices[id], 20.0f, -0.0f, 0.8f);
+    gfx = renderQuad(gfx, &graphics.matrices[id], dice_gfx_ids[1]);
+    id++;
+    break;
+
+  case 3:
+    set_dice_matrices(&graphics.matrices[id], -32.0f, 0.0f, 0.8f);
+    gfx = renderQuad(gfx, &graphics.matrices[id], dice_gfx_ids[0]);
+    id++;
+
+    set_dice_matrices(&graphics.matrices[id], 0.0f, 0.0f, 0.8f);
+    gfx = renderQuad(gfx, &graphics.matrices[id], dice_gfx_ids[1]);
+    id++;
+
+    set_dice_matrices(&graphics.matrices[id], 32.0f, -0.0f, 0.8f);
+    gfx = renderQuad(gfx, &graphics.matrices[id], dice_gfx_ids[2]);
+    id++;
+    break;
+
+  case 4:
     set_dice_matrices(&graphics.matrices[id], -20.0f, 20.0f, 0.8f);
     gfx = renderQuad(gfx, &graphics.matrices[id], dice_gfx_ids[0]);
     id++;
@@ -45,22 +70,8 @@ Gfx *renderDice(Gfx *gfx, u32 dice_count, u32 *dice_gfx_ids, u32 id)
     set_dice_matrices(&graphics.matrices[id], 20.0f, -20.0f, 0.8f);
     gfx = renderQuad(gfx, &graphics.matrices[id], dice_gfx_ids[3]);
     id++;
+    break;
   }
-  else
-  {
-    set_dice_matrices(&graphics.matrices[id], -32.0f, 0.0f, 0.8f);
-    gfx = renderQuad(gfx, &graphics.matrices[id], dice_gfx_ids[0]);
-    id++;
-
-    set_dice_matrices(&graphics.matrices[id], 0.0f, 0.0f, 0.8f);
-    gfx = renderQuad(gfx, &graphics.matrices[id], dice_gfx_ids[1]);
-    id++;
-
-    set_dice_matrices(&graphics.matrices[id], 32.0f, -0.0f, 0.8f);
-    gfx = renderQuad(gfx, &graphics.matrices[id], dice_gfx_ids[2]);
-    id++;
-  }
-
   return gfx;
 }
 

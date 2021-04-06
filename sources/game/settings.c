@@ -13,7 +13,7 @@ void init_settings()
     settings.players[1] = SETTINGS_PLAYER_OFF;
     settings.players[2] = SETTINGS_PLAYER_OFF;
     settings.players[3] = SETTINGS_PLAYER_OFF;
-    settings.flags = SETTINGS_FLAG_MUTATIONS | SETTINGS_FLAG_AIRVENTS;
+    settings.flags = SETTINGS_FLAG_MUTATIONS | SETTINGS_FLAG_AIRVENTS | SETTINGS_FLAG_SHAPE_0 | SETTINGS_FLAG_SHAPE_1;
 }
 
 void change_settings_player(s32 player_id, s32 d)

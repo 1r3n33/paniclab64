@@ -9,7 +9,7 @@ void render_story()
     gfx = gfxClearCfb(gfx, GPACK_RGBA5551(0x70, 0x70, 0xC0, 0xFF), G_MAXFBZ);
 
     gfx = render_string(gfx, "Room 1", 0, -15.0f, 80.0f);
-    gfx = render_string(gfx, "Meet Sluggy", 16, -30.0f, 0.0f);
+    gfx = render_string(gfx, "Meet Squiddy", 16, -30.0f, 0.0f);
 
     gfxEnd(gfx);
 }

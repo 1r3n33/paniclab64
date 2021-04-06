@@ -10,6 +10,8 @@ Cards *get_cards()
     return &cards;
 }
 
+u32 shape_setting_flags[] = {SETTINGS_FLAG_SHAPE_0, SETTINGS_FLAG_SHAPE_1};
+
 u32 init_cards(u32 settings_flags)
 {
     u32 mutations = settings_flags & SETTINGS_FLAG_MUTATIONS;
@@ -17,10 +19,15 @@ u32 init_cards(u32 settings_flags)
     u32 directions = mutations | air_vents;
 
     // 8 cards are amoebas
-    u32 i;
-    for (i = 0; i < 8; i++)
+    u32 i = 0;
+    for (u32 j = 0; j < 8; j++)
     {
-        cards.flags[i] = i & 7;
+        u32 shape = j & 1;
+        if (settings_flags & shape_setting_flags[shape])
+        {
+            cards.flags[i] = j;
+            i++;
+        }
     }
 
     if (directions)
