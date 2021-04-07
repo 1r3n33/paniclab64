@@ -29,6 +29,6 @@ u32 get_cards_start(u32 dice_dir);
 u32 get_card_flags(u32 card_id);
 
 // Map to graphics data
-u32 cards_to_gfx(u32 *card_gfx_ids);
+void cards_to_gfx(u32 *card_count, u32 *virtual_card_count, u32 *card_gfx_ids);
 
 #endif // CARDS_H

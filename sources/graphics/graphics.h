@@ -14,6 +14,7 @@ typedef struct
     Matrices matrices[MATRICES_LEN];
 
     u32 card_count;
+    u32 virtual_card_count;
     u32 card_gfx_ids[32];
 
     u32 dice_count;

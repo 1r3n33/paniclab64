@@ -3,10 +3,19 @@
 
 Gfx *renderQuad(Gfx *gfx, Matrices *mtx, u32 tex_id);
 
-Gfx *renderCards(Gfx *gfx, u32 card_count, u32 *card_gfx_ids, u32 *cursors, u32 id)
+Gfx *renderCards(Gfx *gfx, u32 card_count, u32 virtual_card_count, u32 *card_gfx_ids, u32 *cursors, u32 id)
 {
-  f32 fr = 360.0f / (float)card_count;
+  f32 fr = 360.0f / (float)virtual_card_count;
   f32 fi = 0.0f;
+
+  // When number of cards is low, it looks nicer to set cards on a bigger virtual circle.
+  u32 d = (virtual_card_count - card_count);
+  if (d > 0)
+  {
+    // Make sure cards are centered.
+    d = (d & 1) ? d : d - 1;
+    fi = -(f32)d / 2.0f;
+  }
 
   for (u32 i = 0; i < card_count; i++, fi += 1.0f)
   {
@@ -178,7 +187,7 @@ void render_game()
 
   gfx = apply_projection(gfx, (f32)SCREEN_WD, (f32)SCREEN_HT);
 
-  gfx = renderCards(gfx, graphics.card_count, graphics.card_gfx_ids, graphics.cursors, 0);
+  gfx = renderCards(gfx, graphics.card_count, graphics.virtual_card_count, graphics.card_gfx_ids, graphics.cursors, 0);
   gfx = renderDice(gfx, graphics.dice_count, graphics.dice_gfx_ids, 32);
   gfx = renderCursors(gfx, graphics.cursor_count, graphics.cursors);
   gfx = renderScores(gfx, graphics.cursor_count);

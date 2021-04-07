@@ -131,8 +131,13 @@ u32 get_card_flags(u32 card_id)
 }
 
 // Map to graphics data
-u32 cards_to_gfx(u32 *card_gfx_ids)
+void cards_to_gfx(u32 *card_count, u32 *virtual_card_count, u32 *card_gfx_ids)
 {
+    *card_count = cards.count;
+
+    // When number of cards is low, it looks nicer to set cards on a bigger virtual circle.
+    *virtual_card_count = (cards.count < 8) ? 8 : cards.count;
+
     for (u32 i = 0; i < cards.count; i++)
     {
         u32 type = cards.flags[i] >> 16;
@@ -158,6 +163,4 @@ u32 cards_to_gfx(u32 *card_gfx_ids)
             break;
         }
     }
-
-    return cards.count;
 }

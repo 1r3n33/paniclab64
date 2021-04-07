@@ -97,7 +97,7 @@ void game_loop(int pendingGfx)
     else
     {
         // Map game data to graphics data
-        graphics.card_count = cards_to_gfx(graphics.card_gfx_ids);
+        cards_to_gfx(&graphics.card_count, &graphics.virtual_card_count, graphics.card_gfx_ids);
         graphics.dice_count = dice_to_gfx(graphics.dice_gfx_ids);
         graphics.cursor_count = cursors_to_gfx(graphics.cursors);
         score_to_string(0, graphics.text[0]);
