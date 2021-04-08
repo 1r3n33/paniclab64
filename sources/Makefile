@@ -13,10 +13,10 @@ LIB = $(ROOT)/usr/lib
 LPR = $(LIB)/PR
 INC = $(ROOT)/usr/include
 
-LCDEFS = -DF3DEX_GBI_2
+LCDEFS = -DF3DEX_GBI_2 -DN_AUDIO
 LCINCS = -I. -I$(NUSYSINCDIR) -I$(NUSTDINCDIR) -I$(ROOT)/usr/include/PR
 LCOPTS = -G 0
-LDFLAGS = $(MKDEPOPT) -L$(LIB) -L$(NUSYSLIBDIR) -lnusys -L$(NUSTDLIBDIR) -lnustd -lgultra -L$(GCCDIR)/MIPSE/LIB -lkmc
+LDFLAGS = $(MKDEPOPT) -L$(LIB) -L$(NUSYSLIBDIR) -L$(NUSTDLIBDIR) -L$(GCCDIR)/MIPSE/LIB -lnualstl_n_d -ln_gmus_d -ln_gaudio_sc -lnusys -lnustd -lgultra -lkmc
 
 OPTIMIZER = -g
 
