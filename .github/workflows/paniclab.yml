@@ -69,6 +69,7 @@ jobs:
       # - Binding to N64 toolchain as explained in https://github.com/trhodeos/modern-n64sdk#apply-patches-to-n64sdk
       # - wine wrapper to execute trans.exe image converter when building graphics
       # - Renaming libkmc.a
+      # - Audio libs and headers from https://ultra64.ca/files/software/nintendo/Nintendo_64_Sound_Tools_WIN95_v3.14/Nintendo_64_Sound_Tools_WIN95_v3.14.iso
       - name: Patch N64 SDK
         run: |
           patch -i .github/workflows/n64sdk.patch -p0
