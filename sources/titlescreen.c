@@ -1,4 +1,5 @@
 #include <nusys.h>
+#include <nualstl_n.h>
 #include "controls/controls.h"
 #include "game/menu.h"
 #include "graphics/graphics.h"
@@ -9,11 +10,16 @@
 
 u32 titlescreen_selection = 0;
 
+musHandle sndHandle = 0;
+
 void titlescreen_up()
 {
     if (titlescreen_selection == 1)
     {
         titlescreen_selection = 0;
+
+        MusHandleStop(sndHandle, 0);
+        sndHandle = MusStartEffect(0);
     }
 }
 
@@ -22,6 +28,9 @@ void titlescreen_down()
     if (titlescreen_selection == 0)
     {
         titlescreen_selection = 1;
+
+        MusHandleStop(sndHandle, 0);
+        sndHandle = MusStartEffect(0);
     }
 }
 

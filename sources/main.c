@@ -3,6 +3,24 @@
 #include "controls/controls.h"
 #include "titlescreen.h"
 
+int ptr_buf[NU_AU_SAMPLE_SIZE];
+int sfx_buf[NU_AU_SE_SIZE];
+
+extern u8 _audio_sfx_wbkSegmentRomStart[];
+extern u8 _audio_sfx_ptrSegmentRomStart[];
+extern u8 _audio_sfx_ptrSegmentRomEnd[];
+extern u8 _audio_sfx_bfxSegmentRomStart[];
+extern u8 _audio_sfx_bfxSegmentRomEnd[];
+
+void Rom2Ram(void *from_addr, void *to_addr, s32 seq_size)
+{
+    // size must be even.
+    if (seq_size & 0x00000001)
+        seq_size++;
+
+    nuPiReadRom((u32)from_addr, to_addr, seq_size);
+}
+
 void audio_init()
 {
     musConfig config;
@@ -25,6 +43,14 @@ void audio_init()
     config.syn_dma_buf_size = NU_AU_DMA_BUFFER_SIZE;
 
     nuAuStlMgrInit(&config);
+
+    // Read and register the sample bank.
+    Rom2Ram((void *)_audio_sfx_ptrSegmentRomStart, (void *)ptr_buf, _audio_sfx_ptrSegmentRomEnd - _audio_sfx_ptrSegmentRomStart);
+    MusPtrBankInitialize(ptr_buf, _audio_sfx_wbkSegmentRomStart);
+
+    // Read and register the sound effects.
+    Rom2Ram((void *)_audio_sfx_bfxSegmentRomStart, (void *)sfx_buf, _audio_sfx_bfxSegmentRomEnd - _audio_sfx_bfxSegmentRomStart);
+    MusFxBankInitialize(sfx_buf);
 }
 
 void mainproc(void)
