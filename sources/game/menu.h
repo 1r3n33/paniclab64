@@ -5,10 +5,10 @@
 
 void init_menu();
 
-void menu_up();
-void menu_down();
-void menu_left();
-void menu_right();
+u32 menu_up();
+u32 menu_down();
+u32 menu_left();
+u32 menu_right();
 
 // Return -1 if selection is BACK
 // Return +1 if selection is START/RESUME

@@ -19,27 +19,34 @@ void init_menu()
     init_settings();
 }
 
-void menu_up()
+u32 menu_up()
 {
     if (selection == MENU_SELECTION_START || selection == MENU_SELECTION_BACK)
     {
         selection = MENU_SELECTION_AIRVENTS;
+        return 1;
     }
     else if (selection > 0)
     {
         selection--;
+        return 1;
     }
+
+    return 0;
 }
 
-void menu_down()
+u32 menu_down()
 {
     if (selection != MENU_SELECTION_START && selection != MENU_SELECTION_BACK)
     {
         selection++;
+        return 1;
     }
+
+    return 0;
 }
 
-void menu_change(s32 sel, s32 d)
+u32 menu_change(s32 sel, s32 d)
 {
     s32 value = 0;
 
@@ -50,40 +57,48 @@ void menu_change(s32 sel, s32 d)
     case MENU_SELECTION_PLAYER3:
     case MENU_SELECTION_PLAYER4:
         change_settings_player(sel, d);
-        break;
+        return 1;
 
     case MENU_SELECTION_MUTATIONS:
         change_settings_flags(SETTINGS_FLAG_MUTATIONS);
-        break;
+        return 1;
 
     case MENU_SELECTION_AIRVENTS:
         change_settings_flags(SETTINGS_FLAG_AIRVENTS);
-        break;
+        return 1;
     }
+
+    return 0;
 }
 
-void menu_left()
+u32 menu_left()
 {
     if (selection == MENU_SELECTION_START)
     {
         selection = MENU_SELECTION_BACK;
+        return 1;
     }
     else
     {
-        menu_change(selection, -1);
+        return menu_change(selection, -1);
     }
+
+    return 0;
 }
 
-void menu_right()
+u32 menu_right()
 {
     if (selection == MENU_SELECTION_BACK)
     {
         selection = MENU_SELECTION_START;
+        return 1;
     }
     else
     {
-        menu_change(selection, +1);
+        return menu_change(selection, +1);
     }
+
+    return 0;
 }
 
 s32 menu_action()

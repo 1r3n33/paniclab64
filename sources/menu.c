@@ -1,5 +1,6 @@
 #include <nusys.h>
 #include "ai/ai.h"
+#include "audio/audio.h"
 #include "controls/controls.h"
 #include "game.h"
 #include "game/game.h"
@@ -16,6 +17,8 @@ void menu_loop(int pendingGfx)
 
     if (controller->trigger & START_BUTTON)
     {
+        audio_play_sfx(FX_MENU_SELECT);
+
         u32 player_count = get_settings_player_count();
         u32 settings_flags = get_settings_flags();
         init_game(player_count, settings_flags);
@@ -31,10 +34,14 @@ void menu_loop(int pendingGfx)
         s32 next = menu_action();
         if (next < 0)
         {
+            audio_play_sfx(FX_MENU_SELECT);
+
             nuGfxFuncSet((NUGfxFunc)titlescreen_loop);
         }
         else if (next > 0)
         {
+            audio_play_sfx(FX_MENU_SELECT);
+
             u32 player_count = get_settings_player_count();
             u32 settings_flags = get_settings_flags();
             init_game(player_count, settings_flags);
@@ -48,22 +55,38 @@ void menu_loop(int pendingGfx)
 
     if (controller->trigger & U_JPAD || controller->stick_y > 50)
     {
-        menu_up();
+        u32 ok = menu_up();
+        if (ok)
+        {
+            audio_play_sfx(FX_MENU_TICK);
+        }
     }
 
     if (controller->trigger & D_JPAD || controller->stick_y < -50)
     {
-        menu_down();
+        u32 ok = menu_down();
+        if (ok)
+        {
+            audio_play_sfx(FX_MENU_TICK);
+        }
     }
 
     if (controller->trigger & L_JPAD || controller->stick_x < -50)
     {
-        menu_left();
+        u32 ok = menu_left();
+        if (ok)
+        {
+            audio_play_sfx(FX_MENU_TICK);
+        }
     }
 
     if (controller->trigger & R_JPAD || controller->stick_x > 50)
     {
-        menu_right();
+        u32 ok = menu_right();
+        if (ok)
+        {
+            audio_play_sfx(FX_MENU_TICK);
+        }
     }
 
     graphics.selection = menu_to_gfx(graphics.text);

@@ -1,5 +1,5 @@
 #include <nusys.h>
-#include <nualstl_n.h>
+#include "audio/audio.h"
 #include "controls/controls.h"
 #include "game/menu.h"
 #include "graphics/graphics.h"
@@ -10,16 +10,12 @@
 
 u32 titlescreen_selection = 0;
 
-musHandle sndHandle = 0;
-
 void titlescreen_up()
 {
     if (titlescreen_selection == 1)
     {
         titlescreen_selection = 0;
-
-        MusHandleStop(sndHandle, 0);
-        sndHandle = MusStartEffect(0);
+        audio_play_sfx(FX_MENU_TICK);
     }
 }
 
@@ -28,9 +24,7 @@ void titlescreen_down()
     if (titlescreen_selection == 0)
     {
         titlescreen_selection = 1;
-
-        MusHandleStop(sndHandle, 0);
-        sndHandle = MusStartEffect(0);
+        audio_play_sfx(FX_MENU_TICK);
     }
 }
 
@@ -41,6 +35,8 @@ void titlescreen_loop(int pendingGfx)
 
     if (controller->trigger & START_BUTTON || controller->trigger & A_BUTTON)
     {
+        audio_play_sfx(FX_MENU_SELECT);
+
         if (titlescreen_selection == 0)
         {
             nuGfxFuncSet((NUGfxFunc)story_loop);
