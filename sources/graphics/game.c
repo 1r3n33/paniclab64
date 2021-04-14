@@ -22,12 +22,14 @@ Gfx *renderCards(Gfx *gfx, u32 card_count, u32 virtual_card_count, u32 *card_gfx
     u32 j = id + i;
 
     f32 scale = 1.0f;
-    scale = (i == cursors[0]) ? 1.2f : scale;
-    scale = (i == cursors[1]) ? 1.2f : scale;
-    scale = (i == cursors[2]) ? 1.2f : scale;
-    scale = (i == cursors[3]) ? 1.2f : scale;
+    scale = (i == cursors[0]) ? 1.25f : scale;
+    scale = (i == cursors[1]) ? 1.25f : scale;
+    scale = (i == cursors[2]) ? 1.25f : scale;
+    scale = (i == cursors[3]) ? 1.25f : scale;
 
-    set_card_matrices(&graphics.matrices[j], 100.0f, fr * fi, scale);
+    f32 z = scale > 1.0f ? -1.0f : 1.0f;
+
+    set_card_matrices(&graphics.matrices[j], 90.0f, z, fr * fi, scale);
 
     gfx = renderQuad(gfx, &graphics.matrices[j], card_gfx_ids[i]);
   }
@@ -93,33 +95,33 @@ u32 cursor_colors[4][4] = {
 
 static Vtx cursor_vtx[] = {
     // Top Left
-    {-20, 20, -4, 0, 0, 0, 0x00, 0x00, 0x00, 0xff},
-    {-16, 20, -4, 0, 0, 0, 0x00, 0x00, 0x00, 0xff},
-    {-16, 18, -4, 0, 0, 0, 0x00, 0x00, 0x00, 0xff},
-    {-18, 18, -4, 0, 0, 0, 0x00, 0x00, 0x00, 0xff},
-    {-18, 16, -4, 0, 0, 0, 0x00, 0x00, 0x00, 0xff},
-    {-20, 16, -4, 0, 0, 0, 0x00, 0x00, 0x00, 0xff},
+    {-20, 20, 0, 0, 0, 0, 0x00, 0x00, 0x00, 0xff},
+    {-16, 20, 0, 0, 0, 0, 0x00, 0x00, 0x00, 0xff},
+    {-16, 18, 0, 0, 0, 0, 0x00, 0x00, 0x00, 0xff},
+    {-18, 18, 0, 0, 0, 0, 0x00, 0x00, 0x00, 0xff},
+    {-18, 16, 0, 0, 0, 0, 0x00, 0x00, 0x00, 0xff},
+    {-20, 16, 0, 0, 0, 0, 0x00, 0x00, 0x00, 0xff},
     // Top Right
-    {20, 20, -4, 0, 0, 0, 0x00, 0x00, 0x00, 0xff},
-    {16, 20, -4, 0, 0, 0, 0x00, 0x00, 0x00, 0xff},
-    {16, 18, -4, 0, 0, 0, 0x00, 0x00, 0x00, 0xff},
-    {18, 18, -4, 0, 0, 0, 0x00, 0x00, 0x00, 0xff},
-    {18, 16, -4, 0, 0, 0, 0x00, 0x00, 0x00, 0xff},
-    {20, 16, -4, 0, 0, 0, 0x00, 0x00, 0x00, 0xff},
+    {20, 20, 0, 0, 0, 0, 0x00, 0x00, 0x00, 0xff},
+    {16, 20, 0, 0, 0, 0, 0x00, 0x00, 0x00, 0xff},
+    {16, 18, 0, 0, 0, 0, 0x00, 0x00, 0x00, 0xff},
+    {18, 18, 0, 0, 0, 0, 0x00, 0x00, 0x00, 0xff},
+    {18, 16, 0, 0, 0, 0, 0x00, 0x00, 0x00, 0xff},
+    {20, 16, 0, 0, 0, 0, 0x00, 0x00, 0x00, 0xff},
     // Bottom Left
-    {-20, -20, -4, 0, 0, 0, 0x00, 0x00, 0x00, 0xff},
-    {-16, -20, -4, 0, 0, 0, 0x00, 0x00, 0x00, 0xff},
-    {-16, -18, -4, 0, 0, 0, 0x00, 0x00, 0x00, 0xff},
-    {-18, -18, -4, 0, 0, 0, 0x00, 0x00, 0x00, 0xff},
-    {-18, -16, -4, 0, 0, 0, 0x00, 0x00, 0x00, 0xff},
-    {-20, -16, -4, 0, 0, 0, 0x00, 0x00, 0x00, 0xff},
+    {-20, -20, 0, 0, 0, 0, 0x00, 0x00, 0x00, 0xff},
+    {-16, -20, 0, 0, 0, 0, 0x00, 0x00, 0x00, 0xff},
+    {-16, -18, 0, 0, 0, 0, 0x00, 0x00, 0x00, 0xff},
+    {-18, -18, 0, 0, 0, 0, 0x00, 0x00, 0x00, 0xff},
+    {-18, -16, 0, 0, 0, 0, 0x00, 0x00, 0x00, 0xff},
+    {-20, -16, 0, 0, 0, 0, 0x00, 0x00, 0x00, 0xff},
     // Bottom Right
-    {20, -20, -4, 0, 0, 0, 0x00, 0x00, 0x00, 0xff},
-    {16, -20, -4, 0, 0, 0, 0x00, 0x00, 0x00, 0xff},
-    {16, -18, -4, 0, 0, 0, 0x00, 0x00, 0x00, 0xff},
-    {18, -18, -4, 0, 0, 0, 0x00, 0x00, 0x00, 0xff},
-    {18, -16, -4, 0, 0, 0, 0x00, 0x00, 0x00, 0xff},
-    {20, -16, -4, 0, 0, 0, 0x00, 0x00, 0x00, 0xff},
+    {20, -20, 0, 0, 0, 0, 0x00, 0x00, 0x00, 0xff},
+    {16, -20, 0, 0, 0, 0, 0x00, 0x00, 0x00, 0xff},
+    {16, -18, 0, 0, 0, 0, 0x00, 0x00, 0x00, 0xff},
+    {18, -18, 0, 0, 0, 0, 0x00, 0x00, 0x00, 0xff},
+    {18, -16, 0, 0, 0, 0, 0x00, 0x00, 0x00, 0xff},
+    {20, -16, 0, 0, 0, 0, 0x00, 0x00, 0x00, 0xff},
 };
 
 Gfx *renderCursors(Gfx *gfx, u32 cursor_count, u32 *cursors)
@@ -197,13 +199,12 @@ void render_game()
 
 // Vertex: xyz, uv, rgba
 static Vtx quad_vtx[] = {
-    {-16, 16, -5, 0, 0 << 6, 0 << 6, 0x00, 0xff, 0x00, 0xff},
-    {16, 16, -5, 0, 31 << 6, 0 << 6, 0x00, 0x00, 0x00, 0xff},
-    {16, -16, -5, 0, 31 << 6, 31 << 6, 0x00, 0x00, 0xff, 0xff},
-    {-16, -16, -5, 0, 0 << 6, 31 << 6, 0xff, 0x00, 0x00, 0xff},
+    {-16, 16, 0, 0, 0 << 6, 0 << 6, 0x00, 0xff, 0x00, 0xff},
+    {16, 16, 0, 0, 31 << 6, 0 << 6, 0x00, 0x00, 0x00, 0xff},
+    {16, -16, 0, 0, 31 << 6, 31 << 6, 0x00, 0x00, 0xff, 0xff},
+    {-16, -16, 0, 0, 0 << 6, 31 << 6, 0xff, 0x00, 0x00, 0xff},
 };
 
-/* Draw a square  */
 Gfx *renderQuad(Gfx *gfx, Matrices *mtx, u32 tex_id)
 {
   gfx = apply_matrices(gfx, mtx);
@@ -213,15 +214,14 @@ Gfx *renderQuad(Gfx *gfx, Matrices *mtx, u32 tex_id)
   gDPPipeSync(gfx++);
   gDPSetCycleType(gfx++, G_CYC_1CYCLE);
 
-  /* Specify back surface culling */
-  gSPSetGeometryMode(gfx++, G_CULL_BACK);
-
   gfx = apply_texture(gfx, tex_id);
 
-  gDPSetRenderMode(gfx++, G_RM_AA_OPA_SURF, G_RM_AA_OPA_SURF2);
+  gDPSetRenderMode(gfx++, G_RM_AA_ZB_OPA_SURF, G_RM_AA_ZB_OPA_SURF2);
 
   gSPClearGeometryMode(gfx++, 0xFFFFFFFF);
-  gSPSetGeometryMode(gfx++, G_SHADE | G_SHADING_SMOOTH);
+  gSPSetGeometryMode(gfx++, G_ZBUFFER | G_SHADE | G_SHADING_SMOOTH);
+
+  gDPSetDepthSource(gfx++, G_ZS_PIXEL);
 
   gSP2Triangles(gfx++, 0, 1, 2, 0, 0, 2, 3, 0);
 

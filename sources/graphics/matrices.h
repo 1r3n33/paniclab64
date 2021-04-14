@@ -14,7 +14,7 @@ typedef struct
 
 void set_titlescreen_matrices(Matrices *m, f32 x, f32 y);
 
-void set_card_matrices(Matrices *m, f32 y, f32 r, f32 s);
+void set_card_matrices(Matrices *m, f32 y, f32 z, f32 r, f32 s);
 
 void set_dice_matrices(Matrices *m, f32 x, f32 y, f32 s);
 
