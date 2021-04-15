@@ -1,5 +1,9 @@
+#include <stdlib.h>
 #include "ai.h"
 #include "../game/flags.h"
+
+#define THROTTLING_SHORT 10
+#define THROTTLING_LONG 30
 
 NUContData controllers[NU_CONT_MAXCONTROLLERS] = {0};
 
@@ -50,10 +54,10 @@ void ai_init(Settings *settings, Cards *cards, Dice *dice, Cursors *cursors)
     ai_checks[2] = 3;
     ai_checks[3] = 4;
 
-    ai_throttlings[0] = 10;
-    ai_throttlings[1] = 10;
-    ai_throttlings[2] = 10;
-    ai_throttlings[3] = 10;
+    ai_throttlings[0] = (THROTTLING_SHORT + THROTTLING_LONG) / 2;
+    ai_throttlings[1] = (THROTTLING_SHORT + THROTTLING_LONG) / 2;
+    ai_throttlings[2] = (THROTTLING_SHORT + THROTTLING_LONG) / 2;
+    ai_throttlings[3] = (THROTTLING_SHORT + THROTTLING_LONG) / 2;
 
     ai_settings = settings;
     ai_cards = cards;
@@ -150,7 +154,7 @@ int ai_advance_to_start_point(u32 player_id)
     }
 
     ai_dirs[player_id] = dir;
-    ai_throttlings[player_id] = 10;
+    ai_throttlings[player_id] = THROTTLING_SHORT + (rand() % (THROTTLING_LONG - THROTTLING_SHORT));
 
     return 1;
 }
@@ -164,7 +168,7 @@ int ai_one_step(u32 player_id)
     {
         if (flags == ai_flags[player_id])
         {
-            ai_throttlings[player_id] = 10;
+            ai_throttlings[player_id] = THROTTLING_SHORT + (rand() % (THROTTLING_LONG - THROTTLING_SHORT));
             return 3;
         }
 
@@ -192,7 +196,7 @@ int ai_one_step(u32 player_id)
     s32 dir = ai_dice->dir & 1 ? 1 : -1;
 
     ai_dirs[player_id] = dir;
-    ai_throttlings[player_id] = 10;
+    ai_throttlings[player_id] = THROTTLING_SHORT + (rand() % (THROTTLING_LONG - THROTTLING_SHORT));
 
     return 2;
 }
