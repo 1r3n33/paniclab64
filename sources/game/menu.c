@@ -11,24 +11,24 @@
 #define MENU_SELECTION_START 6
 #define MENU_SELECTION_BACK 7
 
-s32 selection;
+s32 menu_selection;
 
 void init_menu()
 {
-    selection = MENU_SELECTION_PLAYER1;
+    menu_selection = MENU_SELECTION_PLAYER1;
     init_settings();
 }
 
 u32 menu_up()
 {
-    if (selection == MENU_SELECTION_START || selection == MENU_SELECTION_BACK)
+    if (menu_selection == MENU_SELECTION_START || menu_selection == MENU_SELECTION_BACK)
     {
-        selection = MENU_SELECTION_AIRVENTS;
+        menu_selection = MENU_SELECTION_AIRVENTS;
         return 1;
     }
-    else if (selection > 0)
+    else if (menu_selection > 0)
     {
-        selection--;
+        menu_selection--;
         return 1;
     }
 
@@ -37,9 +37,9 @@ u32 menu_up()
 
 u32 menu_down()
 {
-    if (selection != MENU_SELECTION_START && selection != MENU_SELECTION_BACK)
+    if (menu_selection != MENU_SELECTION_START && menu_selection != MENU_SELECTION_BACK)
     {
-        selection++;
+        menu_selection++;
         return 1;
     }
 
@@ -73,14 +73,14 @@ u32 menu_change(s32 sel, s32 d)
 
 u32 menu_left()
 {
-    if (selection == MENU_SELECTION_START)
+    if (menu_selection == MENU_SELECTION_START)
     {
-        selection = MENU_SELECTION_BACK;
+        menu_selection = MENU_SELECTION_BACK;
         return 1;
     }
     else
     {
-        return menu_change(selection, -1);
+        return menu_change(menu_selection, -1);
     }
 
     return 0;
@@ -88,14 +88,14 @@ u32 menu_left()
 
 u32 menu_right()
 {
-    if (selection == MENU_SELECTION_BACK)
+    if (menu_selection == MENU_SELECTION_BACK)
     {
-        selection = MENU_SELECTION_START;
+        menu_selection = MENU_SELECTION_START;
         return 1;
     }
     else
     {
-        return menu_change(selection, +1);
+        return menu_change(menu_selection, +1);
     }
 
     return 0;
@@ -103,7 +103,7 @@ u32 menu_right()
 
 s32 menu_action()
 {
-    switch (selection)
+    switch (menu_selection)
     {
     case MENU_SELECTION_START:
         return 1;
@@ -117,7 +117,7 @@ s32 menu_action()
 
 u32 menu_to_gfx(char text[32][32])
 {
-    if (selection == MENU_SELECTION_PLAYER1)
+    if (menu_selection == MENU_SELECTION_PLAYER1)
     {
         strcpy(text[0], "\x06");
         strcpy(text[1], "\x06");
@@ -130,7 +130,7 @@ u32 menu_to_gfx(char text[32][32])
     strcat(text[0], "Player 1");
     strcat(text[1], get_settings_player_string(0));
 
-    if (selection == MENU_SELECTION_PLAYER2)
+    if (menu_selection == MENU_SELECTION_PLAYER2)
     {
         strcpy(text[2], "\x06");
         strcpy(text[3], "\x06");
@@ -143,7 +143,7 @@ u32 menu_to_gfx(char text[32][32])
     strcat(text[2], "Player 2");
     strcat(text[3], get_settings_player_string(1));
 
-    if (selection == MENU_SELECTION_PLAYER3)
+    if (menu_selection == MENU_SELECTION_PLAYER3)
     {
         strcpy(text[4], "\x06");
         strcpy(text[5], "\x06");
@@ -156,7 +156,7 @@ u32 menu_to_gfx(char text[32][32])
     strcat(text[4], "Player 3");
     strcat(text[5], get_settings_player_string(2));
 
-    if (selection == MENU_SELECTION_PLAYER4)
+    if (menu_selection == MENU_SELECTION_PLAYER4)
     {
         strcpy(text[6], "\x06");
         strcpy(text[7], "\x06");
@@ -169,7 +169,7 @@ u32 menu_to_gfx(char text[32][32])
     strcat(text[6], "Player 4");
     strcat(text[7], get_settings_player_string(3));
 
-    if (selection == MENU_SELECTION_MUTATIONS)
+    if (menu_selection == MENU_SELECTION_MUTATIONS)
     {
         strcpy(text[8], "\x06");
         strcpy(text[9], "\x06");
@@ -182,7 +182,7 @@ u32 menu_to_gfx(char text[32][32])
     strcat(text[8], "Mutations");
     strcat(text[9], get_settings_flags_string(SETTINGS_FLAG_MUTATIONS));
 
-    if (selection == MENU_SELECTION_AIRVENTS)
+    if (menu_selection == MENU_SELECTION_AIRVENTS)
     {
         strcpy(text[10], "\x06");
         strcpy(text[11], "\x06");
@@ -195,7 +195,7 @@ u32 menu_to_gfx(char text[32][32])
     strcat(text[10], "Air vents");
     strcat(text[11], get_settings_flags_string(SETTINGS_FLAG_AIRVENTS));
 
-    if (selection == MENU_SELECTION_BACK)
+    if (menu_selection == MENU_SELECTION_BACK)
     {
         strcpy(text[12], "\x02"
                          "B"
@@ -212,7 +212,7 @@ u32 menu_to_gfx(char text[32][32])
                          "Back");
     }
 
-    if (selection == MENU_SELECTION_START)
+    if (menu_selection == MENU_SELECTION_START)
     {
         strcpy(text[13], "\x04"
                          "S"
@@ -230,5 +230,5 @@ u32 menu_to_gfx(char text[32][32])
         strcpy(text[13], "\x08Start");
     }
 
-    return selection;
+    return menu_selection;
 }

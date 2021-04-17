@@ -2,6 +2,7 @@
 #include "audio/audio.h"
 #include "controls/controls.h"
 #include "game/menu.h"
+#include "game/story.h"
 #include "graphics/graphics.h"
 #include "graphics/titlescreen.h"
 #include "menu.h"
@@ -39,6 +40,7 @@ void titlescreen_loop(int pendingGfx)
 
         if (titlescreen_selection == 0)
         {
+            story_init();
             nuGfxFuncSet((NUGfxFunc)story_loop);
         }
         else if (titlescreen_selection == 1)
