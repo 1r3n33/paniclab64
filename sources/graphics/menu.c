@@ -4,9 +4,9 @@
 #include "menu.h"
 #include "projection.h"
 
-Mtx triangles_mtx;
+Mtx menu_triangles_mtx;
 
-Vtx triangles_vtx[6] = {
+Vtx menu_triangles_vtx[6] = {
     {0, 3, 0, 0, 0, 0, 0x00, 0x00, 0x00, 0xff},
     {6, 6, 0, 0, 0, 0, 0x00, 0x00, 0x00, 0xff},
     {6, 0, 0, 0, 0, 0, 0x00, 0x00, 0x00, 0xff},
@@ -16,9 +16,9 @@ Vtx triangles_vtx[6] = {
     {34, 0, 0, 0, 0, 0, 0x00, 0x00, 0x00, 0xff},
 };
 
-f32 triangles_pos[] = {61.0f, 41.0f, 21.0f, 1.0f, -39.0f, -59.0f, -999.9f, -999.9f};
+f32 menu_triangles_pos[] = {61.0f, 41.0f, 21.0f, 1.0f, -39.0f, -59.0f, -999.9f, -999.9f};
 
-Gfx *render_selection(Gfx *gfx, u32 selection)
+Gfx *render_menu_selection(Gfx *gfx, u32 selection)
 {
     gSPTexture(gfx++, 0, 0, 0, 0, G_OFF);
     gDPSetRenderMode(gfx++, G_RM_AA_OPA_SURF, G_RM_AA_OPA_SURF2);
@@ -26,13 +26,13 @@ Gfx *render_selection(Gfx *gfx, u32 selection)
     gDPSetPrimColor(gfx++, 0, 0, 0xf0, 0xf0, 0x50, 0xFF);
     gSPClearGeometryMode(gfx++, 0xFFFFFFFF);
 
-    guTranslate(&triangles_mtx, 18.0f, triangles_pos[selection], 0.0f);
+    guTranslate(&menu_triangles_mtx, 18.0f, menu_triangles_pos[selection], 0.0f);
     gSPMatrix(
         gfx++,
-        OS_K0_TO_PHYSICAL(&triangles_mtx),
+        OS_K0_TO_PHYSICAL(&menu_triangles_mtx),
         G_MTX_MODELVIEW | G_MTX_LOAD | G_MTX_NOPUSH);
 
-    gSPVertex(gfx++, triangles_vtx, 6, 0);
+    gSPVertex(gfx++, menu_triangles_vtx, 6, 0);
     gSP2Triangles(gfx++, 0, 1, 2, 0, 3, 4, 5, 0);
 
     return gfx;
@@ -67,7 +67,7 @@ void render_menu()
     gfx = render_string(gfx, graphics.text[12], 130, -100.0f, -100.0f);
     gfx = render_string(gfx, graphics.text[13], 140, 80.0f, -100.0f);
 
-    gfx = render_selection(gfx, graphics.selection);
+    gfx = render_menu_selection(gfx, graphics.selection);
 
     gfxEnd(gfx);
 }

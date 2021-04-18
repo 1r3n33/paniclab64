@@ -9,6 +9,28 @@
 #include "story.h"
 #include "titlescreen.h"
 
+void story_init_level(u32 level)
+{
+    switch (level)
+    {
+    case 0:
+        init_game(1, SETTINGS_FLAG_SHAPE_0);
+        break;
+
+    case 1:
+        init_game(1, SETTINGS_FLAG_SHAPE_0 | SETTINGS_FLAG_SHAPE_1);
+        break;
+
+    default:
+        init_game(1, SETTINGS_FLAG_MUTATIONS | SETTINGS_FLAG_AIRVENTS | SETTINGS_FLAG_SHAPE_0 | SETTINGS_FLAG_SHAPE_1);
+        break;
+    }
+
+    shuffle_game();
+    game_loop_init(3, (NUGfxFunc)story_loop);
+    nuGfxFuncSet((NUGfxFunc)game_loop);
+}
+
 void story_loop(int pending_gfx)
 {
     controls_update();
@@ -20,17 +42,12 @@ void story_loop(int pending_gfx)
         if (next < 0)
         {
             audio_play_sfx(FX_MENU_SELECT);
-
             nuGfxFuncSet((NUGfxFunc)titlescreen_loop);
         }
         else if (next > 0)
         {
             audio_play_sfx(FX_MENU_SELECT);
-
-            init_game(1, SETTINGS_FLAG_SHAPE_0);
-            shuffle_game();
-            game_loop_init(1, (NUGfxFunc)story_loop);
-            nuGfxFuncSet((NUGfxFunc)game_loop);
+            story_init_level(story_get_current_level());
         }
     }
 

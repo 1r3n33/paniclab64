@@ -18,4 +18,6 @@ s32 story_action();
 // Map to graphics data
 u32 story_to_gfx(char text[32][32]);
 
+u32 story_get_current_level();
+
 #endif // GAME_STORY_H

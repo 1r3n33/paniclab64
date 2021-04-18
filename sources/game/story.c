@@ -28,7 +28,7 @@ char *story_subtitle[STORY_LEVEL_COUNT] = {
     "Beware Of Mutations",
     "Even More Mutations",
     "Hide And Seek",
-    "Subtitle 6",
+    "AI Battle Mode",
     "Subtitle 7",
     "Subtitle 8",
 };
@@ -183,4 +183,9 @@ u32 story_to_gfx(char text[32][32])
     }
 
     return story_selection;
+}
+
+u32 story_get_current_level()
+{
+    return story_current_level;
 }
