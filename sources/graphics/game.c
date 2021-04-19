@@ -13,8 +13,8 @@ Gfx *renderCards(Gfx *gfx, u32 card_count, u32 virtual_card_count, u32 *card_gfx
   if (d > 0)
   {
     // Make sure cards are centered.
-    d = (d & 1) ? d : d - 1;
-    fi = -(f32)d / 2.0f;
+    u32 count = (d & 1) ? card_count : card_count - 1;
+    fi = -(f32)count / 2.0f;
   }
 
   for (u32 i = 0; i < card_count; i++, fi += 1.0f)
