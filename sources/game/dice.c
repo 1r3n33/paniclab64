@@ -14,7 +14,7 @@ void init_dice(u32 settings_flags)
     dice.forced_flags_clear = ~0;
     dice.forced_flags_set = 0;
 
-    u32 is_shape_forced = ((settings_flags & (SETTINGS_FLAG_SHAPE_0 | SETTINGS_FLAG_SHAPE_1)) != (SETTINGS_FLAG_SHAPE_0 | SETTINGS_FLAG_SHAPE_1));
+    u32 is_shape_forced = ((settings_flags & SETTINGS_FLAG_SHAPE_ALL) != SETTINGS_FLAG_SHAPE_ALL);
     if (is_shape_forced)
     {
         dice.forced_flags_clear = ~0x1;
@@ -22,7 +22,7 @@ void init_dice(u32 settings_flags)
     }
 
     // If air vents or mutations is not set we only need the 3 first dice
-    dice.is_dir_enabled = (settings_flags & (SETTINGS_FLAG_AIRVENTS | SETTINGS_FLAG_MUTATIONS)) ? 1 : 0;
+    dice.is_dir_enabled = (settings_flags & (SETTINGS_FLAG_AIRVENTS | SETTINGS_FLAG_MUTATION_ALL)) ? 1 : 0;
 
     dice.flags = 0;
     dice.dir = 0;

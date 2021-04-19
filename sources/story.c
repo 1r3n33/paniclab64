@@ -18,11 +18,15 @@ void story_init_level(u32 level)
         break;
 
     case 1:
-        init_game(1, SETTINGS_FLAG_SHAPE_0 | SETTINGS_FLAG_SHAPE_1);
+        init_game(1, SETTINGS_FLAG_SHAPE_ALL);
+        break;
+
+    case 2:
+        init_game(1, SETTINGS_FLAG_SHAPE_ALL | SETTINGS_FLAG_MUTATION_0);
         break;
 
     default:
-        init_game(1, SETTINGS_FLAG_MUTATIONS | SETTINGS_FLAG_AIRVENTS | SETTINGS_FLAG_SHAPE_0 | SETTINGS_FLAG_SHAPE_1);
+        init_game(1, SETTINGS_FLAG_MUTATION_ALL | SETTINGS_FLAG_AIRVENTS | SETTINGS_FLAG_SHAPE_ALL);
         break;
     }
 

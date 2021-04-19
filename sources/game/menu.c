@@ -60,7 +60,7 @@ u32 menu_change(s32 sel, s32 d)
         return 1;
 
     case MENU_SELECTION_MUTATIONS:
-        change_settings_flags(SETTINGS_FLAG_MUTATIONS);
+        change_settings_flags(SETTINGS_FLAG_MUTATION_ALL);
         return 1;
 
     case MENU_SELECTION_AIRVENTS:
@@ -180,7 +180,7 @@ u32 menu_to_gfx(char text[32][32])
         strcpy(text[9], "\x08");
     }
     strcat(text[8], "Mutations");
-    strcat(text[9], get_settings_flags_string(SETTINGS_FLAG_MUTATIONS));
+    strcat(text[9], get_settings_flags_string(SETTINGS_FLAG_MUTATION_ALL));
 
     if (menu_selection == MENU_SELECTION_AIRVENTS)
     {

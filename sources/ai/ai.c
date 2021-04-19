@@ -100,7 +100,7 @@ NUContData *ai_controls_get(u32 player_id)
 
 int ai_compute_start_point(u32 player_id)
 {
-    if ((ai_settings->flags & (SETTINGS_FLAG_AIRVENTS | SETTINGS_FLAG_MUTATIONS)) == 0)
+    if ((ai_settings->flags & (SETTINGS_FLAG_AIRVENTS | SETTINGS_FLAG_MUTATION_ALL)) == 0)
     {
         ai_targets[player_id] = ai_cursors->pos[player_id];
         return 1;

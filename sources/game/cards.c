@@ -14,7 +14,7 @@ u32 shape_setting_flags[] = {SETTINGS_FLAG_SHAPE_0, SETTINGS_FLAG_SHAPE_1};
 
 u32 init_cards(u32 settings_flags)
 {
-    u32 mutations = settings_flags & SETTINGS_FLAG_MUTATIONS;
+    u32 mutations = settings_flags & SETTINGS_FLAG_MUTATION_ALL;
     u32 air_vents = settings_flags & SETTINGS_FLAG_AIRVENTS;
     u32 directions = mutations | air_vents;
 
@@ -55,9 +55,18 @@ u32 init_cards(u32 settings_flags)
     if (mutations)
     {
         // 3 cards are mutations
-        cards.flags[i++] = FLAGS_SWAP_SHAPE;
-        cards.flags[i++] = FLAGS_SWAP_PATTERN;
-        cards.flags[i++] = FLAGS_SWAP_COLOR;
+        if (settings_flags & SETTINGS_FLAG_MUTATION_0)
+        {
+            cards.flags[i++] = FLAGS_SWAP_SHAPE;
+        }
+        if (settings_flags & SETTINGS_FLAG_MUTATION_1)
+        {
+            cards.flags[i++] = FLAGS_SWAP_PATTERN;
+        }
+        if (settings_flags & SETTINGS_FLAG_MUTATION_2)
+        {
+            cards.flags[i++] = FLAGS_SWAP_COLOR;
+        }
     }
 
     if (air_vents)
