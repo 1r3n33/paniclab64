@@ -28,6 +28,8 @@ Settings *get_settings();
 
 void init_settings();
 
+void settings_set_player(u32 player_id, u32 value);
+
 void change_settings_player(s32 player_id, s32 d);
 
 void change_settings_flags(u32 settings_flags);

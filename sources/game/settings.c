@@ -16,6 +16,11 @@ void init_settings()
     settings.flags = SETTINGS_FLAG_MUTATION_ALL | SETTINGS_FLAG_AIRVENTS | SETTINGS_FLAG_SHAPE_ALL;
 }
 
+void settings_set_player(u32 player_id, u32 value)
+{
+    settings.players[player_id] = value;
+}
+
 void change_settings_player(s32 player_id, s32 d)
 {
     s32 value = (s32)settings.players[player_id] + d;
