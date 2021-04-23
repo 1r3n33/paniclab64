@@ -6,6 +6,7 @@
 #include "matrices.h"
 #include "projection.h"
 #include "textures.h"
+#include "../utils/stringbuilder.h"
 
 typedef struct
 {
@@ -23,7 +24,9 @@ typedef struct
     u32 cursor_count;
     u32 cursors[4];
 
-    char text[32][32];
+    char text[32][32]; // to be replaced by 'strings'
+    String strings[32];
+
 } Graphics;
 
 extern Graphics graphics;

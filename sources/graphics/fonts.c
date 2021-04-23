@@ -155,6 +155,11 @@ static u32 spaces[128] = {
     ['z'] = 4 + 1,
 };
 
+u32 fonts_get_width(char c)
+{
+    return spaces[c];
+}
+
 Gfx *apply_fonts_texture(Gfx *gfx)
 {
     // Enable texture, set scaling parameters

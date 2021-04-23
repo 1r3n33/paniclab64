@@ -132,55 +132,74 @@ s32 story_action()
 }
 
 // Map to graphics data
-u32 story_to_gfx(char text[32][32])
+u32 story_to_gfx(String strings[32])
 {
+    sb_init(&strings[0]);
+    sb_init(&strings[1]);
+    sb_init(&strings[2]);
+    sb_init(&strings[3]);
+
     if (story_selection == STORY_SELECTION_LEVEL)
     {
-        strcpy(text[0], "\x06");
-        strcpy(text[1], "\x06");
+        sb_color(&strings[0], SB_COLOR_YELLOW);
+        sb_color(&strings[1], SB_COLOR_YELLOW);
     }
     else
     {
-        strcpy(text[0], "\x08");
-        strcpy(text[1], "\x08");
+        sb_color(&strings[0], SB_COLOR_WHITE);
+        sb_color(&strings[1], SB_COLOR_WHITE);
     }
-    strcat(text[0], story_title[story_current_level]);
-    strcat(text[1], story_subtitle[story_current_level]);
+
+    sb_append(&strings[0], story_title[story_current_level]);
+    sb_append(&strings[1], story_subtitle[story_current_level]);
+
+    sb_valign(&strings[0], 1, 40);
+    sb_halign(&strings[0], 0, 0);
+
+    sb_valign(&strings[1], 1, 60);
+    sb_halign(&strings[1], 0, 0);
 
     if (story_selection == STORY_SELECTION_BACK)
     {
-        strcpy(text[2], "\x02"
-                        "B"
-                        "\x03"
-                        "a"
-                        "\x02"
-                        "c"
-                        "\x03"
-                        "k");
+        sb_color(&strings[2], SB_COLOR_BLUE);
+        sb_append(&strings[2], "B");
+        sb_color(&strings[2], SB_COLOR_PURPLE);
+        sb_append(&strings[2], "a");
+        sb_color(&strings[2], SB_COLOR_BLUE);
+        sb_append(&strings[2], "c");
+        sb_color(&strings[2], SB_COLOR_PURPLE);
+        sb_append(&strings[2], "k");
     }
     else
     {
-        strcpy(text[2], "\x08"
-                        "Back");
+        sb_color(&strings[2], SB_COLOR_WHITE);
+        sb_append(&strings[2], "Back");
     }
+
+    sb_valign(&strings[2], -1, 40);
+    sb_halign(&strings[2], -1, 40);
 
     if (story_selection == STORY_SELECTION_START)
     {
-        strcpy(text[3], "\x04"
-                        "S"
-                        "\x05"
-                        "t"
-                        "\x04"
-                        "a"
-                        "\x05"
-                        "r"
-                        "\x04"
-                        "t");
+        sb_color(&strings[3], SB_COLOR_ORANGE);
+        sb_append(&strings[3], "S");
+        sb_color(&strings[3], SB_COLOR_RED);
+        sb_append(&strings[3], "t");
+        sb_color(&strings[3], SB_COLOR_ORANGE);
+        sb_append(&strings[3], "a");
+        sb_color(&strings[3], SB_COLOR_RED);
+        sb_append(&strings[3], "r");
+        sb_color(&strings[3], SB_COLOR_ORANGE);
+        sb_append(&strings[3], "t");
     }
     else
     {
-        strcpy(text[3], "\x08Start");
+        sb_color(&strings[3], SB_COLOR_WHITE);
+        sb_append(&strings[3], "Start");
     }
+
+    sb_valign(&strings[3], -1, 40);
+    sb_halign(&strings[3], 1, 40);
 
     return story_selection;
 }

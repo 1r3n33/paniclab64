@@ -111,7 +111,7 @@ void story_loop(int pending_gfx)
         }
     }
 
-    graphics.selection = story_to_gfx(graphics.text);
+    graphics.selection = story_to_gfx(graphics.strings);
 
     if (pending_gfx < 1)
     {

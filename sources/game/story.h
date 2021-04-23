@@ -2,6 +2,7 @@
 #define GAME_STORY_H
 
 #include <nusys.h>
+#include "../utils/stringbuilder.h"
 
 void story_init();
 
@@ -16,7 +17,7 @@ u32 story_right();
 s32 story_action();
 
 // Map to graphics data
-u32 story_to_gfx(char text[32][32]);
+u32 story_to_gfx(String strings[32]);
 
 u32 story_get_current_level();
 
