@@ -100,10 +100,36 @@ void game_loop(int pendingGfx)
         cards_to_gfx(&graphics.card_count, &graphics.virtual_card_count, graphics.card_gfx_ids);
         graphics.dice_count = dice_to_gfx(graphics.dice_gfx_ids);
         graphics.cursor_count = cursors_to_gfx(graphics.cursors);
-        score_to_string(0, graphics.text[0]);
-        score_to_string(1, graphics.text[1]);
-        score_to_string(2, graphics.text[2]);
-        score_to_string(3, graphics.text[3]);
+
+        char score[8];
+
+        score_to_string(0, score);
+        sb_init(&graphics.strings[0]);
+        sb_color(&graphics.strings[0], SB_COLOR_WHITE);
+        sb_append(&graphics.strings[0], score);
+        sb_halign(&graphics.strings[0], -1, 20);
+        sb_valign(&graphics.strings[0], 1, 20);
+
+        score_to_string(1, score);
+        sb_init(&graphics.strings[1]);
+        sb_color(&graphics.strings[1], SB_COLOR_WHITE);
+        sb_append(&graphics.strings[1], score);
+        sb_halign(&graphics.strings[1], 1, 20);
+        sb_valign(&graphics.strings[1], 1, 20);
+
+        score_to_string(2, score);
+        sb_init(&graphics.strings[2]);
+        sb_color(&graphics.strings[2], SB_COLOR_WHITE);
+        sb_append(&graphics.strings[2], score);
+        sb_halign(&graphics.strings[2], -1, 20);
+        sb_valign(&graphics.strings[2], -1, 20);
+
+        score_to_string(3, score);
+        sb_init(&graphics.strings[3]);
+        sb_color(&graphics.strings[3], SB_COLOR_WHITE);
+        sb_append(&graphics.strings[3], score);
+        sb_halign(&graphics.strings[3], 1, 20);
+        sb_valign(&graphics.strings[3], -1, 20);
 
         if (pendingGfx < 1)
         {

@@ -2,6 +2,7 @@
 #define GAME_MENU_H
 
 #include <nusys.h>
+#include "../utils/stringbuilder.h"
 
 void init_menu();
 
@@ -16,6 +17,6 @@ u32 menu_right();
 s32 menu_action();
 
 // Map to graphics data
-u32 menu_to_gfx(char text[32][32]);
+u32 menu_to_gfx(String strings[32]);
 
 #endif // GAME_MENU_H

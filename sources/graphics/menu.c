@@ -16,7 +16,7 @@ Vtx menu_triangles_vtx[6] = {
     {34, 0, 0, 0, 0, 0, 0x00, 0x00, 0x00, 0xff},
 };
 
-f32 menu_triangles_pos[] = {61.0f, 41.0f, 21.0f, 1.0f, -39.0f, -59.0f, -999.9f, -999.9f};
+f32 menu_triangles_pos[] = {51.0f, 31.0f, 11.0f, -9.0f, -29.0f, -49.0f, -999.9f, -999.9f};
 
 Gfx *render_menu_selection(Gfx *gfx, u32 selection)
 {
@@ -26,7 +26,7 @@ Gfx *render_menu_selection(Gfx *gfx, u32 selection)
     gDPSetPrimColor(gfx++, 0, 0, 0xf0, 0xf0, 0x50, 0xFF);
     gSPClearGeometryMode(gfx++, 0xFFFFFFFF);
 
-    guTranslate(&menu_triangles_mtx, 18.0f, menu_triangles_pos[selection], 0.0f);
+    guTranslate(&menu_triangles_mtx, 20.0f, menu_triangles_pos[selection], 0.0f);
     gSPMatrix(
         gfx++,
         OS_K0_TO_PHYSICAL(&menu_triangles_mtx),
@@ -45,27 +45,12 @@ void render_menu()
     gfx = gfxClearCfb(gfx, GPACK_RGBA5551(0x70, 0xC0, 0x70, 0xFF), G_MAXFBZ);
     gfx = apply_projection(gfx, (f32)SCREEN_WD, (f32)SCREEN_HT);
 
-    gfx = render_string(gfx, "Settings", 0, -20.0f, 100.0f);
+    gfx = render_string(gfx, "Settings", 0, -20.0f, 80.0f);
 
-    gfx = render_string(gfx, graphics.text[0], 10, -50.0f, 60.0f);
-    gfx = render_string(gfx, graphics.text[1], 20, 30.0f, 60.0f);
-
-    gfx = render_string(gfx, graphics.text[2], 30, -50.0f, 40.0f);
-    gfx = render_string(gfx, graphics.text[3], 40, 30.0f, 40.0f);
-
-    gfx = render_string(gfx, graphics.text[4], 50, -50.0f, 20.0f);
-    gfx = render_string(gfx, graphics.text[5], 60, 30.0f, 20.0f);
-
-    gfx = render_string(gfx, graphics.text[6], 70, -50.0f, 0.0f);
-    gfx = render_string(gfx, graphics.text[7], 80, 30.0f, 0.0f);
-
-    gfx = render_string(gfx, graphics.text[8], 90, -50.0f, -40.0f);
-    gfx = render_string(gfx, graphics.text[9], 100, 30.0f, -40.0f);
-    gfx = render_string(gfx, graphics.text[10], 110, -50.0f, -60.0f);
-    gfx = render_string(gfx, graphics.text[11], 120, 30.0f, -60.0f);
-
-    gfx = render_string(gfx, graphics.text[12], 130, -100.0f, -100.0f);
-    gfx = render_string(gfx, graphics.text[13], 140, 80.0f, -100.0f);
+    for (u32 i = 0; i <= 13; i++)
+    {
+        gfx = render_string(gfx, graphics.strings[i].b, (i+1) * 16, graphics.strings[i].x, graphics.strings[i].y);
+    }
 
     gfx = render_menu_selection(gfx, graphics.selection);
 

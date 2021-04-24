@@ -89,7 +89,7 @@ void menu_loop(int pendingGfx)
         }
     }
 
-    graphics.selection = menu_to_gfx(graphics.text);
+    graphics.selection = menu_to_gfx(graphics.strings);
 
     if (pendingGfx < 1)
     {

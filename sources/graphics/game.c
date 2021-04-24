@@ -173,7 +173,7 @@ Gfx *renderScores(Gfx *gfx, u32 count)
 {
   for (u32 i = 0; i < count; i++)
   {
-    gfx = render_string(gfx, graphics.text[i], i * 8, scores_pos[i][0], scores_pos[i][1]);
+    gfx = render_string(gfx, graphics.strings[i].b, i * 32, graphics.strings[i].x, graphics.strings[i].y);
   }
   return gfx;
 }
