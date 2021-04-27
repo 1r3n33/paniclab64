@@ -6,6 +6,7 @@
 #include "graphics/game.h"
 #include "graphics/graphics.h"
 #include "menu.h"
+#include "utils/stringbuilder.h"
 
 #define LOOP_CONTINUE 0x0
 #define LOOP_STOP_WIN 0x1

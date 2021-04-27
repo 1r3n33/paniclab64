@@ -6,7 +6,7 @@
 #include "matrices.h"
 #include "projection.h"
 #include "textures.h"
-#include "../utils/stringbuilder.h"
+#include "../utils/string.h"
 
 typedef struct
 {

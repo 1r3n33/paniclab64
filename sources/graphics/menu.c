@@ -49,7 +49,7 @@ void render_menu()
 
     for (u32 i = 0; i <= 13; i++)
     {
-        gfx = render_string(gfx, graphics.strings[i].b, (i+1) * 16, graphics.strings[i].x, graphics.strings[i].y);
+        gfx = render_string(gfx, graphics.strings[i].buf, (i + 1) * 16, graphics.strings[i].x, graphics.strings[i].y);
     }
 
     gfx = render_menu_selection(gfx, graphics.selection);

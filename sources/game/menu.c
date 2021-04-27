@@ -1,6 +1,7 @@
 #include <string.h>
 #include "menu.h"
 #include "settings.h"
+#include "../utils/stringbuilder.h"
 
 #define MENU_SELECTION_PLAYER1 0
 #define MENU_SELECTION_PLAYER2 1

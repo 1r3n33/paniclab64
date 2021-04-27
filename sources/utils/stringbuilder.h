@@ -2,6 +2,7 @@
 #define UTILS_STRINGBUILDER_H
 
 #include <nusys.h>
+#include "string.h"
 
 #define SB_COLOR_BLACK 1
 #define SB_COLOR_BLUE 2
@@ -11,15 +12,6 @@
 #define SB_COLOR_YELLOW 6
 #define SB_COLOR_GREEN 7
 #define SB_COLOR_WHITE 8
-
-typedef struct
-{
-    char b[32];
-    char *p;
-    s32 w;
-    s32 x;
-    s32 y;
-} String;
 
 void sb_init(String *s);
 void sb_append(String *s, char *in);

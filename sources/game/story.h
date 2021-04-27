@@ -2,7 +2,7 @@
 #define GAME_STORY_H
 
 #include <nusys.h>
-#include "../utils/stringbuilder.h"
+#include "../utils/string.h"
 
 void story_init();
 

@@ -1,5 +1,6 @@
 #include <string.h>
 #include "story.h"
+#include "../utils/stringbuilder.h"
 
 #define STORY_SELECTION_LEVEL 0
 #define STORY_SELECTION_START 1

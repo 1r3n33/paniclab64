@@ -4,8 +4,8 @@
 
 void sb_init(String *s)
 {
-    s->b[0] = 0;
-    s->p = s->b;
+    s->buf[0] = 0;
+    s->p = s->buf;
     s->w = 0;
     s->x = 0;
     s->y = 0;

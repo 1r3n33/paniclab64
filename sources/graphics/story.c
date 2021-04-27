@@ -53,11 +53,11 @@ void render_story()
 
     gfx = apply_projection(gfx, (f32)SCREEN_WD, (f32)SCREEN_HT);
 
-    gfx = render_string(gfx, graphics.strings[0].b, 0x00, graphics.strings[0].x, graphics.strings[0].y);
-    gfx = render_string(gfx, graphics.strings[1].b, 0x20, graphics.strings[1].x, graphics.strings[1].y);
+    gfx = render_string(gfx, graphics.strings[0].buf, 0x00, graphics.strings[0].x, graphics.strings[0].y);
+    gfx = render_string(gfx, graphics.strings[1].buf, 0x20, graphics.strings[1].x, graphics.strings[1].y);
 
-    gfx = render_string(gfx, graphics.strings[2].b, 0x40, graphics.strings[2].x, graphics.strings[2].y);
-    gfx = render_string(gfx, graphics.strings[3].b, 0x60, graphics.strings[3].x, graphics.strings[3].y);
+    gfx = render_string(gfx, graphics.strings[2].buf, 0x40, graphics.strings[2].x, graphics.strings[2].y);
+    gfx = render_string(gfx, graphics.strings[3].buf, 0x60, graphics.strings[3].x, graphics.strings[3].y);
 
     gfx = render_story_selection(gfx, graphics.selection);
 
