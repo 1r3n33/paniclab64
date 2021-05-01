@@ -24,6 +24,8 @@ void shuffle_cards();
 
 u32 get_cards_count();
 
+u32 get_virtual_card_count();
+
 u32 get_cards_start(u32 dice_dir);
 
 u32 get_card_flags(u32 card_id);

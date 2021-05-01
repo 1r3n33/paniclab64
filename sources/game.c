@@ -43,7 +43,8 @@ u32 update_player(u32 player_id)
     }
 
     u32 card_count = get_cards_count();
-    s32 index = controls_get_index(player_id, card_count);
+    u32 virtual_card_count = get_virtual_card_count();
+    s32 index = controls_get_index(player_id, card_count, virtual_card_count);
     if (index >= 0)
     {
         set_cursor(player_id, index);

@@ -116,6 +116,11 @@ u32 get_cards_count()
     return cards.count;
 }
 
+u32 get_virtual_card_count()
+{
+    return (cards.count < 12) ? 12 : cards.count;
+}
+
 u32 get_cards_start(u32 dice_dir)
 {
     switch (dice_dir)
@@ -145,7 +150,7 @@ void cards_to_gfx(u32 *card_count, u32 *virtual_card_count, u32 *card_gfx_ids)
     *card_count = cards.count;
 
     // When number of cards is low, it looks nicer to set cards on a bigger virtual circle.
-    *virtual_card_count = (cards.count < 12) ? 12 : cards.count;
+    *virtual_card_count = get_virtual_card_count();
 
     for (u32 i = 0; i < cards.count; i++)
     {

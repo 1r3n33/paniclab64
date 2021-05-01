@@ -16,6 +16,6 @@ void controls_update();
 
 NUContData *controls_get(u32 player_id);
 
-s32 controls_get_index(u32 player_id, u32 count);
+s32 controls_get_index(u32 player_id, u32 card_count, u32 virtual_card_count);
 
 #endif // CONTROLS_H
