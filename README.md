@@ -7,9 +7,10 @@ N64 homebrew inspired by [Panic lab from Gigamic](https://en.gigamic.com/game/pa
 
 ![Screen1](./screenshots/screenshot001.png)
 ![Screen2](./screenshots/screenshot002.png)
-![Screen3](./screenshots/screenshot003.png)
 ![Screen4](./screenshots/screenshot004.png)
+![Screen3](./screenshots/screenshot003.png)
 ![Screen5](./screenshots/screenshot005.png)
+![Screen6](./screenshots/screenshot006.png)
 
 # How to play
 
@@ -25,7 +26,7 @@ Starting from the arrow indicated by the direction die, each players tries to fi
 
 ![A](./manual/Button-N64-A.svg) A to validate selection
 
-![START](./manual/Button-N64-Start.svg) START to reshuffle cards
+![START](./manual/Button-N64-Start.svg) START to quit current game
 
 ## Dice
 
