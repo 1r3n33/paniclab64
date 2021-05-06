@@ -12,7 +12,7 @@
 #define LOOP_STOP_WIN 0x1
 #define LOOP_STOP_QUIT 0x2
 
-u32 update_player(u32 player_id)
+u32 update_player(u32 player_id, u32 solution)
 {
     NUContData *controller = ai_is_enabled(player_id)
                                  ? ai_controls_get(player_id)
@@ -20,7 +20,6 @@ u32 update_player(u32 player_id)
 
     if (controller->trigger & A_BUTTON)
     {
-        u32 solution = get_solution();
         if (cursor_equals(player_id, solution))
         {
             add_to_score(player_id, 100);
@@ -61,11 +60,13 @@ u32 update_player(u32 player_id)
 
 u32 game_round_count;
 NUGfxFunc game_next_loop;
+u32 game_solution;
 
 void game_loop_init(u32 round_count, NUGfxFunc next_loop)
 {
     game_round_count = round_count;
     game_next_loop = next_loop;
+    game_solution = get_solution();
 }
 
 void game_loop(int pendingGfx)
@@ -73,10 +74,10 @@ void game_loop(int pendingGfx)
     controls_update();
 
     u32 status = 0;
-    status |= update_player(0);
-    status |= update_player(1);
-    status |= update_player(2);
-    status |= update_player(3);
+    status |= update_player(0, game_solution);
+    status |= update_player(1, game_solution);
+    status |= update_player(2, game_solution);
+    status |= update_player(3, game_solution);
 
     if (status & LOOP_STOP_WIN)
     {
@@ -86,6 +87,7 @@ void game_loop(int pendingGfx)
             reset_cursors();
             shuffle_game();
             ai_init(get_settings(), get_cards(), get_dice(), get_cursors());
+            game_solution = get_solution();
         }
         else
         {
