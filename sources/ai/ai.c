@@ -14,6 +14,7 @@ s32 ai_dirs[NU_CONT_MAXCONTROLLERS] = {0};
 s32 ai_flags[NU_CONT_MAXCONTROLLERS] = {0};
 s32 ai_checks[NU_CONT_MAXCONTROLLERS] = {0};
 s32 ai_throttlings[NU_CONT_MAXCONTROLLERS] = {0};
+s32 ai_swaps[NU_CONT_MAXCONTROLLERS] = {0};
 
 Settings *ai_settings;
 Cards *ai_cards;
@@ -58,6 +59,11 @@ void ai_init(Settings *settings, Cards *cards, Dice *dice, Cursors *cursors)
     ai_throttlings[1] = (THROTTLING_SHORT + THROTTLING_LONG) / 2;
     ai_throttlings[2] = (THROTTLING_SHORT + THROTTLING_LONG) / 2;
     ai_throttlings[3] = (THROTTLING_SHORT + THROTTLING_LONG) / 2;
+
+    ai_swaps[0] = 0;
+    ai_swaps[1] = 0;
+    ai_swaps[2] = 0;
+    ai_swaps[3] = 0;
 
     ai_settings = settings;
     ai_cards = cards;
@@ -175,16 +181,27 @@ int ai_one_step(u32 player_id)
         if (flags == FLAGS_SWAP_SHAPE)
         {
             ai_flags[player_id] ^= 0b001;
+            ai_swaps[player_id]++;
         }
 
         if (flags == FLAGS_SWAP_PATTERN)
         {
             ai_flags[player_id] ^= 0b010;
+            ai_swaps[player_id]++;
         }
 
         if (flags == FLAGS_SWAP_COLOR)
         {
             ai_flags[player_id] ^= 0b100;
+            ai_swaps[player_id]++;
+        }
+
+        // If flags go back to original, the game cannot be resolved
+        // Stop on the swap card
+        if (ai_swaps[player_id] == 6)
+        {
+            ai_throttlings[player_id] = THROTTLING_SHORT + (rand() % (THROTTLING_LONG - THROTTLING_SHORT));
+            return 3;
         }
     }
 
